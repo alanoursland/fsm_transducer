@@ -1,0 +1,120 @@
+"""Command-line entry point.
+
+Examples (from inside the ``src`` directory):
+
+    python -m fsm_parser parse "The book fell."
+    python -m fsm_parser trace "I can book flights."
+    python -m fsm_parser parse --grammar examples/grammar.yaml "The cat slept."
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+
+from fsm_parser.config import load_grammar
+from fsm_parser.debug import render_state, render_trace
+from fsm_parser.grammar import build_default_parser
+from fsm_parser.pipeline import Parser
+from fsm_parser.tokens import ParserState
+
+
+def _make_parser_from_args(args: argparse.Namespace) -> Parser:
+    if args.grammar:
+        grammar = load_grammar(args.grammar)
+        return Parser(layers=grammar.layers)
+    return build_default_parser()
+
+
+def _state_to_dict(state: ParserState) -> dict:
+    return {
+        "layer": state.layer,
+        "tokens": [
+            {
+                "index": t.index,
+                "text": t.text,
+                "labels": dict(t.labels.weights),
+            }
+            for t in state.tokens
+        ],
+    }
+
+
+def cmd_parse(args: argparse.Namespace) -> int:
+    parser = _make_parser_from_args(args)
+    text = _read_input(args)
+    state = parser.parse(text)
+    if args.json:
+        json.dump(_state_to_dict(state), sys.stdout, indent=2)
+        sys.stdout.write("\n")
+    else:
+        print(render_state(state, top_k=args.top_k))
+    return 0
+
+
+def cmd_trace(args: argparse.Namespace) -> int:
+    parser = _make_parser_from_args(args)
+    text = _read_input(args)
+    _, traces = parser.parse_with_trace(text)
+    if args.json:
+        out = [
+            {
+                "layer": t.layer,
+                "blocks": t.block_names,
+                "deltas": [
+                    {
+                        "token_index": d.token_index,
+                        "label": d.label,
+                        "weight": d.weight,
+                        "source": d.source,
+                    }
+                    for d in t.deltas
+                ],
+                "state": _state_to_dict(t.state),
+            }
+            for t in traces
+        ]
+        json.dump(out, sys.stdout, indent=2)
+        sys.stdout.write("\n")
+    else:
+        print(render_trace(traces, top_k=args.top_k))
+    return 0
+
+
+def _read_input(args: argparse.Namespace) -> str:
+    if args.text:
+        return args.text
+    if args.file:
+        return Path(args.file).read_text()
+    return sys.stdin.read()
+
+
+def build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(prog="fsm-parser")
+    sub = p.add_subparsers(dest="command", required=True)
+
+    common = argparse.ArgumentParser(add_help=False)
+    common.add_argument("text", nargs="?", help="text to parse")
+    common.add_argument("--file", "-f", help="read input from file")
+    common.add_argument("--grammar", "-g", help="path to grammar YAML")
+    common.add_argument("--json", action="store_true", help="emit JSON output")
+    common.add_argument("--top-k", type=int, default=5, help="labels per token")
+
+    parse = sub.add_parser("parse", parents=[common], help="parse text")
+    parse.set_defaults(func=cmd_parse)
+
+    trace = sub.add_parser("trace", parents=[common], help="parse with layer trace")
+    trace.set_defaults(func=cmd_trace)
+
+    return p
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_argparser().parse_args(argv)
+    return args.func(args)
+
+
+if __name__ == "__main__":  # pragma: no cover
+    raise SystemExit(main())

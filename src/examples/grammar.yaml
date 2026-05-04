@@ -1,0 +1,57 @@
+layers:
+  - blocks:
+      - name: lexicon
+        type: lexical
+        entries:
+          the: { "POS:DET": 1.0 }
+          a:   { "POS:DET": 1.0 }
+          can: { "POS:AUX": 0.7, "POS:VERB": 0.2, "POS:NOUN": 0.1 }
+          book: { "POS:NOUN": 0.55, "POS:VERB": 0.45 }
+          cat:  { "POS:NOUN": 1.0 }
+          dog:  { "POS:NOUN": 1.0 }
+          flights: { "POS:NOUN": 1.0 }
+          slept:   { "POS:VERB": 1.0 }
+          fell:    { "POS:VERB": 1.0 }
+          chased:  { "POS:VERB": 1.0 }
+          i:    { "POS:PRON": 1.0 }
+  - blocks:
+      - name: context
+        type: fsm
+        fsms:
+          - name: det_boosts_noun
+            pattern:
+              - has: "POS:DET"
+                min_weight: 0.3
+              - has_any: ["POS:NOUN", "POS:VERB"]
+                min_weight: 0.1
+            emit:
+              - label: "POS:NOUN"
+                weight: 0.5
+                offset: 0
+          - name: aux_boosts_verb
+            pattern:
+              - has: "POS:AUX"
+                min_weight: 0.3
+              - has_any: ["POS:NOUN", "POS:VERB"]
+                min_weight: 0.1
+            emit:
+              - label: "POS:VERB"
+                weight: 0.5
+                offset: 0
+  - blocks:
+      - name: phrases
+        type: fsm
+        fsms:
+          - name: np_det_noun
+            pattern:
+              - has: "POS:DET"
+                min_weight: 0.3
+              - has: "POS:NOUN"
+                min_weight: 0.3
+            emit:
+              - label: "PHRASE:NP_HEAD"
+                weight: 0.8
+                offset: 0
+              - label: "PHRASE:NP_START"
+                weight: 0.7
+                offset: -1

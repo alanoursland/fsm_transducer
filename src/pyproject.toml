@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fsm-parser"
+version = "0.1.0"
+description = "Stacked weighted FSM parser"
+requires-python = ">=3.10"
+dependencies = [
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+fsm-parser = "fsm_parser.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["fsm_parser*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
