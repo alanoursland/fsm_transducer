@@ -1,10 +1,16 @@
-"""Decay, pruning, and normalization of label bags."""
+"""Decay, pruning, normalization, and delta application."""
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
-from fsm_parser.labels import FORGOTTEN, LabelBag, LabelDelta
+from fsm_parser.labels import (
+    AddSlot,
+    FORGOTTEN,
+    LabelBag,
+    LabelDelta,
+    RepresentationDelta,
+)
 from fsm_parser.tokens import ParserState
 
 
@@ -17,15 +23,33 @@ class NormalizationConfig:
     forgotten_label: str = FORGOTTEN
 
 
-def apply_deltas(state: ParserState, deltas: list[LabelDelta]) -> None:
-    """Add each delta to its target token's label bag."""
+def apply_deltas(
+    state: ParserState, deltas: list[RepresentationDelta]
+) -> None:
+    """Apply a list of deltas. Sorts streams whose membership changed."""
+    touched_streams: set[str] = set()
     for d in deltas:
-        if 0 <= d.token_index < len(state.tokens):
-            state.tokens[d.token_index].labels.add(d.label, d.weight)
+        if isinstance(d, LabelDelta):
+            slot = state.get_slot(d.slot_id)
+            if slot is not None:
+                slot.labels.add(d.label, d.weight)
+            continue
+        if isinstance(d, AddSlot):
+            if d.slot.stream != d.stream:
+                raise ValueError(
+                    f"AddSlot stream mismatch: delta={d.stream!r}, "
+                    f"slot={d.slot.stream!r}"
+                )
+            state.add_slot(d.stream, d.slot)
+            touched_streams.add(d.stream)
+            continue
+        raise TypeError(f"unknown delta type: {type(d).__name__}")
+    for stream in touched_streams:
+        state.sort_stream(stream)
 
 
 def normalize(bag: LabelBag, config: NormalizationConfig) -> LabelBag:
-    """Apply decay, top-k and threshold pruning, and optional rescaling."""
+    """Decay, prune to top-k, threshold-prune, and optionally rescale."""
     forgotten_label = config.forgotten_label
 
     forgotten_w = bag.weights.get(forgotten_label, 0.0) * config.decay
@@ -65,7 +89,15 @@ def normalize(bag: LabelBag, config: NormalizationConfig) -> LabelBag:
     return result
 
 
-def normalize_state(state: ParserState, config: NormalizationConfig) -> None:
-    """Normalize every token's label bag in place."""
-    for token in state.tokens:
-        token.labels = normalize(token.labels, config)
+def normalize_state(
+    state: ParserState,
+    config: NormalizationConfig,
+    *,
+    stream_configs: dict[str, NormalizationConfig] | None = None,
+) -> None:
+    """Normalize every slot in every stream using the appropriate config."""
+    stream_configs = stream_configs or {}
+    for stream_name, slots in state.streams.items():
+        cfg = stream_configs.get(stream_name, config)
+        for slot in slots:
+            slot.labels = normalize(slot.labels, cfg)

@@ -6,7 +6,7 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 
 from fsm_parser.blocks import ParserBlock
-from fsm_parser.labels import FORGOTTEN, LabelDelta
+from fsm_parser.labels import FORGOTTEN, RepresentationDelta
 from fsm_parser.normalization import (
     NormalizationConfig,
     apply_deltas,
@@ -22,6 +22,7 @@ class ParserConfig:
     max_labels_per_token: int = 64
     total_mass: float | None = None
     forgotten_label: str = FORGOTTEN
+    stream_configs: dict[str, NormalizationConfig] = field(default_factory=dict)
 
     def to_normalization(self) -> NormalizationConfig:
         return NormalizationConfig(
@@ -37,7 +38,7 @@ class ParserConfig:
 class LayerTrace:
     layer: int
     block_names: list[str]
-    deltas: list[LabelDelta]
+    deltas: list[RepresentationDelta]
     state: ParserState  # snapshot AFTER applying deltas and normalizing
 
 
@@ -48,20 +49,34 @@ class Parser:
     layers: list[list[ParserBlock]]
     config: ParserConfig = field(default_factory=ParserConfig)
 
+    # ---- text-based entry points (existing API) ---------------------
+
     def parse(self, text: str) -> ParserState:
-        state = initialize_state(text)
-        norm_cfg = self.config.to_normalization()
+        return self.parse_state(initialize_state(text))
+
+    def parse_with_trace(
+        self, text: str
+    ) -> tuple[ParserState, list[LayerTrace]]:
+        return self.parse_state_with_trace(initialize_state(text))
+
+    # ---- state-based entry points ----------------------------------
+
+    def parse_state(self, state: ParserState) -> ParserState:
+        default_cfg = self.config.to_normalization()
         for i, blocks in enumerate(self.layers):
-            deltas: list[LabelDelta] = []
+            deltas: list[RepresentationDelta] = []
             for block in blocks:
                 deltas.extend(block.apply(state))
             apply_deltas(state, deltas)
-            normalize_state(state, norm_cfg)
+            normalize_state(
+                state, default_cfg, stream_configs=self.config.stream_configs
+            )
             state.layer = i + 1
         return state
 
-    def parse_with_trace(self, text: str) -> tuple[ParserState, list[LayerTrace]]:
-        state = initialize_state(text)
+    def parse_state_with_trace(
+        self, state: ParserState
+    ) -> tuple[ParserState, list[LayerTrace]]:
         traces: list[LayerTrace] = [
             LayerTrace(
                 layer=0,
@@ -70,19 +85,21 @@ class Parser:
                 state=deepcopy(state),
             )
         ]
-        norm_cfg = self.config.to_normalization()
+        default_cfg = self.config.to_normalization()
         for i, blocks in enumerate(self.layers):
-            deltas: list[LabelDelta] = []
+            deltas: list[RepresentationDelta] = []
             for block in blocks:
                 deltas.extend(block.apply(state))
             apply_deltas(state, deltas)
-            normalize_state(state, norm_cfg)
+            normalize_state(
+                state, default_cfg, stream_configs=self.config.stream_configs
+            )
             state.layer = i + 1
             traces.append(
                 LayerTrace(
                     layer=i + 1,
                     block_names=[b.name for b in blocks],
-                    deltas=deltas,
+                    deltas=list(deltas),
                     state=deepcopy(state),
                 )
             )

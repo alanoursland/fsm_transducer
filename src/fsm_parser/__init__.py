@@ -1,7 +1,25 @@
 """Stacked weighted FSM parser."""
 
-from fsm_parser.labels import LabelBag, LabelDelta
-from fsm_parser.tokens import Token, ParserState, tokenize, initialize_state
+from fsm_parser.labels import (
+    AddLabel,
+    AddSlot,
+    LabelBag,
+    LabelDelta,
+    RepresentationDelta,
+)
+from fsm_parser.slots import (
+    ProvenanceEdge,
+    Slot,
+    SlotId,
+    SourceSpan,
+)
+from fsm_parser.tokens import (
+    ParserState,
+    Token,
+    initialize_char_state,
+    initialize_state,
+    tokenize,
+)
 from fsm_parser.fsm import (
     StateId,
     Capture,
@@ -58,16 +76,37 @@ from fsm_parser.blocks import (
     LexicalBlock,
     FSMBlock,
 )
-from fsm_parser.normalization import normalize, apply_deltas
-from fsm_parser.pipeline import Parser, ParserConfig
+from fsm_parser.char_blocks import (
+    AmbiguousShiftRightReducer,
+    CharClassBlock,
+    SimpleCharToTokenReducer,
+)
+from fsm_parser.normalization import (
+    NormalizationConfig,
+    apply_deltas,
+    normalize,
+    normalize_state,
+)
+from fsm_parser.pipeline import LayerTrace, Parser, ParserConfig
 
 __all__ = [
     "LabelBag",
     "LabelDelta",
+    "AddLabel",
+    "AddSlot",
+    "RepresentationDelta",
+    "Slot",
+    "SlotId",
+    "SourceSpan",
+    "ProvenanceEdge",
     "Token",
     "ParserState",
+    "LayerTrace",
+    "NormalizationConfig",
+    "normalize_state",
     "tokenize",
     "initialize_state",
+    "initialize_char_state",
     "StateId",
     "Capture",
     "CaptureValue",
@@ -116,6 +155,9 @@ __all__ = [
     "ParserBlock",
     "LexicalBlock",
     "FSMBlock",
+    "CharClassBlock",
+    "SimpleCharToTokenReducer",
+    "AmbiguousShiftRightReducer",
     "normalize",
     "apply_deltas",
     "Parser",

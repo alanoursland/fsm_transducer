@@ -17,6 +17,7 @@ from pathlib import Path
 from fsm_parser.config import load_grammar
 from fsm_parser.debug import render_state, render_trace
 from fsm_parser.grammar import build_default_parser
+from fsm_parser.labels import AddSlot, LabelDelta
 from fsm_parser.pipeline import Parser
 from fsm_parser.tokens import ParserState
 
@@ -26,6 +27,21 @@ def _make_parser_from_args(args: argparse.Namespace) -> Parser:
         grammar = load_grammar(args.grammar)
         return Parser(layers=grammar.layers)
     return build_default_parser()
+
+
+def _slot_to_dict(slot) -> dict:
+    return {
+        "id": slot.id,
+        "kind": slot.kind,
+        "stream": slot.stream,
+        "text": slot.text,
+        "source_span": (
+            [slot.source_span.start, slot.source_span.end]
+            if slot.source_span is not None
+            else None
+        ),
+        "labels": dict(slot.labels.weights),
+    }
 
 
 def _state_to_dict(state: ParserState) -> dict:
@@ -39,7 +55,31 @@ def _state_to_dict(state: ParserState) -> dict:
             }
             for t in state.tokens
         ],
+        "streams": {
+            name: [_slot_to_dict(s) for s in slots]
+            for name, slots in state.streams.items()
+        },
     }
+
+
+def _delta_to_dict(d) -> dict:
+    if isinstance(d, LabelDelta):
+        return {
+            "type": "add_label",
+            "slot_id": d.slot_id,
+            "token_index": d.token_index,
+            "label": d.label,
+            "weight": d.weight,
+            "source": d.source,
+        }
+    if isinstance(d, AddSlot):
+        return {
+            "type": "add_slot",
+            "stream": d.stream,
+            "slot": _slot_to_dict(d.slot),
+            "source": d.source,
+        }
+    return {"type": "unknown", "repr": repr(d)}
 
 
 def cmd_parse(args: argparse.Namespace) -> int:
@@ -63,15 +103,7 @@ def cmd_trace(args: argparse.Namespace) -> int:
             {
                 "layer": t.layer,
                 "blocks": t.block_names,
-                "deltas": [
-                    {
-                        "token_index": d.token_index,
-                        "label": d.label,
-                        "weight": d.weight,
-                        "source": d.source,
-                    }
-                    for d in t.deltas
-                ],
+                "deltas": [_delta_to_dict(d) for d in t.deltas],
                 "state": _state_to_dict(t.state),
             }
             for t in traces

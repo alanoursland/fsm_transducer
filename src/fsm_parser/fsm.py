@@ -24,6 +24,7 @@ from typing import Any, Callable, Iterable, Protocol, Sequence
 
 from fsm_parser.labels import LabelBag, LabelDelta
 from fsm_parser.semirings import LegacyMul, ProductReal, Semiring
+from fsm_parser.slots import Slot, SlotId
 from fsm_parser.tokens import ParserState, Token
 
 
@@ -43,16 +44,27 @@ class StateId:
 
 @dataclass(frozen=True)
 class CaptureValue:
+    """A captured value plus the position and slot id it came from.
+
+    ``value`` is what gets interpolated into emission label templates;
+    its meaning depends on ``kind``. ``pos`` and ``slot_id`` record where
+    the capture happened so emission anchors can resolve relative
+    offsets and exact targets independently of how the user wants the
+    template to render.
+    """
+
     kind: str
-    value: Any  # int for "index", str for "top_label"
+    value: Any  # int for "index", str for "slot_id"/"top_label", SourceSpan, ...
+    pos: int | None = None
+    slot_id: SlotId | None = None
 
 
 @dataclass(frozen=True)
 class Capture:
-    """Bind a name to information about the token a transition consumes."""
+    """Bind a name to information about the slot a transition consumes."""
 
     name: str
-    kind: str = "index"  # "index" | "top_label"
+    kind: str = "index"  # "index" | "slot_id" | "top_label" | "source_span"
 
 
 @dataclass
@@ -71,19 +83,28 @@ class ScanContext:
 
 class EmissionAnchor(Protocol):
     def resolve(
-        self, captures: dict[str, CaptureValue], firing_pos: int | None,
-        scan_start: int, n: int,
-    ) -> int | None: ...
+        self,
+        captures: dict[str, CaptureValue],
+        firing_pos: int | None,
+        scan_start: int,
+        slots: "Sequence[Slot]",
+    ) -> SlotId | None: ...
+
+
+def _slot_id_at(slots: "Sequence[Slot]", pos: int) -> SlotId | None:
+    if 0 <= pos < len(slots):
+        return slots[pos].id
+    return None
 
 
 @dataclass(frozen=True)
 class FiringOffset:
     offset: int = 0
 
-    def resolve(self, captures, firing_pos, scan_start, n):  # noqa: ARG002
+    def resolve(self, captures, firing_pos, scan_start, slots):  # noqa: ARG002
         if firing_pos is None:
             return None
-        return firing_pos + self.offset
+        return _slot_id_at(slots, firing_pos + self.offset)
 
 
 @dataclass(frozen=True)
@@ -91,31 +112,36 @@ class CaptureAnchor:
     name: str
     offset: int = 0
 
-    def resolve(self, captures, firing_pos, scan_start, n):  # noqa: ARG002
+    def resolve(self, captures, firing_pos, scan_start, slots):  # noqa: ARG002
         cap = captures.get(self.name)
-        if cap is None or cap.kind != "index":
+        if cap is None:
             return None
-        return cap.value + self.offset
+        # offset 0 with a known slot id: use it directly (stable target).
+        if self.offset == 0 and cap.slot_id is not None:
+            return cap.slot_id
+        if cap.pos is None:
+            return None
+        return _slot_id_at(slots, cap.pos + self.offset)
 
 
 @dataclass(frozen=True)
 class ScanStart:
     offset: int = 0
 
-    def resolve(self, captures, firing_pos, scan_start, n):  # noqa: ARG002
-        return scan_start + self.offset
+    def resolve(self, captures, firing_pos, scan_start, slots):  # noqa: ARG002
+        return _slot_id_at(slots, scan_start + self.offset)
 
 
 @dataclass(frozen=True)
 class ScanEnd:
-    """Anchor at the most recently consumed token in the scan."""
+    """Anchor at the most recently consumed slot in the scan."""
 
     offset: int = 0
 
-    def resolve(self, captures, firing_pos, scan_start, n):  # noqa: ARG002
+    def resolve(self, captures, firing_pos, scan_start, slots):  # noqa: ARG002
         if firing_pos is None:
             return None
-        return firing_pos + self.offset
+        return _slot_id_at(slots, firing_pos + self.offset)
 
 
 _DEFAULT_ANCHOR = FiringOffset(0)
@@ -469,13 +495,18 @@ class _Path:
         return (self.state, self.captures_sig())
 
 
-def _capture_from_token(cap: Capture, token: Token) -> CaptureValue:
+def _capture_from_slot(cap: Capture, slot: Slot, pos: int) -> CaptureValue:
     if cap.kind == "index":
-        return CaptureValue("index", token.index)
+        # Legacy: value is the position in the scanned stream.
+        return CaptureValue("index", pos, pos=pos, slot_id=slot.id)
+    if cap.kind == "slot_id":
+        return CaptureValue("slot_id", slot.id, pos=pos, slot_id=slot.id)
     if cap.kind == "top_label":
-        top = token.labels.top_k(1)
+        top = slot.labels.top_k(1)
         value = top[0][0] if top else ""
-        return CaptureValue("top_label", value)
+        return CaptureValue("top_label", value, pos=pos, slot_id=slot.id)
+    if cap.kind == "source_span":
+        return CaptureValue("source_span", slot.source_span, pos=pos, slot_id=slot.id)
     raise ValueError(f"unsupported capture kind: {cap.kind!r}")
 
 
@@ -512,11 +543,21 @@ class FSMScanner:
 
             self.semiring = _CallableShim()  # type: ignore[assignment]
 
-    def scan(self, fsm: FSM, state: ParserState) -> list[LabelDelta]:
+    def scan(
+        self,
+        fsm: FSM,
+        state: ParserState,
+        *,
+        stream: str = "token",
+        slot_filter: Callable[[Slot], bool] | None = None,
+    ) -> list[LabelDelta]:
         deltas: list[LabelDelta] = []
-        n = len(state.tokens)
+        slots = state.stream(stream)
+        if slot_filter is not None:
+            slots = [s for s in slots if slot_filter(s)]
+        n = len(slots)
         for start in range(n):
-            self._scan_from(fsm, state.tokens, start, n, deltas)
+            self._scan_from(fsm, slots, start, n, deltas)
         return deltas
 
     # -- internals -----------------------------------------------------------
@@ -529,17 +570,17 @@ class FSMScanner:
         firing_pos: int | None,
         path_weight: float,
         scan_start: int,
-        n: int,
+        slots: "Sequence[Slot]",
         source: str,
         deltas: list[LabelDelta],
     ) -> None:
-        target = em.anchor.resolve(captures, firing_pos, scan_start, n)
-        if target is None or not (0 <= target < n):
+        target_id = em.anchor.resolve(captures, firing_pos, scan_start, slots)
+        if target_id is None:
             return
         label = _interpolate(em.label, captures)
         deltas.append(
             LabelDelta(
-                token_index=target,
+                slot_id=target_id,
                 label=label,
                 weight=self.semiring.times(path_weight, em.weight),
                 source=source,
@@ -549,7 +590,7 @@ class FSMScanner:
     def _scan_from(
         self,
         fsm: FSM,
-        tokens: list[Token],
+        slots: "Sequence[Slot]",
         start: int,
         n: int,
         deltas: list[LabelDelta],
@@ -562,12 +603,12 @@ class FSMScanner:
             last_consumed=None,
         )
         frontier = self._epsilon_close(
-            [initial], fsm, deltas, scan_start=start, n=n
+            [initial], fsm, deltas, scan_start=start, slots=slots
         )
 
         for pos in range(start, n):
             ctx.pos = pos
-            frame = tokens[pos]
+            frame = slots[pos]
             successors: list[_Path] = []
             for path in frontier:
                 ctx.captures = path.captures
@@ -578,7 +619,7 @@ class FSMScanner:
                         continue
                     new_captures = dict(path.captures)
                     for cap in tr.captures:
-                        new_captures[cap.name] = _capture_from_token(cap, frame)
+                        new_captures[cap.name] = _capture_from_slot(cap, frame, pos)
                     new_weight = self.semiring.times(path.weight, tr.weight)
                     for em in tr.emissions:
                         self._fire(
@@ -587,7 +628,7 @@ class FSMScanner:
                             firing_pos=pos,
                             path_weight=new_weight,
                             scan_start=start,
-                            n=n,
+                            slots=slots,
                             source=fsm.name,
                             deltas=deltas,
                         )
@@ -601,7 +642,7 @@ class FSMScanner:
                     )
             successors = self._merge(successors)
             frontier = self._epsilon_close(
-                successors, fsm, deltas, scan_start=start, n=n
+                successors, fsm, deltas, scan_start=start, slots=slots
             )
             if not frontier:
                 break
@@ -613,7 +654,7 @@ class FSMScanner:
         deltas: list[LabelDelta],
         *,
         scan_start: int,
-        n: int,
+        slots: "Sequence[Slot]",
     ) -> list[_Path]:
         seen: set[tuple] = set()
         result: list[_Path] = []
@@ -633,7 +674,7 @@ class FSMScanner:
                         firing_pos=path.last_consumed,
                         path_weight=path.weight,
                         scan_start=scan_start,
-                        n=n,
+                        slots=slots,
                         source=fsm.name,
                         deltas=deltas,
                     )
@@ -645,7 +686,7 @@ class FSMScanner:
                             firing_pos=path.last_consumed,
                             path_weight=path.weight,
                             scan_start=scan_start,
-                            n=n,
+                            slots=slots,
                             source=fsm.name,
                             deltas=deltas,
                         )
@@ -661,7 +702,7 @@ class FSMScanner:
                         firing_pos=path.last_consumed,
                         path_weight=new_weight,
                         scan_start=scan_start,
-                        n=n,
+                        slots=slots,
                         source=fsm.name,
                         deltas=deltas,
                     )
