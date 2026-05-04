@@ -36,12 +36,34 @@ from typing import Any
 import yaml
 
 from fsm_parser.blocks import FSMBlock, LexicalBlock, ParserBlock
+from fsm_parser.combinators import (
+    alt,
+    concat,
+    literal,
+    optional,
+    plus,
+    star,
+)
 from fsm_parser.fsm import (
     Always,
+    And,
+    AtSentenceEnd,
+    AtSentenceStart,
+    Capture,
+    CaptureAnchor,
     Condition,
     Emission,
+    EmissionAnchor,
+    FSM,
+    FiringOffset,
     HasAnyLabel,
     HasLabel,
+    Not,
+    Or,
+    ScanEnd,
+    ScanStart,
+    WeightAbove,
+    WeightBelow,
     compile_linear,
 )
 
@@ -56,12 +78,48 @@ def _condition_from_dict(node: dict[str, Any]) -> Condition:
     if "has_any" in node:
         labels = tuple(node["has_any"])
         return HasAnyLabel(labels=labels, min_weight=float(node.get("min_weight", 0.0)))
+    if "weight_above" in node:
+        return WeightAbove(label=node["weight_above"], threshold=float(node["threshold"]))
+    if "weight_below" in node:
+        return WeightBelow(label=node["weight_below"], threshold=float(node["threshold"]))
+    if "not" in node:
+        return Not(_condition_from_dict(node["not"]))
+    if "and" in node:
+        return And(tuple(_condition_from_dict(p) for p in node["and"]))
+    if "or" in node:
+        return Or(tuple(_condition_from_dict(p) for p in node["or"]))
+    if node.get("at_start") is True:
+        return AtSentenceStart()
+    if node.get("at_end") is True:
+        return AtSentenceEnd()
     if node.get("any") is True:
         return Always()
     raise ConfigError(f"unknown condition node: {node!r}")
 
 
+def _anchor_from_dict(node: dict[str, Any] | None) -> EmissionAnchor:
+    if node is None:
+        return FiringOffset(0)
+    kind = node.get("kind", "firing")
+    offset = int(node.get("offset", 0))
+    if kind == "firing":
+        return FiringOffset(offset)
+    if kind == "capture":
+        return CaptureAnchor(name=node["name"], offset=offset)
+    if kind == "scan_start":
+        return ScanStart(offset)
+    if kind == "scan_end":
+        return ScanEnd(offset)
+    raise ConfigError(f"unknown anchor kind: {kind!r}")
+
+
 def _emission_from_dict(node: dict[str, Any]) -> Emission:
+    if "anchor" in node:
+        return Emission(
+            label=node["label"],
+            weight=float(node.get("weight", 1.0)),
+            anchor=_anchor_from_dict(node["anchor"]),
+        )
     return Emission(
         label=node["label"],
         weight=float(node.get("weight", 1.0)),
@@ -69,12 +127,54 @@ def _emission_from_dict(node: dict[str, Any]) -> Emission:
     )
 
 
+def _captures_from_list(items: Any) -> tuple[Capture, ...]:
+    if not items:
+        return ()
+    return tuple(
+        Capture(name=c["name"], kind=c.get("kind", "index")) for c in items
+    )
+
+
+def _machine_from_dict(node: dict[str, Any]) -> FSM:
+    """Compile a combinator-style machine spec into an FSM."""
+    op = node.get("op")
+    name = node.get("name")
+    if op == "literal" or (op is None and "match" in node):
+        return literal(
+            _condition_from_dict(node["match"]),
+            emissions=[_emission_from_dict(e) for e in node.get("emit", [])],
+            captures=_captures_from_list(node.get("capture", ())),
+            weight=float(node.get("weight", 1.0)),
+            name=name,
+        )
+    if op == "concat":
+        return concat(
+            *[_machine_from_dict(m) for m in node["machines"]], name=name
+        )
+    if op == "alt":
+        return alt(*[_machine_from_dict(m) for m in node["machines"]], name=name)
+    if op == "star":
+        return star(_machine_from_dict(node["machine"]), name=name)
+    if op == "plus":
+        return plus(_machine_from_dict(node["machine"]), name=name)
+    if op == "optional":
+        return optional(_machine_from_dict(node["machine"]), name=name)
+    raise ConfigError(f"unknown machine op: {op!r} in node {node!r}")
+
+
 def _fsm_block_from_dict(node: dict[str, Any]) -> FSMBlock:
-    fsms = []
+    fsms: list[FSM] = []
     for fsm_node in node.get("fsms", []):
+        # Two forms: linear "pattern" (legacy) or combinator "machine".
+        if "machine" in fsm_node:
+            machine = _machine_from_dict(fsm_node["machine"])
+            if "name" in fsm_node:
+                machine.name = fsm_node["name"]
+            fsms.append(machine)
+            continue
         if "pattern" not in fsm_node:
             raise ConfigError(
-                f"FSM {fsm_node.get('name')!r} requires a 'pattern' (linear form)"
+                f"FSM {fsm_node.get('name')!r} requires a 'pattern' or 'machine'"
             )
         conditions = [_condition_from_dict(c) for c in fsm_node["pattern"]]
         emissions = [_emission_from_dict(e) for e in fsm_node.get("emit", [])]

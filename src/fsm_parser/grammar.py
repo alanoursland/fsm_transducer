@@ -7,7 +7,10 @@ verb reading after ``can``, and toward the noun reading after ``the``.
 from __future__ import annotations
 
 from fsm_parser.blocks import FSMBlock, LexicalBlock
+from fsm_parser.combinators import concat, literal, optional, star
 from fsm_parser.fsm import (
+    Capture,
+    CaptureAnchor,
     Emission,
     HasAnyLabel,
     HasLabel,
@@ -73,33 +76,62 @@ def context_block() -> FSMBlock:
 
 
 def phrase_block() -> FSMBlock:
-    np_det_noun = compile_linear(
-        "np_det_noun",
-        [HasLabel("POS:DET", 0.3), HasLabel("POS:NOUN", 0.3)],
-        [
-            Emission(label="PHRASE:NP_START", weight=0.7, offset=-1),
-            Emission(label="PHRASE:NP_HEAD", weight=0.8, offset=0),
-            Emission(label="PHRASE:NP_END", weight=0.7, offset=0),
-        ],
+    # Built compositionally: optional adjectives, capture-anchored start label.
+    np_det_noun = concat(
+        literal(
+            HasLabel("POS:DET", 0.3),
+            captures=[Capture("det")],
+        ),
+        star(literal(HasLabel("POS:ADJ", 0.3))),
+        literal(
+            HasLabel("POS:NOUN", 0.3),
+            captures=[Capture("head")],
+            emissions=[
+                Emission("PHRASE:NP_START", 0.7, anchor=CaptureAnchor("det")),
+                Emission("PHRASE:NP_HEAD", 0.8),
+                Emission("PHRASE:NP_END", 0.7),
+            ],
+        ),
+        name="np_det_noun",
     )
-    np_pron = compile_linear(
-        "np_pron",
-        [HasLabel("POS:PRON", 0.3)],
-        [
-            Emission(label="PHRASE:NP_START", weight=0.6, offset=0),
-            Emission(label="PHRASE:NP_HEAD", weight=0.6, offset=0),
-            Emission(label="PHRASE:NP_END", weight=0.6, offset=0),
+    np_pron = literal(
+        HasLabel("POS:PRON", 0.3),
+        emissions=[
+            Emission("PHRASE:NP_START", 0.6),
+            Emission("PHRASE:NP_HEAD", 0.6),
+            Emission("PHRASE:NP_END", 0.6),
         ],
+        name="np_pron",
     )
-    vp_verb = compile_linear(
-        "vp_verb",
-        [HasLabel("POS:VERB", 0.3)],
-        [
-            Emission(label="PHRASE:VP_HEAD", weight=0.7, offset=0),
-            Emission(label="ROLE:PREDICATE", weight=0.5, offset=0),
+    vp_verb = literal(
+        HasLabel("POS:VERB", 0.3),
+        emissions=[
+            Emission("PHRASE:VP_HEAD", 0.7),
+            Emission("ROLE:PREDICATE", 0.5),
         ],
+        name="vp_verb",
     )
     return FSMBlock(name="phrases", fsms=[np_det_noun, np_pron, vp_verb])
+
+
+def dependency_block() -> FSMBlock:
+    """Emit pointer-style SUBJECT_OF labels using captures."""
+    subject_of = concat(
+        literal(HasLabel("PHRASE:NP_HEAD", 0.3), captures=[Capture("head")]),
+        literal(
+            HasLabel("PHRASE:VP_HEAD", 0.3),
+            captures=[Capture("verb")],
+            emissions=[
+                Emission(
+                    "DEP:nsubj:{verb}",
+                    0.5,
+                    anchor=CaptureAnchor("head"),
+                ),
+            ],
+        ),
+        name="subject_of",
+    )
+    return FSMBlock(name="dependencies", fsms=[subject_of])
 
 
 def role_block() -> FSMBlock:
@@ -122,7 +154,7 @@ def build_default_parser() -> Parser:
             [lexicon()],
             [context_block()],
             [phrase_block()],
-            [role_block()],
+            [role_block(), dependency_block()],
         ],
         config=ParserConfig(decay=0.95, min_weight=0.005, max_labels_per_token=32),
     )

@@ -1,0 +1,37 @@
+layers:
+  - blocks:
+      - name: lexicon
+        type: lexical
+        entries:
+          the: { "POS:DET": 1.0 }
+          big: { "POS:ADJ": 1.0 }
+          red: { "POS:ADJ": 1.0 }
+          dog: { "POS:NOUN": 1.0 }
+          cat: { "POS:NOUN": 1.0 }
+          ran: { "POS:VERB": 1.0 }
+  - blocks:
+      - name: phrases
+        type: fsm
+        fsms:
+          - name: np_with_optional_adjs
+            machine:
+              op: concat
+              machines:
+                - op: literal
+                  match: { has: "POS:DET", min_weight: 0.3 }
+                  capture:
+                    - { name: det }
+                - op: star
+                  machine:
+                    op: literal
+                    match: { has: "POS:ADJ", min_weight: 0.3 }
+                - op: literal
+                  match: { has: "POS:NOUN", min_weight: 0.3 }
+                  capture:
+                    - { name: head }
+                  emit:
+                    - label: "PHRASE:NP_HEAD"
+                      weight: 0.8
+                    - label: "PHRASE:NP_START"
+                      weight: 0.7
+                      anchor: { kind: capture, name: det }
