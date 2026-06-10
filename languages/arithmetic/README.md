@@ -58,3 +58,19 @@ unrolled. Inputs nested deeper than K are not crashes; they produce
 * **Determinism note.** Every machine in this language is deterministic
   on well-formed input, so the engine's eager-emission semantics
   produce no spurious labels except where the spec says so (errors).
+* **Output contract.** Instruction operands are references into the
+  label field, so the parser's output is *field + program*, not a
+  self-contained stream. Resolution policy in `instructions.yaml`.
+
+## Deliberate exclusions
+
+Two ideas from `notes/labels_as_universal_representation.md` are
+intentionally **not** used here, to keep the first validated language
+small:
+
+* fixed-width (8-bit) label parameters with carry-chained families —
+  K = 3 with explicit depth states is the right size for hand
+  validation; and
+* char-level tokenization-as-parsing — sketched as a future layer 0 at
+  the bottom of `lexicon.yaml`, but this language assumes pre-tokenized
+  input.
