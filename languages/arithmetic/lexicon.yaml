@@ -1,0 +1,31 @@
+# Layer 0: token classes for arithmetic.
+#
+# Assumes pre-tokenized input (one slot per number or symbol). A char->token
+# assembly layer using the existing shape-changing machinery can precede
+# this; it is out of scope for this definition.
+#
+# Every slot keeps its identity labels (TEXT:<surface>) from
+# initialization; the lexicon adds class labels.
+
+classes:
+  NUM:
+    match: { shape: digits }      # every char is a digit
+    also_emit:
+      - VAL:{TEXT}                # parameterized: VAL family carries the literal
+  OP:ADD: { match: { text: "+" } }
+  OP:SUB: { match: { text: "-" } }
+  OP:MUL: { match: { text: "*" } }
+  OP:DIV: { match: { text: "/" } }
+  LPAREN: { match: { text: "(" } }
+  RPAREN: { match: { text: ")" } }
+
+# Convenience super-classes (emitted alongside the specific class):
+super_classes:
+  OPERATOR: [OP:ADD, OP:SUB, OP:MUL, OP:DIV]
+  ADDITIVE: [OP:ADD, OP:SUB]
+  MULTIPLICATIVE: [OP:MUL, OP:DIV]
+  PAREN: [LPAREN, RPAREN]
+
+# Anything matching no class:
+fallback:
+  emit: [ERROR:UNKNOWN_TOKEN]

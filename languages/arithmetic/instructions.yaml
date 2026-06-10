@@ -1,0 +1,48 @@
+# Target instruction set: a four-function stack machine.
+#
+# The parser GENERATES this program; it never executes it. The program is
+# read off the final label field by the projection rule below.
+
+instruction_set:
+  PUSH:
+    operands: 1
+    semantics: "push operand onto the stack"
+  ADD: { operands: 0, semantics: "pop b, pop a, push a+b" }
+  SUB: { operands: 0, semantics: "pop b, pop a, push a-b" }
+  MUL: { operands: 0, semantics: "pop b, pop a, push a*b" }
+  DIV: { operands: 0, semantics: "pop b, pop a, push a/b" }
+
+# --- Operand references ------------------------------------------------------
+# Operands are symbolic references into the label field, resolved when the
+# program is read off (or later -- the program remains meaningful as a
+# symbolic object):
+#
+#   !{FAMILY}        the parameter of this slot's strongest FAMILY label
+#                    e.g. PUSH(!{VAL}) on a slot carrying VAL:42 -> PUSH 42
+#   !{FAMILY@id}     the same, on an explicit slot id (cross-slot reference)
+#   !{token:3}       the slot itself (lets an instruction name a token,
+#                    or a collection via a span: !{token:3..token:5})
+#
+# This keeps instructions decoupled from literal values: the instruction
+# stream says *where the value lives*, not what it is. A later layer (or a
+# different label family entirely, e.g. an embedding-like family) can
+# change what !{VAL} resolves to without touching the emitters.
+
+# --- Projection rule ---------------------------------------------------------
+# program = []
+# for slot in token order:
+#     for exec_label in slot's EXEC.* labels,
+#         sorted by (rank, depth descending, operator position ascending):
+#             append instruction
+#
+# A slot with no EXEC labels contributes nothing (parens, operators --
+# operator slots carry the *classification* OP:MUL etc., but their EXEC
+# instruction lives on the slot where the operation completes).
+
+# --- Validity conditions (checkable by hand or by a 10-line VM) --------------
+# 1. Executing the program on an empty stack leaves exactly one value.
+# 2. That value equals the arithmetic result of the input expression.
+# 3. The number of PUSH instructions equals the number of NUM tokens;
+#    the number of op instructions equals the number of operator tokens.
+# 4. If any ERROR:* label is present, conditions 1-3 are not required;
+#    the program is best-effort over the well-formed prefix.
