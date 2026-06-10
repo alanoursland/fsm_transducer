@@ -16,7 +16,6 @@ from typing import Tuple
 
 from fsm_parser.labels import LabelBag
 
-
 SlotId = str
 
 

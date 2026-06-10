@@ -2,7 +2,6 @@
 
 import pytest
 
-from fsm_parser.labels import LabelBag
 from fsm_parser.slots import Slot, SourceSpan
 from fsm_parser.tokens import (
     ParserState,

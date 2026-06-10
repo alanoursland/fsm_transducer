@@ -9,18 +9,15 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from typing import Iterable
 
-from fsm_parser.labels import LabelBag
 from fsm_parser.slots import (
     ProvenanceEdge,
     Slot,
-    SourceSpan,
     SlotId,
+    SourceSpan,
     Token,  # re-export
     slot_sort_key,
 )
-
 
 __all__ = [
     "Token",

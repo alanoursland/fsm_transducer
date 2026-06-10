@@ -10,13 +10,12 @@ from __future__ import annotations
 from typing import Iterable
 
 from fsm_parser.fsm import (
+    FSM,
     Capture,
     Condition,
     Emission,
-    FSM,
     FSMBuilder,
     StateId,
-    StateInfo,
     Transition,
 )
 

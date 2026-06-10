@@ -1,0 +1,40 @@
+# Example grammar using the regex front-end (fsm_parser.regex_compile).
+#
+# Atoms are label conditions: <POS:DET> matches a slot whose POS:DET
+# weight is positive; <POS:DET@0.3> requires weight > 0.3. Named groups
+# (?P<NP> ...) emit NP / NP_START / NP_END onto the matched slots.
+layers:
+  - blocks:
+      - name: pos_dictionary
+        type: lexical
+        entries:
+          the: { "POS:DET": 0.9 }
+          a: { "POS:DET": 0.9 }
+          big: { "POS:ADJ": 0.8 }
+          old: { "POS:ADJ": 0.7 }
+          red: { "POS:ADJ": 0.8 }
+          cat: { "POS:NOUN": 0.8 }
+          dog: { "POS:NOUN": 0.8 }
+          mat: { "POS:NOUN": 0.8 }
+          book: { "POS:NOUN": 0.6, "POS:VERB": 0.4 }
+          sat: { "POS:VERB": 0.8 }
+          saw: { "POS:VERB": 0.7 }
+          "on": { "POS:PREP": 0.9 }  # quoted: bare `on` is YAML boolean
+          with: { "POS:PREP": 0.9 }
+  - blocks:
+      - name: phrases
+        type: fsm
+        fsms:
+          - name: noun_phrase
+            regex: "<POS:DET@0.2> (?P<NP> <POS:ADJ@0.2>* <POS:NOUN@0.2>)"
+            group_weight: 0.8
+          - name: prep_phrase
+            regex: "(?P<PP> <POS:PREP@0.2> <POS:DET@0.2> <POS:ADJ@0.2>* <POS:NOUN@0.2>)"
+            group_weight: 0.6
+  - blocks:
+      - name: roles
+        type: fsm
+        fsms:
+          - name: subject_verb
+            regex: "(?P<SUBJ> <NP_END@0.1>) <POS:VERB@0.2>"
+            group_weight: 0.7

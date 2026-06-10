@@ -10,7 +10,7 @@ from fsm_parser.projection import (
     project_non_overlapping,
     project_spans,
 )
-from fsm_parser.slots import Slot, SourceSpan
+from fsm_parser.slots import Slot
 from fsm_parser.tokens import ParserState
 
 

@@ -3,7 +3,6 @@ from fsm_parser.fsm import (
     FSMBuilder,
     FSMScanner,
     HasLabel,
-    StateInfo,
 )
 from fsm_parser.tokens import initialize_state
 

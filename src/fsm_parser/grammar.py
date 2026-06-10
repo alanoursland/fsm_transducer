@@ -7,7 +7,7 @@ verb reading after ``can``, and toward the noun reading after ``the``.
 from __future__ import annotations
 
 from fsm_parser.blocks import FSMBlock, LexicalBlock
-from fsm_parser.combinators import concat, literal, optional, star
+from fsm_parser.combinators import concat, literal, star
 from fsm_parser.fsm import (
     Capture,
     CaptureAnchor,

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Iterable, Protocol
+from typing import Protocol
 
 from fsm_parser.fsm import FSM, FSMScanner
 from fsm_parser.labels import LabelDelta, RepresentationDelta

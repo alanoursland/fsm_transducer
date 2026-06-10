@@ -152,14 +152,29 @@ sentences, gold POS stripped or kept per experiment).
 
 ## Sequencing and effort
 
-| # | Workstream | Size | Depends on |
-|---|-----------|------|------------|
-| 1 | Packaging/CI | S | — |
-| 2 | Single-pass transduce | M | 1 |
-| 3 | Regex front-end + minimizer port | L | 1 |
-| 4 | Determinization + analyze() | M | 3 |
-| 5 | Real grammar + eval | L | 3 |
-| 6 | Property/stress tests | M | 2, 3 |
+| # | Workstream | Size | Depends on | Status |
+|---|-----------|------|------------|--------|
+| 1 | Packaging/CI | S | — | done |
+| 2 | Single-pass transduce | M | 1 | done |
+| 3 | Regex front-end + minimizer port | L | 1 | done |
+| 4 | Determinization + analyze() | M | 3 | done |
+| 5 | Real grammar + eval | L | 3 | example grammar done; corpus eval open |
+| 6 | Property/stress tests | M | 2, 3 | oracle + bound tests done; hypothesis fuzzing open |
+
+Implementation notes (deviations from the plan as written):
+
+* Group START/END marking is implemented with hidden capture registers
+  (``Capture(mode="first")`` was added to the engine) plus an exit-state
+  ``on_enter`` emission, not with static first/last transition sets — the
+  static sets mislabel loop iterations (``<ADJ>* <NOUN>`` would mark every
+  adjective as a possible start). The capture approach gives exact span
+  endpoints through loops and emits nothing for zero-width matches.
+* ``transduce()`` keeps ``scan_start`` in the path merge key so its delta
+  multiset is exactly ``scan()``'s; the practical win is one input pass and
+  immediate death of failed paths, verified by a frontier-bound test.
+* Minimal-DFA sizes are measured over the *minterm* alphabet, which is
+  larger than the textbook exclusive alphabet (a slot can satisfy several
+  conditions at once); tests document this.
 
 Workstreams 2 and 3 are independent and can proceed in parallel. Workstream 5
 is the payoff and should not slip behind further engine work: after 1–3, the
