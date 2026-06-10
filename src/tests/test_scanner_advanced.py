@@ -3,7 +3,6 @@
 from fsm_parser.combinators import alt, concat, literal, star
 from fsm_parser.fsm import (
     Emission,
-    FSMBuilder,
     FSMScanner,
     HasLabel,
 )

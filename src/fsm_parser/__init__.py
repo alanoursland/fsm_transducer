@@ -1,11 +1,88 @@
 """Stacked weighted FSM parser."""
 
+from fsm_parser.analysis import (
+    FSMAnalysis,
+    accepts,
+    analyze,
+    determinize,
+    is_plain,
+    minimize,
+)
+from fsm_parser.blocks import (
+    FSMBlock,
+    LexicalBlock,
+    ParserBlock,
+)
+from fsm_parser.char_blocks import (
+    AmbiguousShiftRightReducer,
+    CharClassBlock,
+    SimpleCharToTokenReducer,
+)
+from fsm_parser.combinators import (
+    alt,
+    call,
+    concat,
+    epsilon,
+    literal,
+    optional,
+    plus,
+    repeat,
+    star,
+)
+from fsm_parser.fsm import (
+    FSM,
+    Always,
+    And,
+    AtSentenceEnd,
+    AtSentenceStart,
+    Capture,
+    CaptureAnchor,
+    CaptureValue,
+    Condition,
+    Emission,
+    EmissionAnchor,
+    FiringOffset,
+    FSMBuilder,
+    FSMScanner,
+    HasAllLabels,
+    HasAnyLabel,
+    HasLabel,
+    LabelPredicate,
+    Never,
+    Not,
+    Or,
+    ScanContext,
+    ScanEnd,
+    ScanStart,
+    StateId,
+    StateInfo,
+    Transition,
+    WeightAbove,
+    WeightBelow,
+    compile_linear,
+)
 from fsm_parser.labels import (
     AddLabel,
     AddSlot,
     LabelBag,
     LabelDelta,
     RepresentationDelta,
+)
+from fsm_parser.normalization import (
+    NormalizationConfig,
+    apply_deltas,
+    normalize,
+    normalize_state,
+)
+from fsm_parser.pipeline import LayerTrace, Parser, ParserConfig
+from fsm_parser.regex_compile import RegexError, compile_regex, parse_regex
+from fsm_parser.semirings import (
+    LegacyMul,
+    LogSemiring,
+    ProductReal,
+    Semiring,
+    TropicalMax,
+    TropicalMin,
 )
 from fsm_parser.slots import (
     ProvenanceEdge,
@@ -20,74 +97,6 @@ from fsm_parser.tokens import (
     initialize_state,
     tokenize,
 )
-from fsm_parser.fsm import (
-    StateId,
-    Capture,
-    CaptureValue,
-    StateInfo,
-    ScanContext,
-    Emission,
-    EmissionAnchor,
-    FiringOffset,
-    CaptureAnchor,
-    ScanStart,
-    ScanEnd,
-    Condition,
-    HasLabel,
-    HasAnyLabel,
-    HasAllLabels,
-    Always,
-    Never,
-    Not,
-    And,
-    Or,
-    WeightAbove,
-    WeightBelow,
-    AtSentenceStart,
-    AtSentenceEnd,
-    LabelPredicate,
-    Transition,
-    FSM,
-    FSMBuilder,
-    FSMScanner,
-    compile_linear,
-)
-from fsm_parser.semirings import (
-    Semiring,
-    ProductReal,
-    TropicalMin,
-    TropicalMax,
-    LogSemiring,
-    LegacyMul,
-)
-from fsm_parser.combinators import (
-    literal,
-    epsilon,
-    concat,
-    alt,
-    star,
-    plus,
-    optional,
-    repeat,
-    call,
-)
-from fsm_parser.blocks import (
-    ParserBlock,
-    LexicalBlock,
-    FSMBlock,
-)
-from fsm_parser.char_blocks import (
-    AmbiguousShiftRightReducer,
-    CharClassBlock,
-    SimpleCharToTokenReducer,
-)
-from fsm_parser.normalization import (
-    NormalizationConfig,
-    apply_deltas,
-    normalize,
-    normalize_state,
-)
-from fsm_parser.pipeline import LayerTrace, Parser, ParserConfig
 
 __all__ = [
     "LabelBag",
@@ -162,4 +171,13 @@ __all__ = [
     "apply_deltas",
     "Parser",
     "ParserConfig",
+    "RegexError",
+    "compile_regex",
+    "parse_regex",
+    "FSMAnalysis",
+    "accepts",
+    "analyze",
+    "determinize",
+    "is_plain",
+    "minimize",
 ]

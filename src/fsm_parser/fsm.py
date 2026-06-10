@@ -22,11 +22,10 @@ import re
 from dataclasses import dataclass, field
 from typing import Any, Callable, Iterable, Protocol, Sequence
 
-from fsm_parser.labels import LabelBag, LabelDelta
+from fsm_parser.labels import LabelDelta
 from fsm_parser.semirings import LegacyMul, ProductReal, Semiring
 from fsm_parser.slots import Slot, SlotId
 from fsm_parser.tokens import ParserState, Token
-
 
 # --- States, captures, emissions, anchors -----------------------------------
 
@@ -61,10 +60,16 @@ class CaptureValue:
 
 @dataclass(frozen=True)
 class Capture:
-    """Bind a name to information about the slot a transition consumes."""
+    """Bind a name to information about the slot a transition consumes.
+
+    ``mode="overwrite"`` (default) replaces the register on every firing;
+    ``mode="first"`` sets it only if absent, so loops keep the earliest
+    value (used for group-start tagging).
+    """
 
     name: str
     kind: str = "index"  # "index" | "slot_id" | "top_label" | "source_span"
+    mode: str = "overwrite"  # "overwrite" | "first"
 
 
 @dataclass
@@ -487,12 +492,13 @@ class _Path:
     weight: float
     captures: dict[str, CaptureValue]
     last_consumed: int | None = None
+    scan_start: int = 0
 
     def captures_sig(self) -> tuple[tuple[str, CaptureValue], ...]:
         return tuple(sorted(self.captures.items()))
 
     def merge_key(self) -> tuple:
-        return (self.state, self.captures_sig())
+        return (self.scan_start, self.state, self.captures_sig())
 
 
 def _capture_from_slot(cap: Capture, slot: Slot, pos: int) -> CaptureValue:
@@ -560,6 +566,90 @@ class FSMScanner:
             self._scan_from(fsm, slots, start, n, deltas)
         return deltas
 
+    def transduce(
+        self,
+        fsm: FSM,
+        state: ParserState,
+        *,
+        stream: str = "token",
+        slot_filter: Callable[[Slot], bool] | None = None,
+    ) -> list[LabelDelta]:
+        """Single left-to-right pass covering all start offsets.
+
+        Equivalent to ``scan()`` up to delta ordering: at each position a
+        fresh start-state path is injected into the live frontier, so every
+        start offset is still explored, but the input is traversed once and
+        dead paths are dropped as soon as they fail.
+
+        Bound: paths merge on ``(scan_start, state, captures)``, so the
+        frontier after position ``i`` holds at most
+        ``(i + 1) * |Q| * |capture signatures|`` paths; for capture-free
+        machines whose live paths die within ``k`` positions (every acyclic
+        machine; any machine whose conditions eventually reject), the
+        frontier is ``O(k * |Q|)`` — independent of input length.
+        """
+        deltas: list[LabelDelta] = []
+        slots = state.stream(stream)
+        if slot_filter is not None:
+            slots = [s for s in slots if slot_filter(s)]
+        n = len(slots)
+        frontier: list[_Path] = []
+        for pos in range(n):
+            initial = _Path(
+                state=fsm.start,
+                weight=self.semiring.one,
+                captures={},
+                last_consumed=None,
+                scan_start=pos,
+            )
+            frontier = frontier + self._epsilon_close(
+                [initial], fsm, deltas, slots=slots
+            )
+            frame = slots[pos]
+            successors: list[_Path] = []
+            for path in frontier:
+                ctx = ScanContext(
+                    scan_start=path.scan_start,
+                    n=n,
+                    pos=pos,
+                    last_consumed=path.last_consumed,
+                    captures=path.captures,
+                )
+                for tr in fsm.transitions_from(path.state):
+                    if tr.epsilon:
+                        continue
+                    if not tr.matches(frame, ctx):
+                        continue
+                    new_captures = dict(path.captures)
+                    for cap in tr.captures:
+                        if cap.mode == "first" and cap.name in new_captures:
+                            continue
+                        new_captures[cap.name] = _capture_from_slot(cap, frame, pos)
+                    new_weight = self.semiring.times(path.weight, tr.weight)
+                    for em in tr.emissions:
+                        self._fire(
+                            em,
+                            new_captures,
+                            firing_pos=pos,
+                            path_weight=new_weight,
+                            scan_start=path.scan_start,
+                            slots=slots,
+                            source=fsm.name,
+                            deltas=deltas,
+                        )
+                    successors.append(
+                        _Path(
+                            state=tr.target,
+                            weight=new_weight,
+                            captures=new_captures,
+                            last_consumed=pos,
+                            scan_start=path.scan_start,
+                        )
+                    )
+            successors = self._merge(successors)
+            frontier = self._epsilon_close(successors, fsm, deltas, slots=slots)
+        return deltas
+
     # -- internals -----------------------------------------------------------
 
     def _fire(
@@ -601,10 +691,9 @@ class FSMScanner:
             weight=self.semiring.one,
             captures={},
             last_consumed=None,
+            scan_start=start,
         )
-        frontier = self._epsilon_close(
-            [initial], fsm, deltas, scan_start=start, slots=slots
-        )
+        frontier = self._epsilon_close([initial], fsm, deltas, slots=slots)
 
         for pos in range(start, n):
             ctx.pos = pos
@@ -619,6 +708,8 @@ class FSMScanner:
                         continue
                     new_captures = dict(path.captures)
                     for cap in tr.captures:
+                        if cap.mode == "first" and cap.name in new_captures:
+                            continue
                         new_captures[cap.name] = _capture_from_slot(cap, frame, pos)
                     new_weight = self.semiring.times(path.weight, tr.weight)
                     for em in tr.emissions:
@@ -638,12 +729,11 @@ class FSMScanner:
                             weight=new_weight,
                             captures=new_captures,
                             last_consumed=pos,
+                            scan_start=start,
                         )
                     )
             successors = self._merge(successors)
-            frontier = self._epsilon_close(
-                successors, fsm, deltas, scan_start=start, slots=slots
-            )
+            frontier = self._epsilon_close(successors, fsm, deltas, slots=slots)
             if not frontier:
                 break
 
@@ -653,7 +743,6 @@ class FSMScanner:
         fsm: FSM,
         deltas: list[LabelDelta],
         *,
-        scan_start: int,
         slots: "Sequence[Slot]",
     ) -> list[_Path]:
         seen: set[tuple] = set()
@@ -673,7 +762,7 @@ class FSMScanner:
                         path.captures,
                         firing_pos=path.last_consumed,
                         path_weight=path.weight,
-                        scan_start=scan_start,
+                        scan_start=path.scan_start,
                         slots=slots,
                         source=fsm.name,
                         deltas=deltas,
@@ -685,7 +774,7 @@ class FSMScanner:
                             path.captures,
                             firing_pos=path.last_consumed,
                             path_weight=path.weight,
-                            scan_start=scan_start,
+                            scan_start=path.scan_start,
                             slots=slots,
                             source=fsm.name,
                             deltas=deltas,
@@ -701,7 +790,7 @@ class FSMScanner:
                         path.captures,
                         firing_pos=path.last_consumed,
                         path_weight=new_weight,
-                        scan_start=scan_start,
+                        scan_start=path.scan_start,
                         slots=slots,
                         source=fsm.name,
                         deltas=deltas,
@@ -712,6 +801,7 @@ class FSMScanner:
                         weight=new_weight,
                         captures=dict(path.captures),
                         last_consumed=path.last_consumed,
+                        scan_start=path.scan_start,
                     )
                 )
         return self._merge(result)

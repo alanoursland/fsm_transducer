@@ -8,7 +8,7 @@ token stream while leaving the char stream untouched.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Iterable
 
 from fsm_parser.labels import (
@@ -19,7 +19,6 @@ from fsm_parser.labels import (
 )
 from fsm_parser.slots import ProvenanceEdge, Slot, SourceSpan
 from fsm_parser.tokens import ParserState
-
 
 _OPERATOR_LABELS = {
     "+": "TOKEN:PLUS",
@@ -136,7 +135,7 @@ class SimpleCharToTokenReducer:
                 deltas.append(self._make_token(state, chars[start:i], "TOKEN:NUMBER"))
                 continue
 
-            label = _OPERATOR_LABELS.get(ch, f"TOKEN:UNKNOWN")
+            label = _OPERATOR_LABELS.get(ch, "TOKEN:UNKNOWN")
             deltas.append(self._make_token(state, [slot], label))
             i += 1
 

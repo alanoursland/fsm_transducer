@@ -8,7 +8,6 @@ from fsm_parser import (
     SimpleCharToTokenReducer,
     initialize_char_state,
 )
-from fsm_parser.normalization import NormalizationConfig
 from fsm_parser.slots import SourceSpan
 
 

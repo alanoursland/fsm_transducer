@@ -45,6 +45,7 @@ from fsm_parser.combinators import (
     star,
 )
 from fsm_parser.fsm import (
+    FSM,
     Always,
     And,
     AtSentenceEnd,
@@ -54,7 +55,6 @@ from fsm_parser.fsm import (
     Condition,
     Emission,
     EmissionAnchor,
-    FSM,
     FiringOffset,
     HasAnyLabel,
     HasLabel,
@@ -66,6 +66,7 @@ from fsm_parser.fsm import (
     WeightBelow,
     compile_linear,
 )
+from fsm_parser.regex_compile import compile_regex
 
 
 class ConfigError(ValueError):
@@ -165,7 +166,18 @@ def _machine_from_dict(node: dict[str, Any]) -> FSM:
 def _fsm_block_from_dict(node: dict[str, Any]) -> FSMBlock:
     fsms: list[FSM] = []
     for fsm_node in node.get("fsms", []):
-        # Two forms: linear "pattern" (legacy) or combinator "machine".
+        # Three forms: linear "pattern" (legacy), combinator "machine",
+        # or a "regex" string (see fsm_parser.regex_compile for syntax).
+        if "regex" in fsm_node:
+            fsms.append(
+                compile_regex(
+                    fsm_node["regex"],
+                    name=fsm_node.get("name"),
+                    group_weight=float(fsm_node.get("group_weight", 1.0)),
+                    emit=[_emission_from_dict(e) for e in fsm_node.get("emit", [])],
+                )
+            )
+            continue
         if "machine" in fsm_node:
             machine = _machine_from_dict(fsm_node["machine"])
             if "name" in fsm_node:

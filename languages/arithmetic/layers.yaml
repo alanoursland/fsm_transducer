@@ -1,0 +1,127 @@
+# Machine specifications, layer by layer. Declarative: states, conditions,
+# and emissions are described at spec level, not in executable form.
+#
+# K (max nesting depth) = 3 throughout.
+
+# ---------------------------------------------------------------------------
+# Layer 1: depth tracking (one anchored machine, the only "global" FSM)
+# ---------------------------------------------------------------------------
+- layer: depth
+  machines:
+    - name: depth_tracker
+      anchored: true            # runs once, from token 0
+      states: [d0, d1, d2, d3, overflow]
+      start: d0
+      accept: [d0]              # ending elsewhere => unbalanced
+      transitions:
+        # Convention: parens belong to the depth they open/close, i.e.
+        # '(' and its matching ')' carry the *inner* depth.
+        - { from: d0, on: LPAREN, to: d1, emit: ["DEPTH:1", "GROUP_START:1"] }
+        - { from: d1, on: LPAREN, to: d2, emit: ["DEPTH:2", "GROUP_START:2"] }
+        - { from: d2, on: LPAREN, to: d3, emit: ["DEPTH:3", "GROUP_START:3"] }
+        - { from: d3, on: LPAREN, to: overflow, emit: ["ERROR:DEPTH_EXCEEDED"] }
+        - { from: d1, on: RPAREN, to: d0, emit: ["DEPTH:1", "GROUP_END:1"] }
+        - { from: d2, on: RPAREN, to: d1, emit: ["DEPTH:2", "GROUP_END:2"] }
+        - { from: d3, on: RPAREN, to: d2, emit: ["DEPTH:3", "GROUP_END:3"] }
+        - { from: d0, on: RPAREN, to: d0, emit: ["ERROR:UNBALANCED_CLOSE"] }
+        - { from: d0, on: not PAREN, to: d0, emit: ["DEPTH:0"] }
+        - { from: d1, on: not PAREN, to: d1, emit: ["DEPTH:1"] }
+        - { from: d2, on: not PAREN, to: d2, emit: ["DEPTH:2"] }
+        - { from: d3, on: not PAREN, to: d3, emit: ["DEPTH:3"] }
+        - { from: overflow, on: any, to: overflow, emit: ["DEPTH:OVERFLOW"] }
+      on_end:
+        # If the run ends in d1..d3: emit ERROR:UNBALANCED_OPEN on the
+        # final token. Downstream layers still process what they can.
+        not_accepting: ["ERROR:UNBALANCED_OPEN"]
+      notes: >
+        Deterministic; 5 states; the validator and the pushdown-unroller
+        in one. Everything below is gated on its DEPTH/GROUP labels.
+
+# ---------------------------------------------------------------------------
+# Layer 2: well-formedness within a depth (schema, one instance per d)
+# ---------------------------------------------------------------------------
+- layer: shape_check
+  schema: forall d in 0..3
+  machines:
+    - name: expr_shape@{d}
+      # Matches a maximal depth-d segment and verifies operand/operator
+      # alternation. An "operand at depth d" is either a NUM with DEPTH:d
+      # or an entire bracketed group (GROUP_START:{d+1} ... GROUP_END:{d+1}),
+      # skipped as an opaque unit.
+      regex_sketch: >
+        operand := <NUM & DEPTH:d>
+                 | <GROUP_START:{d+1}> <not DEPTH:d>* <GROUP_END:{d+1}>
+        expr    := operand ( <OPERATOR & DEPTH:d> operand )*
+      emit:
+        on_violation:
+          # e.g. two operators adjacent, operator at segment edge
+          - ERROR:MALFORMED@{d} on the offending token
+      notes: >
+        Pure acceptor plus error emissions; keeps later layers honest.
+        Independent instances per depth; an error at depth 2 does not
+        block labeling at depths 0-1.
+
+# ---------------------------------------------------------------------------
+# Layer 3: multiplicative grouping (schema, one instance per d)
+# ---------------------------------------------------------------------------
+- layer: terms
+  schema: forall d in 0..3
+  machines:
+    - name: term_marker@{d}
+      # A "term" is a maximal run of operands joined by * or / at depth d.
+      # Single operands are degenerate terms.
+      regex_sketch: >
+        (?P<TERM_{d}> operand ( <MULTIPLICATIVE & DEPTH:d> operand )* )
+      emit:
+        - TERM_START:{d} on first token of span
+        - TERM_END:{d}   on last token of span
+      notes: >
+        Uses the group-tagging mechanism (hidden first/last registers).
+        After this layer, additive structure at depth d sees only:
+        TERM ( +|- TERM )*.
+
+# ---------------------------------------------------------------------------
+# Layer 4: instruction emission (two schemas per depth)
+# ---------------------------------------------------------------------------
+- layer: emit
+  machines:
+    - name: push_emitter
+      # Depth-independent: every number pushes itself.
+      regex_sketch: "(?P<n> <NUM>)"
+      emit:
+        - label: "EXEC.0:PUSH(!{VAL})"
+          anchor: n
+  schema: forall d in 0..3
+  machines_per_depth:
+    - name: mul_emitter@{d}
+      # Left-associative chain: each multiplicative operator fires at the
+      # last token of its immediate right operand.
+      regex_sketch: >
+        operand (?P<op> <MULTIPLICATIVE & DEPTH:d>) (?P<rhs> operand)
+        ...repeating along the chain
+      emit:
+        - label: "EXEC.1:MUL"   # or EXEC.1:DIV, per op class
+          anchor: last token of rhs
+    - name: add_emitter@{d}
+      # Additive operators fire at the last token of their right TERM
+      # (i.e., at the TERM_END:{d} token), after any multiplicative
+      # instruction already placed there -- hence rank 2.
+      regex_sketch: >
+        term (?P<op> <ADDITIVE & DEPTH:d>) (?P<rhs> term)
+        where term := <TERM_START:{d}> ... <TERM_END:{d}>
+      emit:
+        - label: "EXEC.2:ADD"   # or EXEC.2:SUB, per op class
+          anchor: rhs TERM_END token
+
+# ---------------------------------------------------------------------------
+# Rank discipline (same-slot instruction ordering)
+# ---------------------------------------------------------------------------
+# Multiple EXEC labels on one slot are read off by rank:
+#   rank 0: PUSH (the slot's own value)
+#   rank 1: multiplicative ops completing at this slot
+#   rank 2: additive ops completing at this slot
+#   ties within a rank: deeper depth first, then leftmost operator first.
+# This is total and deterministic, so the projection is a sort, not a
+# search. Rationale: an instruction completes innermost-first and
+# tightest-binding-first; the rank encodes exactly the shunting-yard pop
+# order.

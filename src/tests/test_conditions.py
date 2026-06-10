@@ -1,6 +1,6 @@
+from fsm_parser.combinators import literal
 from fsm_parser.fsm import (
     And,
-    AtSentenceEnd,
     AtSentenceStart,
     Emission,
     FSMScanner,
@@ -13,7 +13,6 @@ from fsm_parser.fsm import (
     WeightBelow,
     compile_linear,
 )
-from fsm_parser.combinators import literal
 from fsm_parser.tokens import initialize_state
 
 

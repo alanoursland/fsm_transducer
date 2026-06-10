@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from fsm_parser.labels import (
-    AddSlot,
     FORGOTTEN,
+    AddSlot,
     LabelBag,
     LabelDelta,
     RepresentationDelta,
