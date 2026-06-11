@@ -114,3 +114,42 @@ exclusion in this very language is the cheapest possible entry point
 for ambiguity — `x - 3` versus `print(-3)` — and was excluded *because*
 it deserves the weighted treatment rather than a lexer hack. That is
 either discipline or procrastination; the next language decides which.
+
+## Addendum (v1.1): unary minus as a story machine
+
+The exclusion this document called "either discipline or
+procrastination" resolved as neither: the author's story-machine
+framing (notes/story_machines.md) dissolved the problem before the
+weighted machinery was needed. One bit of narrative state — *did an
+operand just complete?* — classifies every `-` deterministically. The
+implementation is a 2-state anchored machine emitting MINUS:UNARY /
+MINUS:BINARY; the binary SUB emitter gates on MINUS:BINARY, operands
+admit leading MINUS:UNARY tokens, and a NEG emitter fires at the
+operand's end.
+
+Two findings worth the ledger:
+
+1. **A real architectural limitation surfaced: the label field is a
+   bag, not a multiset.** `- -3` emits two identical EXEC.1:NEG labels
+   on one slot; they merge, one NEG survives, and `- -3` evaluates to
+   -3. `-(-3)` is fine (different slots). The behavior is documented
+   and pinned by a test rather than patched, because the right fix is
+   a design decision (sequence-numbered EXEC labels? multiset bags?)
+   that deserves more than a workaround. This is the first limitation
+   discovered that is about the *representation* rather than about
+   regularity.
+2. **The rank table needed a derivation, not an inheritance.** NEG
+   binds tighter than MUL, and `2 * -3` lands both on one slot — so
+   NEG forced a global rank renumbering (everything from MUL up
+   shifted by one). Same error species as the K-budget: a constant
+   table carried by precedent until a new construct broke it. The
+   pattern ledger now reads: positional errors, then resource-budget
+   errors, now ordering-budget errors — all of them constants that
+   precedent froze and composition thawed.
+
+The story machine itself is the smallest anchored machine in the
+project (2 states), and it resolves what looked like the entry point
+for weighted ambiguity. The control condition now exists; the
+two-stories experiment remains open, and the next step recorded in
+notes/story_machines.md (the same story machine shared between imp and
+sexpr via syntax adapters) is unblocked.

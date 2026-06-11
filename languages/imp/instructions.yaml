@@ -7,6 +7,7 @@ instruction_set:
   LOAD:  { operands: 1, semantics: "push value of variable (innermost scope containing it)" }
   DECL:  { operands: 1, semantics: "pop v; bind name in CURRENT scope" }
   STORE: { operands: 1, semantics: "pop v; assign innermost existing binding (error if none)" }
+  NEG:   { operands: 0, semantics: "pop v; push -v" }
   ADD:   { operands: 0, semantics: "pop b, a; push a+b" }
   SUB:   { operands: 0, semantics: "pop b, a; push a-b" }
   MUL:   { operands: 0, semantics: "pop b, a; push a*b" }

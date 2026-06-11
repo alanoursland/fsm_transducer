@@ -12,7 +12,8 @@ if x > 1 { print(x); }
 
 Scope: `let` declarations, assignment, `print(expr);`,
 `if expr { ... }` (no else), expressions over `+ - * / > < ==` with
-parentheses, unsigned integer literals, identifiers. Combined
+parentheses and **unary minus**, unsigned integer literals,
+identifiers. Combined
 paren+block nesting to **K = 5** (blocks and parens share the budget;
 three block levels plus `print((x))` already needs 5).
 Exclusions at the end.
@@ -55,10 +56,14 @@ Rank discipline:
 | rank | ops | on token |
 |---|---|---|
 | 0 | PUSH, LOAD, BRF, EXIT | literal / identifier / `{` / `}` |
-| 1 | MUL, DIV; ENTER | expression end; `{` |
-| 2 | ADD, SUB | expression end |
-| 3 | GT, LT, EQ | expression end |
-| 4 | DECL, STORE, PRINT | `;` |
+| 1 | NEG; ENTER | operand end; `{` |
+| 2 | MUL, DIV | expression end |
+| 3 | ADD, SUB | expression end |
+| 4 | GT, LT, EQ | expression end |
+| 5 | DECL, STORE, PRINT | `;` |
+
+NEG outranks MUL because `2 * -3` lands NEG and MUL on the same slot
+(the `3`); rank 1 < 2 applies the negation first.
 
 ## Files
 
@@ -72,8 +77,13 @@ differential against transpiled Python).
 * `else`, `while`, bare blocks — `while` needs backward jumps
   (markers can express it; the VM loop is the work); every `{` in v1
   is an if-body;
-* unary minus and negative literals (the `x -3` lexing ambiguity is a
-  weight-bearing problem worth doing properly, not slipping in);
+* ~~unary minus~~ — added in v1.1 via a two-state **story machine**
+  (expect-operand / expect-operator) labeling each `-` as
+  `MINUS:UNARY` / `MINUS:BINARY`; see notes/story_machines.md. Known
+  limitation: consecutive unary minuses without parens (`- -x`)
+  collapse to one NEG, because identical `EXEC.1:NEG` labels on one
+  slot merge — a label field is a bag, not a multiset. `-(-x)` works
+  (different slots). Pinned by a test as documented behavior;
 * chained comparisons (`a > b > c` emits per-pair, left-assoc — noted,
   not endorsed);
 * booleans as values — comparisons yield 1/0;

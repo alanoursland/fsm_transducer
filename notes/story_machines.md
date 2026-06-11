@@ -29,7 +29,7 @@ are for what remains after that move.
 | json | container-kind stack {O, A} | *what we're inside* |
 | sexpr | expectation stack {head-pending, in-body} | *what comes next* |
 | imp (scope) | declared-bit stack per identifier | *who has been introduced* |
-| (minus, planned) | {expect-operand, expect-operator} | *what the last event was* |
+| imp (minus, implemented) | {expect-operand, expect-operator} | *what the last event was* |
 
 Where-we-are, what-we're-inside, what-comes-next, who's-on-stage, what
 just happened: these are the state variables of a **story**, not of a

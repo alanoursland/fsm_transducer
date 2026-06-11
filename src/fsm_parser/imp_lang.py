@@ -8,14 +8,23 @@ New machinery relative to the earlier languages:
   one declared-bit per block level);
 * **cross-slot operands**: ``DECL``/``STORE`` execute at the statement's
   ``;`` but name the variable token via a slot-id capture interpolated
-  into the emission label (``EXEC.4:DECL(!{VAL@token:1})``) — first use
+  into the emission label (``EXEC.5:DECL(!{VAL@token:1})``) — first use
   of template interpolation and the ``!{FAMILY@id}`` reference form;
 * **structured control flow**: ``BRF``/``ENTER``/``EXIT`` matched
   markers instead of address jumps (emissions cannot point forward).
 
 Expression machinery (operand/chain/guard construction, exit-emission
 envelope) is arithmetic's, extended with identifiers as operands and a
-comparison precedence level below additive.
+comparison precedence level below additive. Unary minus is resolved
+by a two-state *story machine* (expect-operand / expect-operator)
+labeling each '-' as MINUS:UNARY or MINUS:BINARY; emitters key off the
+labels. Ranks: 0 PUSH/LOAD/BRF/EXIT, 1 NEG/ENTER, 2 MUL/DIV,
+3 ADD/SUB, 4 cmp, 5 statement ops.
+
+Known limitation (documented in the spec): consecutive unary minuses
+without parens (``--x``) collapse — identical EXEC.1:NEG labels on the
+same slot merge in the bag (a label field is a bag, not a multiset).
+``-(-x)`` works (the two NEGs land on different slots).
 """
 
 from __future__ import annotations
@@ -216,6 +225,36 @@ def build_scope_checker(name: str, max_scopes: int = MAX_SCOPES) -> FSM:
     return b.build()
 
 
+
+# --- Layer 2b: minus story machine (anchored expectation tracker) --------------------
+
+
+def build_minus_story() -> FSM:
+    """Two-state story machine: {expect-operand, expect-operator}.
+
+    The narrative state is *what the last event was*: after a completed
+    operand (NUM, IDENT, or a closing paren) the story expects an
+    operator, so a '-' continues something (MINUS:BINARY); everywhere
+    else the story expects an operand, so a '-' begins something
+    (MINUS:UNARY). One bit of story state dissolves the apparent
+    ambiguity — see notes/story_machines.md.
+    """
+    b = FSMBuilder("minus_story")
+    eo = b.state("expect_operand")
+    ep = b.state("expect_operator")
+    b.start(eo)
+    b.accept(eo, ep)
+    operand_done = Or((HasLabel("NUM"), HasLabel("IDENT"), HasLabel("RPAREN")))
+    sub = HasLabel("SUB_OP")
+    other = Not(Or((operand_done, sub)))
+    for src, minus_kind in ((eo, "UNARY"), (ep, "BINARY")):
+        b.transition(src, sub, eo,
+                     emissions=[Emission(f"MINUS:{minus_kind}", 1.0, offset=0)])
+        b.transition(src, operand_done, ep)
+        b.transition(src, other, eo)
+    return b.build()
+
+
 # --- Layer 3: expression emitters (arithmetic's construction + IDENT + cmp) ----------
 
 
@@ -231,20 +270,27 @@ def _addop(d):
     return And((HasLabel("ADDITIVE"), _d(d)))
 
 
+def _unary_minus(d: int):
+    return And((HasLabel("SUB_OP"), HasLabel("MINUS:UNARY"), _d(d)))
+
+
 def _operand(d: int) -> FSM:
+    """An operand, optionally preceded by unary minuses (story-labeled)."""
     end_cap = Capture("end", kind="index")
     scalar = literal(
         And((Or((HasLabel("NUM"), HasLabel("IDENT"))), _d(d))), captures=[end_cap]
     )
     if d >= MAX_DEPTH:
-        return scalar
-    group = concat(
-        literal(And((HasLabel("LPAREN"), HasLabel(f"GROUP_START:{d + 1}")))),
-        star(literal(Not(HasLabel(f"GROUP_END:{d + 1}")))),
-        literal(And((HasLabel("RPAREN"), HasLabel(f"GROUP_END:{d + 1}"))),
-                captures=[end_cap]),
-    )
-    return alt(scalar, group)
+        core = scalar
+    else:
+        group = concat(
+            literal(And((HasLabel("LPAREN"), HasLabel(f"GROUP_START:{d + 1}")))),
+            star(literal(Not(HasLabel(f"GROUP_END:{d + 1}")))),
+            literal(And((HasLabel("RPAREN"), HasLabel(f"GROUP_END:{d + 1}"))),
+                    captures=[end_cap]),
+        )
+        core = alt(scalar, group)
+    return concat(star(literal(_unary_minus(d))), core)
 
 
 def _mulchain(d: int) -> FSM:
@@ -272,16 +318,32 @@ def _expression_emitters(max_depth: int) -> list[FSM]:
         for label, instr in (("MUL_OP", "MUL"), ("DIV_OP", "DIV")):
             m = _with_exit_emission(
                 concat(_operand(d), literal(And((HasLabel(label), _d(d)))), _operand(d)),
-                Emission(f"EXEC.1:{instr}", 1.0, anchor=CaptureAnchor("end")),
+                Emission(f"EXEC.2:{instr}", 1.0, anchor=CaptureAnchor("end")),
             )
             m.name = f"{instr.lower()}@{d}"
             machines.append(m)
+        neg = concat(
+            literal(_unary_minus(d)),
+            _operand(d),
+        )
+        neg = _with_exit_emission(
+            neg, Emission("EXEC.1:NEG", 1.0, anchor=CaptureAnchor("end"))
+        )
+        neg.name = f"neg@{d}"
+        machines.append(neg)
         for label, instr in (("ADD_OP", "ADD"), ("SUB_OP", "SUB")):
+            # binary '-' only: the minus story machine has already
+            # classified every '-' token
+            op_cond = (
+                And((HasLabel(label), HasLabel("MINUS:BINARY"), _d(d)))
+                if instr == "SUB"
+                else And((HasLabel(label), _d(d)))
+            )
             m = concat(
-                literal(And((HasLabel(label), _d(d)))),
+                literal(op_cond),
                 _mulchain(d),
                 literal(Not(_mulop(d)),
-                        emissions=[Emission(f"EXEC.2:{instr}", 1.0,
+                        emissions=[Emission(f"EXEC.3:{instr}", 1.0,
                                             anchor=CaptureAnchor("end"))]),
             )
             m.name = f"{instr.lower()}@{d}"
@@ -291,7 +353,7 @@ def _expression_emitters(max_depth: int) -> list[FSM]:
                 literal(And((HasLabel(label), _d(d)))),
                 _addchain(d),
                 literal(Not(Or((_mulop(d), _addop(d)))),
-                        emissions=[Emission(f"EXEC.3:{instr}", 1.0,
+                        emissions=[Emission(f"EXEC.4:{instr}", 1.0,
                                             anchor=CaptureAnchor("end"))]),
             )
             m.name = f"{instr.lower()}@{d}"
@@ -326,7 +388,7 @@ def _statement_emitters() -> list[FSM]:
         literal(HasLabel("ASSIGN")),
         star(literal(Not(HasLabel("SEMI")))),
         literal(HasLabel("SEMI"),
-                emissions=[Emission("EXEC.4:DECL(!{VAL@{var}})", 1.0, offset=0)]),
+                emissions=[Emission("EXEC.5:DECL(!{VAL@{var}})", 1.0, offset=0)]),
     )
     let_decl.name = "let_decl"
     machines.append(let_decl)
@@ -337,7 +399,7 @@ def _statement_emitters() -> list[FSM]:
         literal(HasLabel("ASSIGN")),
         star(literal(Not(HasLabel("SEMI")))),
         literal(HasLabel("SEMI"),
-                emissions=[Emission("EXEC.4:STORE(!{VAL@{var}})", 1.0, offset=0)]),
+                emissions=[Emission("EXEC.5:STORE(!{VAL@{var}})", 1.0, offset=0)]),
     )
     assign.name = "assign"
     machines.append(assign)
@@ -346,7 +408,7 @@ def _statement_emitters() -> list[FSM]:
         literal(HasLabel("PRINT_KW")),
         star(literal(Not(HasLabel("SEMI")))),
         literal(HasLabel("SEMI"),
-                emissions=[Emission("EXEC.4:PRINT", 1.0, offset=0)]),
+                emissions=[Emission("EXEC.5:PRINT", 1.0, offset=0)]),
     )
     print_stmt.name = "print_stmt"
     machines.append(print_stmt)
@@ -435,6 +497,9 @@ def compile_program(text: str, *, max_depth: int = MAX_DEPTH) -> CompileResult:
                                         label="ERROR:UNBALANCED_OPEN",
                                         weight=1.0, source="bracket_tracker")])
 
+    # minus story machine (expectation tracker)
+    apply_deltas(state, scanner.transduce(build_minus_story(), state, anchored=True))
+
     # input-indexed scope checkers
     idents = sorted({
         s.text for s in real if "IDENT" in s.labels and s.text
@@ -522,6 +587,10 @@ def run_program(program: list[Instruction]) -> RunResult:
                     break
             else:
                 return fail()
+        elif ins.op == "NEG":
+            if not stack:
+                return fail()
+            stack.append(-stack.pop())
         elif ins.op in _BINOPS:
             if len(stack) < 2:
                 return fail()

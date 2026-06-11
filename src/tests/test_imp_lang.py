@@ -32,7 +32,7 @@ def test_example_a_canonical():
     res = run_program(r.program)
     assert res.valid and res.outputs == [3] and res.env == {"x": 3}
     # cross-slot operand: DECL at the ';' names the 'x' token
-    assert "EXEC.4:DECL(!{VAL@token:1})" in _labels(r, "token:4")
+    assert "EXEC.5:DECL(!{VAL@token:1})" in _labels(r, "token:4")
     assert {"EXEC.0:BRF", "EXEC.1:ENTER", "GROUP_START:1"} <= _labels(r, "token:9")
 
 
@@ -130,9 +130,10 @@ class _Gen:
     def expr(self, vars_, depth=0, cmp_ok=False):
         r = self.rng
         def atom():
-            if vars_ and r.random() < 0.5:
-                return r.choice(vars_)
-            return str(r.randint(0, 9))
+            base = r.choice(vars_) if vars_ and r.random() < 0.5 else str(r.randint(0, 9))
+            if r.random() < 0.2:
+                return f"-{base}"
+            return base
         def arith(d):
             parts = [atom()]
             for _ in range(r.randint(0, 2)):
@@ -199,3 +200,45 @@ def test_differential_against_python():
         namespace = {"out": []}
         exec("\n".join(pys), namespace)  # noqa: S102 - trusted generated code
         assert res.outputs == namespace["out"], src
+
+
+# --- Unary minus (story machine) ------------------------------------------------------
+
+
+def test_minus_story_labels():
+    r = compile_program("let x = 5; print(x - 3); print(-3);")
+    minus = {s.id: sorted(lab for lab in s.labels.weights if lab.startswith("MINUS"))
+             for s in r.state.tokens if s.text == "-"}
+    assert list(minus.values()) == [["MINUS:BINARY"], ["MINUS:UNARY"]]
+
+
+def test_unary_minus_basic():
+    assert execute("print(-3);").outputs == [-3]
+    assert execute("let y = -3; print(y);").outputs == [-3]
+    assert execute("let x = 5; print(x - 3);").outputs == [2]
+
+
+def test_unary_after_binary():
+    assert execute("print(1 - -2);").outputs == [3]
+
+
+def test_unary_binds_tighter_than_mul():
+    # NEG and MUL land on the same slot; rank 1 < 2 orders them
+    assert execute("print(2 * -3);").outputs == [-6]
+
+
+def test_unary_on_paren_group():
+    assert execute("print(-(1 + 2) * 2);").outputs == [-6]
+    assert execute("print(-(-3));").outputs == [3]
+
+
+def test_unary_in_condition():
+    assert execute("let x = 4; if -x < 0 { print(-x); }").outputs == [-4]
+
+
+def test_documented_limitation_double_unary_collapses():
+    # languages/imp/README.md: consecutive unary minuses without parens
+    # collapse (identical EXEC.1:NEG labels merge in the bag). This test
+    # pins the documented behavior so a future fix shows up as a diff.
+    res = execute("print(- -3);")
+    assert res.outputs == [-3]   # one NEG survives, not two
