@@ -106,3 +106,73 @@ not that stories are regular; it is that a bounded story budget is the
 right *shape* of bound (humans appear to have one too), and that the
 budget should be spent on narrative state variables rather than on
 phrase structure.
+
+## Addendum: stories are syntax-invariant (the interlingua claim)
+
+A second observation from the author sharpens the framing: **the
+imperative and declarative can share the same story.**
+
+```text
+(print - 3)      ; sexpr
+print(-3);       // imp
+```
+
+Different token order, different brackets, different grammar — same
+story: *an action is being applied; its operand position just opened;
+minus begins something.* Whereas, within one language:
+
+```text
+y = x - 3;       // a different story: a referent is being bound;
+                 // an operand completed; minus continues something
+print(x - 3);    // outer story = application (like print(-3));
+                 // inner story = expression (like y = x - 3)
+```
+
+The third example shows stories *compose*: the narrative state is a
+stack of frames (application, binding, expression), each with its own
+expectation state. Which frame you are in and where you are within it
+are separate coordinates.
+
+### The evidence was already in the repo
+
+The four languages' instruction sets converged without that being a
+design goal: NEW_LIST / NEW_OBJ / NEW_ARR are all "a container opens";
+APPEND / SETK / DECL are all "an element completes into its frame";
+PUSH is "an entity enters the stage." The instruction streams were
+never describing syntax — they were serializing the story. Convergence
+that falls out rather than being designed in is the strongest kind of
+evidence the abstraction is real.
+
+### The three-tier factoring this implies
+
+1. **Syntax adapters** (per language): lexicon + a thin tracker
+   translating surface tokens into *story events* as labels —
+   FRAME_OPEN:application, OPERAND_DONE, REFERENT_INTRODUCED,
+   FRAME_CLOSE, ...
+2. **One shared story machine**: consumes story-event labels,
+   maintains the narrative stack (frame kind x expectation), emits
+   story-state labels (EXPECT:OPERAND, IN:binding, ...). The same FSM
+   for every language whose adapter speaks the event vocabulary.
+3. **Shared semantic emitters**: written once against story-state
+   labels. Unary-vs-binary minus becomes a single rule that works in
+   imp and sexpr alike.
+
+### The falsification experiment (cheap, sharp)
+
+Implement unary minus in BOTH imp and sexpr with literally the same
+story machine — one file, imported by both runners; only the adapters
+differ. If each language turns out to need private story states, the
+interlingua claim is wrong and the failure will show exactly where
+syntax leaks into story. If it works, tier 2 is real and every future
+language gets minus (and everything else written against story state)
+for the price of an adapter.
+
+### What this is and is not
+
+It rhymes with "deep structure" but is not a tree — it is *process
+state*, which places it nearer the psycholinguistics of situation
+models (event-indexing: readers track time, space, causation,
+protagonist; readers of a text and its translation converge on the
+same situation model despite disjoint syntax). "The imperative and
+declarative share the same story" is that finding, adopted as an
+architecture decision.
