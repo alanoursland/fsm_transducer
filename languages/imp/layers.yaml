@@ -1,0 +1,103 @@
+# Machine specifications. Combined paren+block nesting K = 5.
+# BOF/EOF sentinels as in arithmetic (guards must always have a token).
+
+# ---------------------------------------------------------------------------
+# Layer 1: bracket tracker (anchored) — stack alphabet {P, B}
+# ---------------------------------------------------------------------------
+- layer: shape
+  machines:
+    - name: bracket_tracker
+      anchored: true
+      transitions_schema: |
+        on LPAREN (d<5): push P; emit DEPTH:{d+1}, GROUP_START:{d+1}
+        on LBRACE (d<5): push B; emit DEPTH:{d+1}, GROUP_START:{d+1}
+        on opener at d=5: -> overflow; emit ERROR:DEPTH_EXCEEDED
+        on closer matching top: pop; emit DEPTH:{d}, GROUP_END:{d}
+        on closer mismatching top: pop anyway; same + ERROR:MISMATCHED_CLOSE
+        on closer at d=0: stay; emit ERROR:UNBALANCED_CLOSE
+        on other: stay; emit DEPTH:{d}
+      on_end: { not_accepting: ["ERROR:UNBALANCED_OPEN"] }
+      notes: >
+        Bracket KIND comes from the token class (LPAREN vs LBRACE), so
+        downstream machines gate on class + GROUP/DEPTH labels; no
+        CTX/ENCL families needed here. ENCL was JSON's tool for
+        "complete into parent"; imp's completions are statement-level
+        (at ';') and control-level (at braces), both class-gated.
+
+# ---------------------------------------------------------------------------
+# Layer 2: per-identifier scope checkers (anchored; INPUT-INDEXED schema)
+# ---------------------------------------------------------------------------
+- layer: scopes
+  schema: forall ident x occurring in the input    # new instantiation kind
+  machines:
+    - name: scope_check@{x}
+      anchored: true
+      # State: (bit-stack sigma, expect flag). sigma has one bit per
+      # open block level + global ("declared at this level?");
+      # expect = previous token was `let`. ~252 states per identifier.
+      transitions_schema: |
+        on LET: expect := true
+        on token x (IDENT, TEXT:x):
+            if expect: declare — set top bit
+                       (if already set: emit ERROR:REDECLARE)
+            else if no bit set anywhere: emit ERROR:UNDECLARED
+            expect := false
+        on LBRACE: push 0 bit;  on RBRACE: pop bit;  expect := false
+        on anything else: expect := false
+      notes: >
+        Declared-before-use over unbounded names is not regular; per
+        name it is. The language factors by identifier the way
+        arithmetic factored by depth. Visibility = any bit set
+        (lexical scoping); shadowing falls out of the bit-stack.
+        Parens do not touch the bit-stack — only blocks scope.
+
+# ---------------------------------------------------------------------------
+# Layer 3: expression emitters (per depth d in 0..3; arithmetic's design)
+# ---------------------------------------------------------------------------
+- layer: expressions
+  schema: forall d in 0..5
+  machines_per_depth:
+    # operand := <(NUM|IDENT) & DEPTH:d>{cap end}
+    #          | <LPAREN & GROUP_START:{d+1}> ... <RPAREN & GROUP_END:{d+1}>{cap end}
+    - mul/div pair emitters: operand <op & DEPTH:d> operand
+        -> EXEC.1:MUL|DIV at rhs end (per adjacent pair = left-assoc)
+    - add/sub emitters: <op & DEPTH:d> mulchain <guard not-mul>
+        -> EXEC.2:ADD|SUB at chain end
+    - cmp emitters (GT/LT/EQ): <op & DEPTH:d> addchain <guard not-add-not-mul>
+        -> EXEC.3:GT|LT|EQ at chain end
+  notes: >
+    Exactly arithmetic's guard-token construction, one precedence level
+    deeper (comparisons below additive). Chains cannot cross statement
+    boundaries: ';' '=' '{' are not operands or operators.
+
+# ---------------------------------------------------------------------------
+# Layer 4: statement and control emitters (global)
+# ---------------------------------------------------------------------------
+- layer: statements
+  machines:
+    - name: push_num
+      pattern: "<NUM>"
+      emit: [{ label: "EXEC.0:PUSH(!{VAL})" }]
+    - name: load
+      # identifier in expression position: not a declaration target,
+      # not an assignment target
+      pattern: "<not LET> <IDENT> <not ASSIGN>"
+      emit: [{ label: "EXEC.0:LOAD(!{VAL})", anchor: the IDENT token }]
+    - name: let_decl
+      pattern: "<LET> <IDENT>{cap var: slot_id} <ASSIGN> <not SEMI>* <SEMI>"
+      emit: [{ label: "EXEC.4:DECL(!{VAL@{var}})", anchor: the SEMI }]
+      # {var} interpolates the captured slot id; the operand is a
+      # cross-slot reference — DECL runs after the expression but
+      # names the variable token. First use of both mechanisms.
+    - name: assign
+      pattern: "<not LET> <IDENT>{cap var} <ASSIGN> <not SEMI>* <SEMI>"
+      emit: [{ label: "EXEC.4:STORE(!{VAL@{var}})", anchor: the SEMI }]
+    - name: print_stmt
+      pattern: "<PRINT_KW> <not SEMI>* <SEMI>"
+      emit: [{ label: "EXEC.4:PRINT", anchor: the SEMI }]
+    - name: block_open    # every block in v1 is an if-body
+      pattern: "<LBRACE>"
+      emit: [{ label: "EXEC.0:BRF" }, { label: "EXEC.1:ENTER" }]
+    - name: block_close
+      pattern: "<RBRACE>"
+      emit: [{ label: "EXEC.0:EXIT" }]

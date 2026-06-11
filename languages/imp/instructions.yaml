@@ -1,0 +1,36 @@
+# Target instruction set: a statement VM with scoped environments.
+# Output contract and !{...} reference semantics inherited; new here:
+# cross-slot references !{VAL@token:k} (operand lives on another slot).
+
+instruction_set:
+  PUSH:  { operands: 1, semantics: "push integer literal" }
+  LOAD:  { operands: 1, semantics: "push value of variable (innermost scope containing it)" }
+  DECL:  { operands: 1, semantics: "pop v; bind name in CURRENT scope" }
+  STORE: { operands: 1, semantics: "pop v; assign innermost existing binding (error if none)" }
+  ADD:   { operands: 0, semantics: "pop b, a; push a+b" }
+  SUB:   { operands: 0, semantics: "pop b, a; push a-b" }
+  MUL:   { operands: 0, semantics: "pop b, a; push a*b" }
+  DIV:   { operands: 0, semantics: "pop b, a; push a/b" }
+  GT:    { operands: 0, semantics: "pop b, a; push 1 if a>b else 0" }
+  LT:    { operands: 0, semantics: "pop b, a; push 1 if a<b else 0" }
+  EQ:    { operands: 0, semantics: "pop b, a; push 1 if a==b else 0" }
+  PRINT: { operands: 0, semantics: "pop v; append to output" }
+  BRF:   { operands: 0, semantics: "pop cond; if falsy, skip past the MATCHED EXIT (counting ENTER/EXIT)" }
+  ENTER: { operands: 0, semantics: "push a new (empty) scope" }
+  EXIT:  { operands: 0, semantics: "pop the current scope" }
+
+# Control flow is STRUCTURED: BRF/ENTER/EXIT are matched markers, not
+# address jumps, because emissions cannot reference forward positions.
+# (A second projection pass could resolve markers to addresses; noted
+# as v2, required before `while`.)
+
+# --- Validity conditions ------------------------------------------------------
+# 1. The value stack ends EMPTY (statements consume what they compute);
+#    exactly one scope (the global) remains.
+# 2. Output sequence and final global environment equal those of the
+#    reference semantics (the differential transpiles to Python).
+# 3. LOAD/STORE on an unbound name, or stack underflow, makes the run
+#    invalid (and is predicted statically by ERROR:UNDECLARED labels —
+#    runtime check and static label should agree; a disagreement is a
+#    bug in one of them, which is what makes having both valuable).
+# 4. With ERROR:* labels present, conditions 1-3 are waived.
