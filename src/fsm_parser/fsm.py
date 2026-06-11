@@ -573,6 +573,7 @@ class FSMScanner:
         *,
         stream: str = "token",
         slot_filter: Callable[[Slot], bool] | None = None,
+        anchored: bool = False,
     ) -> list[LabelDelta]:
         """Single left-to-right pass covering all start offsets.
 
@@ -581,9 +582,15 @@ class FSMScanner:
         start offset is still explored, but the input is traversed once and
         dead paths are dropped as soon as they fail.
 
+        With ``anchored=True`` the start path is injected only at position
+        0, so the machine runs exactly once from the beginning of the
+        stream — required for global transducers like depth trackers,
+        whose state must reflect the entire prefix.
+
         Bound: paths merge on ``(scan_start, state, captures)``, so the
         frontier after position ``i`` holds at most
-        ``(i + 1) * |Q| * |capture signatures|`` paths; for capture-free
+        ``(i + 1) * |Q| * |capture signatures|`` paths (``|Q| * |capture
+        signatures|`` when anchored); for capture-free
         machines whose live paths die within ``k`` positions (every acyclic
         machine; any machine whose conditions eventually reject), the
         frontier is ``O(k * |Q|)`` — independent of input length.
@@ -595,16 +602,17 @@ class FSMScanner:
         n = len(slots)
         frontier: list[_Path] = []
         for pos in range(n):
-            initial = _Path(
-                state=fsm.start,
-                weight=self.semiring.one,
-                captures={},
-                last_consumed=None,
-                scan_start=pos,
-            )
-            frontier = frontier + self._epsilon_close(
-                [initial], fsm, deltas, slots=slots
-            )
+            if pos == 0 or not anchored:
+                initial = _Path(
+                    state=fsm.start,
+                    weight=self.semiring.one,
+                    captures={},
+                    last_consumed=None,
+                    scan_start=pos,
+                )
+                frontier = frontier + self._epsilon_close(
+                    [initial], fsm, deltas, slots=slots
+                )
             frame = slots[pos]
             successors: list[_Path] = []
             for path in frontier:

@@ -1,0 +1,30 @@
+# Target instruction set: a five-op stack-based document builder.
+# Output contract and operand-reference semantics: identical to
+# languages/arithmetic/instructions.yaml (field + program; !{VAL}
+# resolves argmax-with-0.5x-margin, typed by the slot's class label).
+
+instruction_set:
+  PUSH:    { operands: 1, semantics: "push operand (typed scalar) onto the stack" }
+  NEW_OBJ: { operands: 0, semantics: "push an empty object" }
+  NEW_ARR: { operands: 0, semantics: "push an empty array" }
+  APPEND:  { operands: 0, semantics: "pop v; append v to the array on top" }
+  SETK:    { operands: 0, semantics: "pop v; pop k; set object_on_top[k] = v" }
+
+# There are deliberately no END/CLOSE instructions: a container is
+# complete the moment its last element completes, and its own
+# completion in the parent (APPEND or SETK) is emitted on its closing
+# bracket via the ENCL label. Keys need no register: a key is PUSHed
+# like any scalar and sits on the stack under its value until SETK
+# consumes both.
+
+# --- Validity conditions ------------------------------------------------------
+# 1. Executing the program on an empty stack leaves exactly one value:
+#    the document.
+# 2. That value equals json.loads(input) for well-formed input.
+# 3. APPEND requires an array below the popped value; SETK requires a
+#    key below the value and an object below that. A violation makes
+#    the run invalid (the projection never produces one from a
+#    well-formed field).
+# 4. If any ERROR:* label is present, conditions 1-3 are not required;
+#    the program is best-effort and partial documents on the stack are
+#    correctly built fragments.

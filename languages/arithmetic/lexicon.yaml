@@ -29,3 +29,27 @@ super_classes:
 # Anything matching no class:
 fallback:
   emit: [ERROR:UNKNOWN_TOKEN]
+
+# --- Future: char-level layer 0 (not used by this language) ------------------
+# This language assumes pre-tokenized input. The intended replacement is
+# tokenization-as-parsing (notes/tokenization_as_parsing.md,
+# notes/labels_as_universal_representation.md section 2): run lexer DFAs
+# over the char stream and emit the machine state onto each consumed
+# char. Sketch for integers (digit+):
+#
+#   lexer_machines:
+#     - name: num
+#       regex: "<CH_DIGIT>+"        # over char slots
+#       emit_states: true           # each char gets num.<state> for the
+#                                   # MINIMIZED DFA state after consuming it
+#       span: NUM                   # GROUP_START/GROUP_END tagging at char
+#                                   # level; the NUM "token" is this span
+#
+# The canonical state-label vocabulary is the minimized DFA's states
+# (Myhill-Nerode classes), computed by fsm_parser.analysis.minimize(),
+# not hand-named; aliases may be declared on top. With this layer, NUM
+# and VAL above become projections of the char-level span rather than
+# properties of a pre-made token, and a bare self-locating PUSH could
+# assemble its value by walking the span (see instructions.yaml,
+# "Output contract"). Deferred until the token-level pipeline is
+# validated end to end.

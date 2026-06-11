@@ -1,0 +1,27 @@
+# Layer 0: token classes for JSON. Whitespace is dropped by the
+# tokenizer; strings carry their unquoted content in VAL.
+
+classes:
+  STRING:
+    match: { regex: '"[^"\\]*"' }     # no escapes in v1
+    also_emit: ["VAL:{content}", "SCALAR"]
+  NUM:
+    match: { regex: '-?[0-9]+(\.[0-9]+)?' }
+    also_emit: ["VAL:{TEXT}", "SCALAR"]
+  TRUE:  { match: { text: "true" },  also_emit: ["VAL:true",  "SCALAR"] }
+  FALSE: { match: { text: "false" }, also_emit: ["VAL:false", "SCALAR"] }
+  NULL:  { match: { text: "null" },  also_emit: ["VAL:null",  "SCALAR"] }
+  LBRACE:   { match: { text: "{" }, also_emit: ["BRACKET"] }
+  RBRACE:   { match: { text: "}" }, also_emit: ["BRACKET"] }
+  LBRACKET: { match: { text: "[" }, also_emit: ["BRACKET"] }
+  RBRACKET: { match: { text: "]" }, also_emit: ["BRACKET"] }
+  COLON: { match: { text: ":" } }
+  COMMA: { match: { text: "," } }
+
+fallback:
+  emit: [ERROR:UNKNOWN_TOKEN]
+
+# The !{VAL} operand reference resolves with class-directed typing:
+# STRING -> text, NUM -> number, TRUE/FALSE -> boolean, NULL -> null.
+# (The VAL family stores the surface form; the class label supplies the
+# type. Both live in the same bag — typing is itself a label read.)

@@ -1,0 +1,32 @@
+# Layer 0: token classes. Longest-match tokenization ('==' before '=').
+
+classes:
+  LET:      { match: { text: "let" } }
+  IF:       { match: { text: "if" } }
+  PRINT_KW: { match: { text: "print" } }
+  IDENT:
+    match: { regex: '[A-Za-z_]\w*' }      # after keyword filtering
+    also_emit: ["VAL:{TEXT}"]
+  NUM:
+    match: { regex: '[0-9]+' }            # unsigned; see exclusions
+    also_emit: ["VAL:{TEXT}"]
+  ASSIGN: { match: { text: "=" } }
+  EQ_OP:  { match: { text: "==" }, also_emit: ["CMP_OP"] }
+  GT_OP:  { match: { text: ">" },  also_emit: ["CMP_OP"] }
+  LT_OP:  { match: { text: "<" },  also_emit: ["CMP_OP"] }
+  ADD_OP: { match: { text: "+" },  also_emit: ["ADDITIVE"] }
+  SUB_OP: { match: { text: "-" },  also_emit: ["ADDITIVE"] }
+  MUL_OP: { match: { text: "*" },  also_emit: ["MULTIPLICATIVE"] }
+  DIV_OP: { match: { text: "/" },  also_emit: ["MULTIPLICATIVE"] }
+  LPAREN: { match: { text: "(" }, also_emit: ["BRACKET"] }
+  RPAREN: { match: { text: ")" }, also_emit: ["BRACKET"] }
+  LBRACE: { match: { text: "{" }, also_emit: ["BRACKET"] }
+  RBRACE: { match: { text: "}" }, also_emit: ["BRACKET"] }
+  SEMI:   { match: { text: ";" } }
+
+fallback:
+  emit: [ERROR:UNKNOWN_TOKEN]
+
+# Expression operands are <NUM> or <IDENT>; both carry VAL. LOAD's
+# operand is the identifier's own VAL; DECL/STORE name their variable
+# through a cross-slot reference (see layers.yaml).

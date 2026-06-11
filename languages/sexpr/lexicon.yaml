@@ -1,0 +1,18 @@
+# Layer 0: three token classes. Whitespace dropped by the tokenizer.
+# Tokenizer: [()] | [^()\s]+   — deliberately the simplest in the project.
+
+classes:
+  LPAREN: { match: { text: "(" }, also_emit: ["PAREN"] }
+  RPAREN: { match: { text: ")" }, also_emit: ["PAREN"] }
+  NUM:
+    match: { regex: '-?[0-9]+' }
+    also_emit: ["VAL:{TEXT}", "ATOM"]
+  SYMBOL:
+    match: { any_other_token: true }   # any non-paren run is a symbol
+    also_emit: ["VAL:{TEXT}", "ATOM"]
+
+# There is no fallback/ERROR:UNKNOWN_TOKEN class: every token is
+# something. The grammar cannot reject at the lexical level at all —
+# the degenerate-but-honest limit of accretion tolerance.
+
+# !{VAL} typing: NUM -> integer, SYMBOL -> symbol (string).

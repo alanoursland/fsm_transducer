@@ -28,6 +28,24 @@ instruction_set:
 # different label family entirely, e.g. an embedding-like family) can
 # change what !{VAL} resolves to without touching the emitters.
 
+# --- Output contract ---------------------------------------------------------
+# Because operands are references, the parser's output is FIELD + PROGRAM,
+# not a self-contained instruction stream (compare: binary + debug
+# symbols). The program is an index into the annotation field; consumers
+# need read access to the field to execute it. The fully implicit limit
+# of this -- a bare PUSH meaning "materialize the value from the labels
+# at/behind this slot" (e.g. by walking a lexer-state span) -- is
+# permitted by the contract but not used by this language, which always
+# names its operand family explicitly (!{VAL}).
+#
+# Resolution policy (closes the ambiguity hole for implicit/derefed
+# operands): a reference resolves against the ARGMAX label of the family
+# on the target slot, and is an error if the runner-up is within 0.5x of
+# the winner's weight. Arithmetic is deterministic, so this policy is
+# never exercised on well-formed input; it is declared so that the
+# projection has no judgment calls. See
+# notes/labels_as_universal_representation.md section 4.
+
 # --- Projection rule ---------------------------------------------------------
 # program = []
 # for slot in token order:
