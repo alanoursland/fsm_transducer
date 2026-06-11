@@ -1,0 +1,19 @@
+# Target instruction set: a three-op list builder. Output contract and
+# !{VAL} reference semantics as in languages/arithmetic/instructions.yaml.
+
+instruction_set:
+  PUSH:     { operands: 1, semantics: "push operand (symbol or integer)" }
+  NEW_LIST: { operands: 0, semantics: "push an empty list" }
+  APPEND:   { operands: 0, semantics: "pop v; append v to the list on top" }
+
+# --- Validity conditions ------------------------------------------------------
+# 1. Executing the program on an empty stack leaves the sequence of
+#    top-level forms, in order (>= 1 entry; a Lisp file is a sequence
+#    of forms, so this generalizes the single-document contract of
+#    arithmetic and JSON).
+# 2. The stack contents equal the structures denoted by the input.
+# 3. APPEND requires a list below the popped value.
+# 4. With ERROR:* labels present, conditions 1-3 are waived; stack
+#    entries are correctly built fragments (an unclosed list remains on
+#    the stack as a separate, correctly-built-so-far fragment, never
+#    spliced into its would-be parent).
