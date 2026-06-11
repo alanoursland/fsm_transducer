@@ -1,13 +1,29 @@
 # Running the arithmetic language, and reading what comes out
 
-Honest status first: **this folder is a specification, not a program.**
-Nothing in it executes today. This document explains (1) what "running"
-this language means right now, by hand; (2) what would have to be built
-for it to run mechanically, and how much of that already exists; (3) how
-to interpret the outputs either way; and (4) what this folder is *for*,
-since that can be unclear when nothing in it is executable.
+Status: **implemented.** The runner is `fsm_parser.arithmetic`; the YAML
+files in this folder are the contract it implements, and `examples.md`
+is its golden acceptance suite (`src/tests/test_arithmetic_lang.py`),
+alongside a 300-expression differential test against Python `eval`.
 
-## 1. Running it by hand (works today)
+```python
+from fsm_parser.arithmetic import compile_expression, run_program, evaluate
+
+result = compile_expression("(1+2)*5")
+for ins in result.program:
+    print(ins)                      # PUSH 1; PUSH 2; ADD; PUSH 5; MUL
+print(result.errors)                # [] — or named, located ERROR:* labels
+print(run_program(result.program))  # stack=[15.0], valid=True
+evaluate("3+4*2")                   # 11.0 (None if the field has errors)
+```
+
+`result.state` is the full label field; inspect any slot's bag with
+`result.state.get_slot("token:4").labels.top_k(10)`.
+
+This document explains (1) how to run the same procedure by hand — still
+the way to settle contract disputes; (2) how the runner maps onto the
+spec; (3) how to interpret the outputs; and (4) what this folder is for.
+
+## 1. Running it by hand
 
 This is the procedure used to validate `examples.md`. For an input like
 `( 1 + 2 ) * 5`:
@@ -37,25 +53,31 @@ equal to evaluating the expression normally. If an `ERROR:*` label was
 written anywhere, expect the validity conditions in `instructions.yaml`
 to fail in a diagnosable way instead.
 
-## 2. What it would take to run mechanically
+## 2. How the runner maps onto the spec
 
-Most of the machinery exists in `fsm_parser`; the spec was written
-against it deliberately. Gap analysis:
-
-| spec feature | engine status |
+| spec feature | implementation |
 |---|---|
-| lexicon classes | exists (`LexicalBlock`; `VAL:{TEXT}` needs a capture-template rule, small) |
-| term/group span tagging | exists (regex front-end named groups: `TERM` is `(?P<TERM_d> ...)`) |
-| per-depth machine schemas | missing, small: a loader loop instantiating one machine per `d` with `DEPTH:d` substituted into conditions |
-| anchored depth tracker | **missing, the real gap**: `scan()`/`transduce()` start at every offset; the depth tracker must run exactly once from token 0. Needs `anchored=True` on the scanner (or an `AtSentenceStart`-guarded design) |
-| `EXEC` rank projection | missing, trivial: ~30 lines reading the final label field |
-| stack VM for validation | missing, trivial: ~15 lines |
+| lexicon classes | `arithmetic.initialize()` (code, not `LexicalBlock` — numbers aren't enumerable entries) |
+| anchored depth tracker | `build_depth_tracker()` + the engine's `transduce(..., anchored=True)` (added for this) |
+| per-depth machine schemas | `build_term_marker(d)` / emitter builders called for `d` in 3..0 — schema instantiation as a plain loop |
+| term/group span tagging | the regex front-end's group decoration (`TERM_{d}` labels; spec family `TERM_START:d` ≡ label `TERM_{d}_START`) |
+| `EXEC` rank projection | `compile_expression()` tail: sort by (token order, rank), resolve `!{VAL}` per the argmax-with-margin policy |
+| stack VM | `run_program()` |
 
-So "make it run" is one engine feature (anchored scanning), one loader
-(language-folder -> pipeline, including schema instantiation), and two
-small scripts. When that lands, `examples.md` stops being documentation
-and becomes the **golden test file**: the runner's output on the five
-inputs must reproduce those tables exactly.
+Two implementation techniques worth knowing because they differ from a
+naive reading of `layers.yaml` (the spec's emission anchors are prose;
+these are how they're realized):
+
+* **Guard tokens instead of lookahead.** Maximal-munch ("the additive
+  operator fires after its *entire* right term") is enforced by
+  requiring the pattern to consume one following token that is not a
+  depth-d `* /` operator. BOF/EOF sentinel slots (kind `meta`, excluded
+  from projection) guarantee the guard token exists at the edges.
+* **Capture-anchored emissions.** Each operand's final consuming
+  transition writes an `end` register; instructions anchor on it
+  (`CaptureAnchor`) — the same tagged-NFA mechanism regex groups use —
+  so "last token of the right operand" is exact even when the operand
+  is a parenthesized group.
 
 ## 3. Interpreting the outputs
 
@@ -120,6 +142,7 @@ Four uses, in order of immediacy:
    explicit — the glass-box/black-box experiment the two projects exist
    to run.
 
-The recommended next step, when ready, is #2: implement anchored
-scanning + the language loader + the projection script, and turn
-`examples.md` into passing tests.
+Items #1 and #2 are done: the runner exists and `examples.md` is its
+passing acceptance suite. The live next steps are #3 (a second language,
+to stress the folder format) and #4 (the probing experiment against
+`regex_transformer`).
