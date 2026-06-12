@@ -59,3 +59,34 @@ fragments, group agents, embedded themes (See Spot run), one PP.
 Out of coverage (plan() returns None): wh-questions, agentless
 non-copula frames (subject-sharing clause-B frames — regenerating
 them as imperatives would change meaning), double embedding.
+
+## Honesty addendum: this is NOT the parser run backwards
+
+"The parser's pipeline, reversed" describes the architecture pattern,
+not the mechanism. What the two directions actually share: the
+engine, the lexicon, and the frame language (which is what the
+round-trip oracle verifies — relation consistency, not machine
+identity). The clause story machine is NOT inverted; generation has
+its own planner (plan(), code — currently the least-FSM component in
+the system, the generation-side analog of pysub's layout pass) and a
+new one-state token emitter.
+
+Why literal reversal was not available: (1) our machines are not
+two-tape FSTs — emissions are capture-anchored, accept-fired, and
+point backwards onto earlier slots, so the output is a scatter over
+the input, not a parallel tape; the accept-emission trick that
+collapsed the construction explosion is exactly what breaks tape
+symmetry; (2) the parse relation is many-to-one (articles and
+NP-internal material are discarded), so the inverse is one-to-many
+and needs a choice policy (the weighted articles); (3) the VM
+projection sits between machine and frame, and plan() inverts it by
+hand.
+
+The principled path to true bidirectionality is the classical one
+(reversible grammar: Shieber 1988's uniform architecture; Kay's chart
+generation; XLE for LFG): a two-tape transition discipline
+(input-label : output-label per transition), under which one machine
+IS both directions and inversion is free. The codex could then mark
+components bidirectional with both signatures measured. Recorded as a
+candidate refactor — after story-coherent projection, since reversal
+inherits whatever projection does.
