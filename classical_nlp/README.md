@@ -1,0 +1,250 @@
+# Classical NLP: the reefs
+
+A high-level survey of the problems that classical symbolic natural
+language processing (roughly 1950s-1990s) encountered — the reasons
+the field abandoned the symbolic program for the statistical one, and
+then for the neural one. This directory is a **lighthouse**: each of
+these problems is something our FSM system must either solve, route
+around, or honestly declare out of scope. Deeper treatments of
+individual problems belong in their own files here; this overview
+stays at the level of "what went wrong, who documented it, and what
+our bearing on it is."
+
+A framing note before the list: this project is deliberately
+re-running the symbolic program. The wager is that it failed for
+repairable reasons — and that three things were missing which now
+exist: **weighted evidence** (so rules contribute salience instead of
+brittle conclusions), **cheap computation** (so thousands of small
+machines are affordable), and **large language models as an
+annotation and distillation source** (so the knowledge bottleneck has
+a supply line). Each section below ends with our bearing.
+
+---
+
+## 1. Brittleness: all grammars leak
+
+Hand-built grammars never covered real text. Sapir said it in 1921 —
+"all grammars leak" — and seventy years of grammar engineering
+confirmed it: every system worked on its examples and shattered on
+the next page of newspaper text. Fragmentary, ungrammatical, or
+merely unanticipated input produced hard failure, not degraded
+output. Robust/ill-formed-input parsing became its own subfield
+(Carbonell & Hayes 1983) precisely because the mainline architecture
+had no notion of partial success.
+
+*Citations:* Sapir (1921), *Language*; Carbonell & Hayes (1983),
+"Recovery strategies for parsing extragrammatical language," *AJCL*.
+
+**Our bearing:** graceful degradation is the architecture's founding
+commitment — no parse failure exists, only weaker label fields; every
+language we have built degrades to fewer frames plus a located error
+label. The corpus coverage curve (65.5% of the real McGuffey Primer,
+measured, ratcheted) is this problem being faced with instruments
+instead of anecdotes.
+
+## 2. The ambiguity explosion
+
+Syntactic ambiguity compounds combinatorially — PP attachments alone
+grow with the Catalan numbers (Church & Patil 1982), and a broad-
+coverage grammar assigns hundreds of parses to ordinary sentences.
+Classical systems had no principled way to rank them; disambiguation
+needed evidence (lexical preference, world knowledge, discourse) that
+the formalism had no slot for.
+
+*Citations:* Church & Patil (1982), "Coping with syntactic ambiguity,"
+*AJCL*; Martin, Church & Patil (1987).
+
+**Our bearing:** the weighted superposition IS the slot the evidence
+goes in: forks carry priors, evidence reweights, projection commits
+late. Two findings so far: most LOCAL ambiguity in designed languages
+dissolved under explicit story state (seven formal languages, zero
+weights needed); and genuine multi-reading survival is live in tier-1
+English — our story-coherent projection problem is this reef under
+its modern name, currently the top open engineering item.
+
+## 3. The knowledge acquisition bottleneck
+
+Everything had to be hand-coded: lexicons, subcategorization, selectional
+restrictions, scripts, world facts. The cost curve killed projects —
+CYC (Lenat & Guha 1990) is the heroic monument; Schank-school script
+systems (SAM, FRUMP) worked exactly as far as someone had written the
+script. Maurice Gross (1979) argued from lexicon-grammar experience
+that coverage demands orders of magnitude more hand description than
+generative theory admitted.
+
+*Citations:* Lenat & Guha (1990), *Building Large Knowledge-Based
+Systems*; Schank & Abelson (1977), *Scripts, Plans, Goals and
+Understanding*; Gross (1979), "On the failure of generative grammar,"
+*Language*.
+
+**Our bearing:** this is the reef the LLM changes most. The recorded
+strategy is distillation: elicit judgments (tags, frames,
+acceptability) from a large model at scale, validate samples, fit our
+weights — converting an opaque model's knowledge into transparent
+machines. First act already on the books (the tier-1 lexicon,
+LLM-tagged, marked silver). Whether it scales is THE open empirical
+question of the project.
+
+## 4. Commonsense: the box was in the pen
+
+Bar-Hillel (1960) argued fully automatic high-quality translation was
+impossible without encyclopedic knowledge, with one example: "the box
+was in the pen" — resolving *pen* (writing implement vs playpen)
+requires knowing relative sizes of things, not grammar. The Winograd
+Schema Challenge (Levesque et al. 2012) is the same argument
+operationalized fifty years later. Symbolic NLP never had a credible
+account of where this knowledge would come from or how inference over
+it would stay tractable.
+
+*Citations:* Bar-Hillel (1960), "The present status of automatic
+translation of languages," *Advances in Computers*; Levesque, Davis &
+Morgenstern (2012).
+
+**Our bearing:** partially out of scope, honestly: we do not propose
+to encode commonsense in FSMs. The belief-stream design (weighted
+facts with provenance, inference scripts) gives commonsense a place
+to LIVE and a calculus to combine under, and distillation gives it a
+supply line — but tractable broad-coverage commonsense inference is
+not claimed. Declare the boundary; revisit per domain (the game's
+closed world is exactly a domain where the knowledge IS enumerable).
+
+## 5. The wrong reaction to Chomsky: finite-state abandoned too early
+
+Chomsky (1957) argued finite-state models cannot capture natural
+language (center-embedding), and the field took this as license to
+ignore finite-state methods for thirty years. Meanwhile FS quietly won
+everywhere it was tried: two-level morphology (Koskenniemi 1983),
+phonology (Kaplan & Kay 1994 — rule systems are regular relations),
+speech, and eventually weighted FSTs as unifying infrastructure
+(Mohri 1997). And the competence/performance gap cut the other way:
+humans fail center-embedding at depth ~3 (Miller & Chomsky 1963; Karlsson
+2007), i.e., the PERFORMANCE phenomenon is bounded — finite-state
+shaped.
+
+*Citations:* Chomsky (1957), *Syntactic Structures*; Koskenniemi
+(1983); Kaplan & Kay (1994), "Regular models of phonological rule
+systems," *CL*; Mohri (1997), "Finite-state transducers in language
+and speech processing," *CL*; Karlsson (2007), "Constraints on
+multiple center-embedding," *J. Linguistics*; Shieber (1985) for the
+honest other side (Swiss German cross-serial dependencies are beyond
+CF).
+
+**Our bearing:** this is the project's founding wager, stated as
+history: bounded resource budgets (our K-limits) are not a hack but
+the empirically right shape of human limits, and the transformer
+connection (Krohn-Rhodes cascades; see notes/what_class_is_a_
+transformer.md) suggests the dominant NL technology is itself a
+bounded-state machine stack. We side with Koskenniemi against the
+verdict of 1957 — with weights.
+
+## 6. Reference, discourse, and the actor-tracking problem
+
+SHRDLU (Winograd 1972) resolved pronouns perfectly — in a blocks
+world with a handful of referents. Scaling reference resolution met:
+salience modeling (Hobbs 1978; centering — Grosz, Joshi & Weinstein
+1995), discourse structure (Mann & Thompson 1988), and the same
+knowledge bottleneck as everything else. No classical system tracked
+many actors over long text reliably.
+
+*Citations:* Winograd (1972), *Understanding Natural Language*; Hobbs
+(1978), "Resolving pronoun references," *Lingua*; Grosz, Joshi &
+Weinstein (1995), "Centering," *CL*; Mann & Thompson (1988), RST.
+
+**Our bearing:** designed, queued, and doubled in value — REF:e*
+labels from per-entity memory machines, a centering-style salience
+story machine, pronouns as weighted superposed candidates. And the
+modern twist: transformers ALSO fail at multi-actor tracking (binding
+IDs — Feng & Steinhardt 2023), so solving it in glass yields training
+data for the black box (paper_ideas/11). The 1995 reef is a 2026
+research opportunity.
+
+## 7. The representation wars and the semantics gap
+
+What is a meaning? Logic, semantic networks, frames (Minsky 1974),
+conceptual dependency (Schank 1972), preference semantics (Wilks
+1975) — each camp had demos, none had an agreed representation, and
+Woods (1975) showed the networks were semantically incoherent
+("What's in a link?"). Inference over any of them was intractable at
+scale.
+
+*Citations:* Schank (1972); Minsky (1974), "A framework for
+representing knowledge"; Woods (1975), "What's in a link?"; Wilks
+(1975).
+
+**Our bearing:** we do not claim to have settled what meaning is; we
+claim a smaller thing with teeth — a canonical frame representation
+that is ROUND-TRIP VERIFIED (frame -> text -> frame identity,
+measured at 90%) and convergent across eight languages' instruction
+sets. Representations that survive a bidirectional mechanical oracle
+earn their keep in a way 1975's could not demonstrate.
+
+## 8. No learning: the statistical revolution's actual lesson
+
+Classical systems did not improve with data. The statistical turn
+(Brown et al. 1990; Jelinek's attributed "every time I fire a
+linguist, the performance goes up") won not because rules were wrong
+but because LEARNED PARAMETERS beat hand-set ones wherever data
+existed. The symbolic program never had a parameter-fitting story.
+
+*Citations:* Brown et al. (1990), "A statistical approach to machine
+translation," *CL*; Church & Mercer (1993), *CL* special issue intro.
+
+**Our bearing:** our weights are still mostly hand-set — this reef is
+ahead of us, not behind. The fitting story exists in design
+(weights as the learnable surface; LLM-annotated targets;
+differentiable WFSTs — Hannun et al. 2020 — as the gradient path)
+and in zero implementations. The honest status: we have rebuilt the
+symbolic program's strengths and not yet absorbed the statistical
+program's lesson.
+
+## 9. Toy domains and the ELIZA effect
+
+ELIZA (Weizenbaum 1966) demonstrated that fluent-seeming behavior
+wins unearned credit; SHRDLU demonstrated that closed worlds
+flatter architectures. Classical NLP repeatedly mistook demo-world
+success for progress, and its critics (Dreyfus 1972; the ALPAC report
+1966, which collapsed MT funding on exactly this gap) were largely
+right about the overclaim.
+
+*Citations:* Weizenbaum (1966), "ELIZA," *CACM*; ALPAC (1966);
+Dreyfus (1972), *What Computers Can't Do*.
+
+**Our bearing:** our defense is methodological, not rhetorical:
+external oracles, corpus measurements with ratchets, declared
+coverage, error ledgers, and PERSPECTIVE documents that record what
+was NOT tested. McGuffey is a controlled register, chosen on purpose
+— the discipline is to keep saying so, and to let the coverage
+numbers (not the demos) carry the claims. ALPAC is what happens
+otherwise.
+
+## 10. Pipeline error propagation
+
+Staged architectures (morphology -> tags -> parse -> semantics)
+multiplied errors: each stage committed early and fed its mistakes
+forward. Much of statistical NLP's machinery (lattices, k-best lists,
+joint models) exists to undo premature commitment.
+
+*Citations:* discussed throughout the era; see Manning & Schütze
+(1999) ch. 1 for the canonical framing.
+
+**Our bearing:** structurally addressed — layers add weighted labels
+and never commit; the field carries alternatives forward; commitment
+happens once, at projection. This is the one reef where our
+architecture is not a repair of the classical design but its
+replacement. (The mixture problem shows the projection step must be
+designed with care — but the error lives in ONE auditable place,
+which was the point.)
+
+---
+
+## Reading the lighthouse
+
+Reefs we have instruments for and measurements against: 1, 2, 7, 9,
+10. Reefs with designs but no implementation: 6, and the projection
+half of 2. Reefs whose answer is the LLM supply line, empirically
+untested at scale: 3, 8. Reefs we deliberately do not claim: 4 (with
+a domain-bounded exception). The wager underneath all of it: 5.
+
+Per-problem deep dives belong in this directory as siblings
+(e.g. `ambiguity.md`, `reference.md`), each owning its literature and
+tracking our experiments against it.
