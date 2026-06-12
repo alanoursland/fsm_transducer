@@ -90,3 +90,47 @@ IS both directions and inversion is free. The codex could then mark
 components bidirectional with both signatures measured. Recorded as a
 candidate refactor — after story-coherent projection, since reversal
 inherits whatever projection does.
+
+## LM addendum: the parser as an autoregressive language model
+
+`mcguffey1_lm.py` is the third generation mode, and unlike the frame
+generator it IS the parser run forwards: the transformer-LM loop on the
+clause story machine itself. The output at each token is a prediction
+of the next token; sample; feed back; repeat.
+
+Mechanism: the machine's belief state over a prefix is its live path
+frontier (`transduce(..., frontier_out=...)`). Each frontier path's
+outgoing transition conditions say which label-classes can come next;
+a vocabulary word's score is
+
+    sum over (path, transition) of
+        path.weight * transition.weight * support(condition, lexicon[word])
+
+where `support` is the soft reading of the same condition the scanner
+evaluates as a boolean (HasLabel reads the word's tag weight, And=min,
+Or=max). The weights on the labels are the language model; sampling
+rolls the dice the parser was already holding. PUNCT ends a sentence
+and resets the frontier.
+
+Two findings, both honest properties of the system:
+
+1. **The frontier machine is permissive by design.** It accretes
+   labels; the VM judges and projection absorbs strays. So raw samples
+   are FSM-grammatical word salad ("Best bird Henry can sees cows bell
+   owl" keeps a live frontier — and even parses, because projection
+   absorbs the strays into nothing). Frame-level round-trip doesn't
+   catch this either: absorbed tokens vanish in regeneration but the
+   frames still match. The acceptance gate that works is **no token
+   left behind**: every sampled content word must appear in the parsed
+   frames. LM proposes; the certified core of the language accepts
+   (rejection sampling, no scoring outside the machines).
+
+2. **What remains is syntax without semantics.** "Let wolf sing. Eat
+   nest of nut. Can Ann fan box?" — grammatical by the system's own
+   judgment, semantically unselective, exactly like a transformer
+   trained on syntax alone. The missing term in the product is an
+   upstream story machine re-weighting the distribution (selectional
+   preferences, entity continuity across the PUNCT reset) — ENCL
+   again: upstream narrates, the reflex reads. That is the queued
+   REF/centering machinery, which would multiply into this same
+   distribution rather than replace it.
