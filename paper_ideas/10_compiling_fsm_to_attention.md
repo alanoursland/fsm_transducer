@@ -35,15 +35,27 @@ measurements no Tracr-style pipeline currently has.
 
 ## What exists
 
-The source machines (fsm_transducer: every machine carries a
-complexity certificate); the trained-twin harness (regex_transformer:
-deterministic training, state-classification head); the author's
-draft delta->QKV construction notes.
+**The compiler is already implemented** in the regex_transformer
+repository: hand-constructed transformers that execute simple regexes
+exactly, using one-hot embeddings (each state and symbol gets its own
+dimension) — an existence proof of delta->QKV, living in the same
+codebase as the training harness (deterministic training,
+state-classification head), so compiled and trained models are
+directly comparable by construction. fsm_transducer supplies the
+source machines, each with a complexity certificate.
+
+The one-hot construction defines the trivial-capacity regime
+(d_model >= |Q| + |Sigma|, exactness for free). The open compiler work
+is everything below that line: compressed embeddings (when must states
+share dimensions — the superposition question, cf. Elhage et al.
+2022), weighted cascades (semiring path weights as attention
+magnitudes), and multi-machine stacks (the cascade, not one machine).
 
 ## Experiments
 
-1. Capacity: states encodable vs d_model; where compilation needs
-   superposition (cf. Toy Models of Superposition).
+1. Capacity: compress below one-hot — states encodable vs d_model,
+   where compilation needs superposition (cf. Toy Models of
+   Superposition); the existence proof anchors the curve's easy end.
 2. Exactness: compiled model vs symbolic machine, exhaustive on
    bounded lengths (the project's standard differential discipline).
 3. Attractor distance: train the twin, measure convergence toward /

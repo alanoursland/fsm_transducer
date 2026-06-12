@@ -63,10 +63,13 @@ load-bearing. (See also notes/what_class_is_a_transformer.md.)
 
 1. **fsm_transducer** — the symbolic cascade (behavioral spec; emits
    the latent labels).
-2. **regex_transformer** — the trained twin (the learned point in
-   weight space).
-3. **delta->QKV compiler** — the constructed attractor (the same
-   machine as 1, expressed in the substrate of 2).
+2. **regex_transformer (training side)** — the trained twin (the
+   learned point in weight space).
+3. **regex_transformer (construction side)** — the delta->QKV compiler,
+   already implemented as an existence proof: hand-built transformers
+   executing simple regexes exactly via one-hot embeddings. Legs 2 and
+   3 share a codebase, which makes compiled-vs-trained comparison a
+   within-harness measurement rather than a cross-project one.
 
 The mirror experiment (paper_ideas/03) gains a second measurement
 axis: not only "do probes recover the glass box's labels?" but "how
