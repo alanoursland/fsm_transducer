@@ -16,12 +16,15 @@ readiness, not importance.
 | 05 | Explanation as provenance traversal (NPCs) | AIIDE / CHI PLAY | belief stream + demo |
 | 03 | Glass-box mirror for transformer interpretability | BlackboxNLP -> NeurIPS/ICLR | training + probing + interventions |
 | 09 | Recognizing the moral of the story | CMN / arXiv | grammar scale-up + arc machines |
+| 10 | Compiling FSM cascades into attention (delta->QKV) | BlackboxNLP -> main | compiler + capacity + attractor-distance |
 
 Sensible sequencing: 02 and 06 are mostly written already (the repo's
 language definitions and PERSPECTIVE documents contain the content);
 08 requires only retrospective analysis of the public record; 01
 anchors the others; 07 unblocks 09; 03 is the flagship scientific bet
-and can proceed in parallel; 04+05 are one strong games paper if
+and can proceed in parallel (10 is its constructive prerequisite and
+shares its infrastructure — see references/prior_work_review.md for
+the three-leg program); 04+05 are one strong games paper if
 merged.
 
 A note on authorship and provenance: this repository was built in
