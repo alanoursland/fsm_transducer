@@ -235,15 +235,102 @@ replacement. (The mixture problem shows the projection step must be
 designed with care — but the error lives in ONE auditable place,
 which was the point.)
 
+## 11. Novelty: the open-world problem
+
+Classical systems were frozen at deployment: an unknown word or
+unanticipated concept was at best skipped, at worst fatal, and never
+LEARNED. Lexical acquisition from context was attempted early —
+Granger's FOUL-UP (1977) inferred unknown-word meanings from script
+context — but no mainline architecture had a path from "novel input"
+to "new competence." The world is open; the systems were closed.
+
+*Citations:* Granger (1977), "FOUL-UP: a program that figures out
+meanings of words from context," *IJCAI*; Zernik & Dyer (1987) on
+lexical acquisition.
+
+**Our bearing:** today we are exactly as closed as 1977:
+ERROR:UNKNOWN_WORD is a fallback, not a doorway. The repair is
+specified by our own machinery run at runtime — the Steele growth
+protocol as a live loop: promote an unknown word to a CANDIDATE
+symbol (a slot with distributional evidence from its eager labels),
+hand candidates to the distillation pipeline for classification,
+inject the result as a typed, weighted lexicon entry — versioned,
+audited, ratchet-tested like any growth iteration. Same loop for the
+game: players teaching NPCs words IS this reef as gameplay. Status:
+designed here, not built.
+
+## 12. Long-range dependencies: distance, not just depth
+
+Two phenomena hid under one complaint. NESTING depth (center-
+embedding) is genuinely bounded in humans and our K-budgets are the
+honest answer. But filler-gap dependencies — "WHO did you say [ ...
+] saw __?" — and cross-paragraph reference span unbounded FLAT
+distance at shallow depth. Classical machinery strained here: ATN
+HOLD registers (Woods 1970), gap threading, GPSG/HPSG slash features
+— each a special mechanism bolted on because the core formalism had
+no account of action at a distance.
+
+*Citations:* Woods (1970), "Transition network grammars," *CACM*;
+Gazdar et al. (1985), *GPSG*; Fodor (1978) on parsing gaps.
+
+**Our bearing:** first, the correction to a misreading this entry
+anticipates: exceeding K does NOT crash — every tracker since
+arithmetic has a tested overflow state (ERROR:DEPTH_EXCEEDED, keep
+narrating); graceful disregard is implemented, not aspirational. The
+open part is distance: our capture registers are exactly ATN HOLDs
+with provenance (a filler is captured, the gap's emission anchors to
+it), and per-entity memory machines are the cross-sentence case —
+but neither has been exercised on real filler-gap constructions
+(no relative clauses in any grammar yet). Tier 2's "The dog that
+ran..." will force it. Status: mechanism in hand, construction
+unbuilt.
+
+## 13. The semantic gap and interlingua bloat
+
+Two-sided reef. Side one: VERIFYING structure is not verifying
+meaning — a representation can be perfectly self-consistent and
+say nothing (the deepest form of the ELIZA effect). Side two: trying
+to close the gap by enriching the representation killed it a
+different way — MT interlinguas grew a gizmo per phenomenon until
+the meaning language was as unwieldy as the languages it mediated,
+one reason transfer-based and then statistical MT won.
+
+*Citations:* the interlingua experience in MT — Hutchins (1986),
+*Machine Translation: Past, Present, Future*; Nirenburg et al.
+(KBMT-89) for the high-water mark; Woods (1975) again, since "What's
+in a link?" is this reef's representation-side statement.
+
+**Our bearing:** stated as a concession first: our round-trip oracle
+verifies the BIJECTION, not the meaning — necessary, never
+sufficient; a vacuous frame language could round-trip at 100%.
+External semantic grounding comes from (a) the game world, where a
+frame's correctness is testable against state and intent
+(convergence note), and (b) sampled human/LLM adequacy judgments,
+with the usual silver-data discipline. Against bloat: the frame
+vocabulary is itself a GROWN language under the same ratchet as
+everything else — a new pred/slot type must be forced by a measured
+corpus or round-trip failure, never added for convenience, and
+signature() keeps the instruction-set alphabet inspectable. We do
+not claim more expressive power than an LLM; we claim auditability,
+and comparisons are task-by-task. Status: oracle running; grounding
+designed; ontology ratchet adopted as policy by this paragraph.
+
 ---
 
 ## Reading the lighthouse
 
 Reefs we have instruments for and measurements against: 1, 2, 7, 9,
-10. Reefs with designs but no implementation: 6, and the projection
+10, and the depth half of 12. Reefs with designs but no
+implementation: 6, 11, the distance half of 12, and the projection
 half of 2. Reefs whose answer is the LLM supply line, empirically
-untested at scale: 3, 8. Reefs we deliberately do not claim: 4 (with
-a domain-bounded exception). The wager underneath all of it: 5.
+untested at scale: 3, 8, and 11's loop. Reefs we deliberately do not
+claim: 4 (with a domain-bounded exception), and the meaning side of
+13 beyond grounded domains. The wager underneath all of it: 5.
+
+(Reefs 11-13 were prompted by an external review of this document —
+suggestions from a different LLM, evaluated and adapted: one accepted
+nearly as-is, one corrected on the facts of this system, one
+reframed. The lighthouse takes light from any source that has some.)
 
 Per-problem deep dives belong in this directory as siblings
 (e.g. `ambiguity.md`, `reference.md`), each owning its literature and
