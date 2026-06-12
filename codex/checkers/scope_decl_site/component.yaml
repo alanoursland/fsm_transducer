@@ -1,0 +1,9 @@
+id: checker.scope.decl_site
+kind: checker
+status: gold
+factory: fsm_parser.cpp_lang:build_scope_checker
+params: {name: x}
+schema_params: [name]
+search_terms: [scope, type, declaration, DECL_SITE, C++, per-identifier]
+used_by: [cpp]
+notes: Bit-stack checker keyed on DECL_SITE labels (type-before-name binding). Third adapter for one checker shape.

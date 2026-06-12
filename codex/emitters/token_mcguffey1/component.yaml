@@ -1,0 +1,8 @@
+id: emitters.token.mcguffey1
+kind: emitter_set
+status: silver
+factory: fsm_parser.mcguffey1_gen:build_token_emitter
+params: {}
+search_terms: [generation, token, article, the, surface form, TOKEN_SELF]
+used_by: [mcguffey_primer generation]
+notes: Generative token emitter; weighted article distribution in the field. Returns one machine (singleton set).

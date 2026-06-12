@@ -1,0 +1,8 @@
+id: tracker.shape.json
+kind: tracker
+status: gold
+factory: fsm_parser.json_lang:build_shape_tracker
+params: {max_depth: 3}
+search_terms: [json, container, object, array, CTX, ENCL, shape]
+used_by: [json]
+notes: Container-kind stacks {O,A}; emits CTX (innermost) and ENCL (parent-of-closed) labels.

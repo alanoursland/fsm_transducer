@@ -1,0 +1,8 @@
+id: tracker.depth.arith
+kind: tracker
+status: gold
+factory: fsm_parser.arithmetic:build_depth_tracker
+params: {max_depth: 3}
+search_terms: [depth, paren, arithmetic, unbalanced]
+used_by: [arithmetic]
+notes: The original 5-state depth tracker (single bracket kind).

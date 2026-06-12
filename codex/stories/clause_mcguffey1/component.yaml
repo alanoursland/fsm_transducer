@@ -1,0 +1,8 @@
+id: story.clause.mcguffey1
+kind: story
+status: silver
+factory: fsm_parser.mcguffey1_lang:build_clause_story
+params: {}
+search_terms: [english, clause, declarative, imperative, question, fragment, coordination, McGuffey]
+used_by: [mcguffey_primer]
+notes: Tier-1 English clause grammar (~40 states); weighted forks; capture-anchored accept emissions.

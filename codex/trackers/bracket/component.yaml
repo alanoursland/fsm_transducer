@@ -1,0 +1,8 @@
+id: tracker.bracket
+kind: tracker
+status: gold
+factory: fsm_parser.imp_lang:build_bracket_tracker
+params: {max_depth: 5}
+search_terms: [bracket, paren, brace, depth, nesting, balanced, mismatch]
+used_by: [imp, pysub, jssub]
+notes: Anchored tracker over bracket-kind stacks {P,B}; DEPTH/GROUP labels, mismatch and balance errors.

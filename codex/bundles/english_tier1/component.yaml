@@ -1,0 +1,9 @@
+id: bundle.english_tier1
+kind: bundle
+status: silver
+imports:
+  - lexicon.mcguffey.tier1
+  - story.clause.mcguffey1
+  - emitters.token.mcguffey1
+search_terms: [english, tier 1, McGuffey, parse and generate, bundle]
+notes: Everything needed to parse and generate tier-1 early-reader English.
