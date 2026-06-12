@@ -1,0 +1,56 @@
+# Layer 0: weighted lexicon — the first weighted labels in any runner.
+# Case-insensitive; words are tokens; VAL:{lower} on content words.
+
+entries:
+  # names (entities)
+  spot:  { N: 1.0, NAME: 1.0 }
+  dick:  { N: 1.0, NAME: 1.0 }
+  jane:  { N: 1.0, NAME: 1.0 }
+  sally: { N: 1.0, NAME: 1.0 }
+  puff:  { N: 1.0, NAME: 1.0 }
+  # common nouns
+  ball: { N: 1.0 }
+  boat: { N: 1.0 }
+  cat:  { N: 1.0 }
+  dog:  { N: 1.0 }
+  # noun/verb ambiguous — the fork words
+  play: { V: 0.55, N: 0.45 }
+  run:  { V: 0.7,  N: 0.3 }
+  look: { V: 0.8,  N: 0.2 }
+  # unambiguous verbs (inflected forms are separate entries)
+  see: { V: 1.0 }
+  sees: { V: 1.0 }
+  runs: { V: 1.0 }
+  plays: { V: 1.0 }
+  looks: { V: 1.0 }
+  go: { V: 1.0 }
+  jump: { V: 1.0 }
+  jumps: { V: 1.0 }
+  # copula, determiners, adjectives, conjunction, pronouns
+  is:  { COP: 1.0 }
+  are: { COP: 1.0 }
+  the: { DET: 1.0 }
+  a:   { DET: 1.0 }
+  red:    { ADJ: 1.0 }
+  big:    { ADJ: 1.0 }
+  little: { ADJ: 1.0 }
+  fun:    { ADJ: 1.0 }
+  and: { CONJ: 1.0 }
+  i:   { PRON: 1.0, N: 1.0 }
+  you: { PRON: 1.0, N: 1.0 }
+  we:  { PRON: 1.0, N: 1.0 }
+
+punctuation:
+  ".": { PUNCT: 1.0 }
+  "!": { PUNCT: 1.0 }
+  "?": { PUNCT: 1.0 }
+  ",": { COMMA: 1.0 }
+
+fallback:
+  emit: [ERROR:UNKNOWN_WORD]   # out-of-vocabulary; sentence degrades
+
+# Note: lexicon weights are recorded on the tokens (play gets V:0.55,
+# N:0.45) but the story machine's fork weights are static transition
+# priors mirroring the ambiguity class — the engine cannot yet scale a
+# path weight by a label weight read from the field. Weight-coupled
+# transitions are the recorded engine extension this language wants.

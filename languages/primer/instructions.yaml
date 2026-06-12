@@ -1,0 +1,31 @@
+# Target: a semantic-frame builder — the series' story-serialization
+# instruction vocabulary applied to events. Stack ops; same shape as
+# JSON's builder (a frame is a container; arguments complete into it).
+
+instruction_set:
+  ENT:    { operands: 1, semantics: "push entity (a referent enters the stage)" }
+  IMPYOU: { operands: 0, semantics: "push the implicit addressee entity 'you'" }
+  EVT:    { operands: 1, semantics: "push a new frame {pred: v}" }
+  AGENT:  { operands: 0, semantics: "pop frame, pop value; frame.agent = value; push frame" }
+  THEME:  { operands: 0, semantics: "pop value; frame now on top gets .theme = value" }
+  ATTR:   { operands: 1, semantics: "frame on top gets .attr = v" }
+  GROUP:  { operands: 0, semantics: "pop e2, e1; push group entity [e1, e2]" }
+  END:    { operands: 0, semantics: "pop completed frame to the output list" }
+
+# 'See Spot run.' (the raising construction):
+#   IMPYOU; EVT see; AGENT;          -> see{agent: you}
+#   ENT spot; EVT run; AGENT;        -> run{agent: spot} on top
+#   THEME;                           -> see{agent: you, theme: run{...}}
+#   END
+# AGENT takes its value from BELOW the frame (subjects precede verbs);
+# THEME from ABOVE (objects follow) — English SVO order serialized,
+# exactly the dual-direction completion JSON's SETK/APPEND established.
+
+# --- Validity conditions ------------------------------------------------------
+# 1. Every frame in the output has a pred and an agent or attr.
+# 2. A sentence either contributes exactly one frame or none (no
+#    partial frames escape; unparsed sentences leave only eager field
+#    labels). There is NO external oracle for condition "the frame is
+#    the right meaning" — see PERSPECTIVE.md; goldens are
+#    hand-validated and that is the permanent condition of the domain.
+# 3. The stack is empty at end of input.
