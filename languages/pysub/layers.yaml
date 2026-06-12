@@ -67,10 +67,10 @@
       emit: [{ label: "EXEC.0:LOAD(!{VAL})", anchor: the IDENT token }]
     - name: assign
       pattern: "<IDENT>{cap var: slot_id} <ASSIGN> <not NEWLINE>* <NEWLINE>"
-      emit: [{ label: "EXEC.5:STORE(!{VAL@{var}})", anchor: the NEWLINE }]
+      emit: [{ label: "EXEC.6:STORE(!{VAL@{var}})", anchor: the NEWLINE }]
     - name: print_stmt
       pattern: "<PRINT_KW> <not NEWLINE>* <NEWLINE>"
-      emit: [{ label: "EXEC.5:PRINT", anchor: the NEWLINE }]
+      emit: [{ label: "EXEC.6:PRINT", anchor: the NEWLINE }]
     - name: if_branch     # ':' only follows if-conditions in this subset
       pattern: "<COLON>"
       emit: [{ label: "EXEC.0:BRF" }]

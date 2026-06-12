@@ -59,8 +59,9 @@ Rank discipline:
 | 1 | NEG; ENTER | operand end; `{` |
 | 2 | MUL, DIV | expression end |
 | 3 | ADD, SUB | expression end |
-| 4 | GT, LT, EQ | expression end |
-| 5 | DECL, STORE, PRINT | `;` |
+| 4 | SHL, SHR | (reserved; used by the cpp subset) |
+| 5 | GT, LT, EQ | expression end |
+| 6 | DECL, STORE, PRINT | `;` |
 
 NEG outranks MUL because `2 * -3` lands NEG and MUL on the same slot
 (the `3`); rank 1 < 2 applies the negation first.

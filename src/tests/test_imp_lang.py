@@ -32,7 +32,7 @@ def test_example_a_canonical():
     res = run_program(r.program)
     assert res.valid and res.outputs == [3] and res.env == {"x": 3}
     # cross-slot operand: DECL at the ';' names the 'x' token
-    assert "EXEC.5:DECL(!{VAL@token:1})" in _labels(r, "token:4")
+    assert "EXEC.6:DECL(!{VAL@token:1})" in _labels(r, "token:4")
     assert {"EXEC.0:BRF", "EXEC.1:ENTER", "GROUP_START:1"} <= _labels(r, "token:9")
 
 

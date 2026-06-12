@@ -227,7 +227,7 @@ def _statement_emitters() -> list[FSM]:
         literal(HasLabel("ASSIGN")),
         star(literal(Not(HasLabel("NEWLINE")))),
         literal(HasLabel("NEWLINE"),
-                emissions=[Emission("EXEC.5:STORE(!{VAL@{var}})", 1.0, offset=0)]),
+                emissions=[Emission("EXEC.6:STORE(!{VAL@{var}})", 1.0, offset=0)]),
     )
     assign.name = "assign"
     machines.append(assign)
@@ -236,7 +236,7 @@ def _statement_emitters() -> list[FSM]:
         literal(HasLabel("PRINT_KW")),
         star(literal(Not(HasLabel("NEWLINE")))),
         literal(HasLabel("NEWLINE"),
-                emissions=[Emission("EXEC.5:PRINT", 1.0, offset=0)]),
+                emissions=[Emission("EXEC.6:PRINT", 1.0, offset=0)]),
     )
     print_stmt.name = "print_stmt"
     machines.append(print_stmt)

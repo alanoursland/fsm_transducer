@@ -17,13 +17,13 @@ Slot stream: `x = 3 «NEWLINE» if x > 1 : «NEWLINE» «INDENT» print ( x )
 |---|---|---|
 | token:0 `x` | IDENT, TARGET | |
 | token:2 `3` | NUM | EXEC.0:PUSH |
-| layout NEWLINE₁ | | EXEC.5:STORE(!{VAL@token:0}) |
+| layout NEWLINE₁ | | EXEC.6:STORE(!{VAL@token:0}) |
 | token:4 `x` | use, assigned ✓ | EXEC.0:LOAD |
-| token:6 `1` | | EXEC.0:PUSH, EXEC.4:GT |
+| token:6 `1` | | EXEC.0:PUSH, EXEC.5:GT |
 | token:7 `:` | | EXEC.0:BRF |
 | layout INDENT | | EXEC.1:ENTER |
 | token:10 `x` | DEPTH:1 (inside print parens) | EXEC.0:LOAD |
-| layout NEWLINE₃ | | EXEC.5:PRINT |
+| layout NEWLINE₃ | | EXEC.6:PRINT |
 | layout DEDENT | | EXEC.0:EXIT |
 
 Program: `PUSH 3; STORE x; LOAD x; PUSH 1; GT; BRF; ENTER; LOAD x;
