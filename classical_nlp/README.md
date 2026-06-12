@@ -209,6 +209,12 @@ right about the overclaim.
 *Citations:* Weizenbaum (1966), "ELIZA," *CACM*; ALPAC (1966);
 Dreyfus (1972), *What Computers Can't Do*.
 
+Add the quieter forms of the same failure: cherry-picked examples,
+test-set contamination, underspecified label schemes, and
+inter-annotator disagreement treated as noise rather than signal —
+evaluation problems shaped which architectures survived as much as
+the architectures did.
+
 **Our bearing:** our defense is methodological, not rhetorical:
 external oracles, corpus measurements with ratchets, declared
 coverage, error ledgers, and PERSPECTIVE documents that record what
@@ -315,6 +321,134 @@ not claim more expressive power than an LLM; we claim auditability,
 and comparisons are task-by-task. Status: oracle running; grounding
 designed; ontology ratchet adopted as policy by this paragraph.
 
+## 14. Pragmatics: language as action
+
+"Can you open the window?" is syntactically a question, semantically
+about ability, pragmatically a request. Much of language is not
+content to be extracted but a MOVE being made — requesting, warning,
+promising, refusing, implying, deflecting. Classical NLP knew this
+(Austin, Searle, Grice) and even built its own symbolic account —
+plan-based speech act theory (Cohen & Perrault 1979; Allen &
+Perrault 1980) — which then hit the same knowledge bottleneck as
+everything else: felicity conditions and speaker goals had to be
+hand-coded. Nonliteral language (metonymy: "the White House said";
+irony; hyperbole) is the same reef's outer shoal — routine in real
+text, and declared mostly out of scope here until the story layer
+needs it.
+
+The sentence this reef deserves, from the external review that
+prompted it: **"Parsing a sentence is not the same as knowing what
+move was made."**
+
+*Citations:* Austin (1962), *How to Do Things with Words*; Searle
+(1969); Grice (1975), "Logic and conversation"; Cohen & Perrault
+(1979), "Elements of a plan-based theory of speech acts," *Cognitive
+Science*.
+
+**Our bearing:** better positioned than classical, for a reason the
+architecture did not plan: our frames are already move-shaped (mood,
+imperative addressee, and the game's message types — ALERT, REQUEST,
+SHARE_OBS — are speech act categories), and the game world makes the
+utterance-to-move mapping ENUMERABLE: a request's felicity conditions
+are checkable against world state. The move layer is a story machine
+over frames (what act does this frame perform, given who is speaking
+to whom in what state) — designed nowhere yet, but the substrate is
+the right shape. Status: unbuilt; the game is its proving ground.
+
+## 15. Idioms, multiword expressions, and constructions
+
+Meaning often lives above the word and below the sentence: "take care
+of," "kick the bucket," "by and large," phrasal verbs, light verbs,
+"the Xer the Yer." These are not exceptions — Jackendoff estimated
+idioms rival the lexicon in number, and Sag et al. (2002) called MWEs
+"a pain in the neck for NLP" because rules-plus-lexicon architectures
+have no natural home for the semi-frozen middle. Construction grammar
+(Fillmore, Kay & O'Connor 1988, "let alone") made the case that the
+middle IS the language.
+
+*Citations:* Sag et al. (2002), "Multiword expressions: a pain in the
+neck for NLP," *CICLing*; Fillmore, Kay & O'Connor (1988),
+*Language*; Jackendoff (1997).
+
+**Our bearing:** rare good news — finite-state machinery LOVES
+bounded surface patterns. A construction is a pattern emitter with
+captures ("the Xer the Yer" is a two-capture machine emitting a
+comparative-correlation frame); a phrasal verb is a two-token lexicon
+entry; our per-lexeme instantiation pattern extends to per-
+construction. The reef here is not representation but ACQUISITION
+(thousands of constructions = reef 3), where the distillation
+pipeline is again the proposed supply line. Status: architecture
+ready, zero constructions implemented.
+
+## 16. Semantic operators: frames that exist but are not asserted
+
+"Mary believes John left." A naive frame extractor emits left(john) —
+and poisons the belief stream with something the text never asserted.
+Negation, modality, quantifier scope ("Every student didn't pass"),
+tense, desire, and intensionality ("the unicorn is imaginary") all
+change the conditions under which a frame holds. Classical NLP took
+this seriously — LUNAR had quantifier machinery (Woods 1972), Cooper
+storage and scope algorithms (Hobbs & Shieber 1987) handled scope,
+and DRT (Kamp 1981) embedded sub-structures for belief and negation —
+and the cost was representations whose inference was intractable
+(reef 13's bloat, from the logic side).
+
+*Citations:* Woods et al. (1972), LUNAR; Cooper (1983); Hobbs &
+Shieber (1987), "An algorithm for generating quantifier scopings,"
+*CL*; Kamp (1981), DRT.
+
+**Our bearing:** the embryo exists — frames carry neg, mod, mood
+already, and nested frames (See Spot run) are embedded structures in
+the DRT sense. The principle to adopt now, before the belief stream
+is built: **assertion status is a label, and embedded frames inherit
+it** — believed-by:mary is a weight-and-provenance context, not a
+truth. The accretion stance (weights are salience, not truth) was
+accidentally the right metaphysics for this reef all along; the work
+is making embedding contexts first-class before inference scripts
+run. Status: design constraint adopted here; gates the belief stream.
+
+## 17. Morphology, segmentation, and typology
+
+English lets a symbolic architecture dodge dragons: poor inflection,
+rigid order, spaces between words. Rich agreement, case systems,
+clitics, productive compounding, reduplication, pro-drop, evidentials,
+and boundary-free scripts are where "general" architectures
+historically went to die — and, ironically, where finite-state
+methods scored their greatest classical victory (Koskenniemi's
+two-level morphology was built FOR Finnish).
+
+*Citations:* Koskenniemi (1983); Beesley & Karttunen (2003),
+*Finite State Morphology*.
+
+**Our bearing:** optimistic on priors, unproven in fact. The
+char-level layer (tokenization-as-parsing, designed and deferred
+since the JSON language) is exactly where morphology slots in, and FS
+is the right tool by history. But the ledger must say it plainly:
+every measurement in this repository is English. "Convergent across
+languages" currently means across PROGRAMMING languages. Status: a
+non-English tier is the honest test, unscheduled.
+
+## 18. Register and domain shift
+
+Distinct from toy domains (reef 9) and from coverage (reef 1):
+a system tuned to one register fails on the next — primers, recipes,
+legal text, chat — and the classical failure was not knowing it was
+failing. Detecting that the distribution moved, then choosing to
+specialize, grow, or abstain, was never part of the architecture.
+
+*Citations:* Biber (1988), *Variation across Speech and Writing*; the
+statistical era's domain-adaptation line (e.g., Daume 2007) as the
+eventual response.
+
+**Our bearing:** two native advantages. Our coverage instruments
+DOUBLE as drift detectors for free — OOV rate and parse-rate drop are
+the alarm, per text, mechanically. And abstention is the
+architecture's default failure mode (zero frames, never wrong frames
+silently). The tier structure makes register growth deliberate rather
+than accidental. What we lack is what everyone lacks: transfer
+without growth. Status: detection instrumented by accident;
+adaptation = the growth protocol, applied on purpose.
+
 ---
 
 ## Reading the lighthouse
@@ -327,10 +461,18 @@ untested at scale: 3, 8, and 11's loop. Reefs we deliberately do not
 claim: 4 (with a domain-bounded exception), and the meaning side of
 13 beyond grounded domains. The wager underneath all of it: 5.
 
-(Reefs 11-13 were prompted by an external review of this document —
-suggestions from a different LLM, evaluated and adapted: one accepted
-nearly as-is, one corrected on the facts of this system, one
-reframed. The lighthouse takes light from any source that has some.)
+Updated: reefs we have instruments for now include 18's detection
+half; designed-not-built grows by 14 (move layer), 15
+(constructions), 16 (assertion status — adopted as a design
+constraint gating the belief stream); 17 is the honest unscheduled
+test of generality.
+
+(Reefs 11-13 were prompted by one external LLM review; 14-18 by a
+second, which also contributed this document's best sentence:
+"parsing a sentence is not the same as knowing what move was made."
+Each batch was evaluated, partially corrected, and adapted — one
+suggestion declined as duplicative, one folded. The lighthouse takes
+light from any source that has some.)
 
 Per-problem deep dives belong in this directory as siblings
 (e.g. `ambiguity.md`, `reference.md`), each owning its literature and
