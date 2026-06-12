@@ -115,6 +115,20 @@ def cmd_trace(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_mcguffey1(args: argparse.Namespace) -> int:
+    from fsm_parser.mcguffey1_lm import _prompt_tokens, generate_lm
+
+    print(generate_lm(
+        args.n_sentences,
+        seed=args.seed,
+        temperature=args.temperature,
+        max_tokens=args.max_tokens,
+        prompt=_prompt_tokens(args.prompt),
+        max_tries=args.max_tries,
+    ))
+    return 0
+
+
 def _read_input(args: argparse.Namespace) -> str:
     if args.text:
         return args.text
@@ -139,6 +153,40 @@ def build_argparser() -> argparse.ArgumentParser:
 
     trace = sub.add_parser("trace", parents=[common], help="parse with layer trace")
     trace.set_defaults(func=cmd_trace)
+
+    lm = sub.add_parser("mcguffey1", help="generate McGuffey tier-1 text")
+    lm.add_argument(
+        "n_sentences",
+        nargs="?",
+        type=int,
+        default=5,
+        help="number of sentences to generate (default: 5)",
+    )
+    lm.add_argument("--seed", type=int, help="random seed for deterministic output")
+    lm.add_argument(
+        "--temperature",
+        "-t",
+        type=float,
+        default=1.0,
+        help="sampling temperature (default: 1.0)",
+    )
+    lm.add_argument(
+        "--max-tokens",
+        type=int,
+        default=10,
+        help="maximum tokens per sampled sentence before rejection (default: 10)",
+    )
+    lm.add_argument(
+        "--prompt",
+        help="prefix tokens each generated sentence must continue, e.g. 'the cat'",
+    )
+    lm.add_argument(
+        "--max-tries",
+        type=int,
+        default=200,
+        help="rejection-sampling attempts per sentence (default: 200)",
+    )
+    lm.set_defaults(func=cmd_mcguffey1)
 
     return p
 

@@ -33,6 +33,7 @@ narrates, the reflex reads.)
 
 from __future__ import annotations
 
+import argparse
 import random
 from functools import lru_cache
 
@@ -238,3 +239,65 @@ def _render(tokens: list[str], punct: str) -> str:
             out.append(w)
     text = " ".join(out).replace(" ,", ",")
     return text + punct
+
+
+def _prompt_tokens(prompt: str | None) -> list[str] | None:
+    if not prompt:
+        return None
+    return [tok.lower() for tok in prompt.replace(",", " ,").split()]
+
+
+def build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="python -m fsm_parser.mcguffey1_lm",
+        description="Generate text from the tier-1 McGuffey symbolic language model.",
+    )
+    p.add_argument(
+        "n_sentences",
+        nargs="?",
+        type=int,
+        default=5,
+        help="number of sentences to generate (default: 5)",
+    )
+    p.add_argument("--seed", type=int, help="random seed for deterministic output")
+    p.add_argument(
+        "--temperature",
+        "-t",
+        type=float,
+        default=1.0,
+        help="sampling temperature (default: 1.0)",
+    )
+    p.add_argument(
+        "--max-tokens",
+        type=int,
+        default=10,
+        help="maximum tokens per sampled sentence before rejection (default: 10)",
+    )
+    p.add_argument(
+        "--prompt",
+        help="prefix tokens each generated sentence must continue, e.g. 'the cat'",
+    )
+    p.add_argument(
+        "--max-tries",
+        type=int,
+        default=200,
+        help="rejection-sampling attempts per sentence (default: 200)",
+    )
+    return p
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_argparser().parse_args(argv)
+    print(generate_lm(
+        args.n_sentences,
+        seed=args.seed,
+        temperature=args.temperature,
+        max_tokens=args.max_tokens,
+        prompt=_prompt_tokens(args.prompt),
+        max_tries=args.max_tries,
+    ))
+    return 0
+
+
+if __name__ == "__main__":  # pragma: no cover
+    raise SystemExit(main())

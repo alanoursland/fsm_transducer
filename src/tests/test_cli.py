@@ -50,3 +50,10 @@ def test_cli_reads_stdin_when_no_text():
     result = _run(["parse"], input_text="The cat slept.\n")
     assert result.returncode == 0, result.stderr
     assert "cat" in result.stdout
+
+
+def test_cli_mcguffey1_generates_text():
+    result = _run(["mcguffey1", "2", "--seed", "1", "--temperature", "0.7"])
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip()
+    assert result.stdout.strip().endswith(".") or result.stdout.strip().endswith("?")
