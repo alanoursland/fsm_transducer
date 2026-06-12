@@ -1,5 +1,9 @@
 """The autoregressive LM built from the tier-1 parser machine."""
 
+import subprocess
+import sys
+from pathlib import Path
+
 from fsm_parser.mcguffey1_lang import lexicon, parse
 from fsm_parser.mcguffey1_lm import (
     generate_lm,
@@ -60,3 +64,47 @@ def test_lm_vocabulary_is_the_lexicon():
     lex = lexicon()
     for tok in text.lower().replace("?", "").replace(".", "").replace(",", "").split():
         assert tok in lex, tok
+
+
+def test_lm_module_cli_generates_text():
+    src = Path(__file__).resolve().parent.parent
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "fsm_parser.mcguffey1_lm",
+            "2",
+            "--seed",
+            "1",
+            "--temperature",
+            "0.7",
+        ],
+        cwd=src,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == generate_lm(2, seed=1, temperature=0.7)
+
+
+def test_lm_module_cli_accepts_prompt():
+    src = Path(__file__).resolve().parent.parent
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "fsm_parser.mcguffey1_lm",
+            "1",
+            "--seed",
+            "3",
+            "--prompt",
+            "the cat",
+        ],
+        cwd=src,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.lower().startswith("the cat")
