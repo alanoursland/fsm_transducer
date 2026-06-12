@@ -105,3 +105,57 @@ memory science — implementable here with mechanisms that all exist.
 * the game integration: relationship arcs as memory machines shared
   (in state) between NPC pairs; trust as a weight the semiring
   propagates through them.
+
+## Addendum: memories are executable (the belief stream)
+
+The author's elaboration, which makes memory generative rather than
+archival:
+
+> The player tells an NPC "Jack is angry at Mary." The parser converts
+> that into semantic representation and the agent remembers that chain
+> of labels. Later, that chain of labels is an FSM that modifies the
+> labels of the system. If the NPC learns "Mary kissed Mark", a
+> jealousy script connects the two and the NPC can tell the player
+> "Jack is angry at Mary because she kissed Mark." It doesn't even
+> have to be true.
+
+Four design consequences:
+
+**1. Inference is parsing the belief stream.** Beliefs are slots in a
+second stream, ordered by acquisition time; inference scripts
+(jealousy, contradiction, generalization) are pattern emitters over
+that stream; the social story machines are its anchored trackers. The
+engine already supports this literally — ParserState is multi-stream
+and AddSlot exists. Parse -> frames -> AddSlot("belief") -> script
+machines transduce the belief stream -> inferred beliefs with
+provenance. The same engine, second stream, zero new mechanisms.
+
+**2. Explanation is provenance traversal.** An inferred belief carries
+derived_from edges to its source beliefs and the script that fired.
+"...because she kissed Mark" is not generated prose; it is a read of
+the CAUSE label's provenance. NPCs can answer "why do you think that?"
+truthfully about their own inference, by construction — auditability
+as a gameplay feature.
+
+**3. Truth was never claimed; salience was.** The accretion stance
+(weights as evidence/salience, not probability of truth) scales to
+social knowledge unchanged: belief weight = source confidence x trust
+x script strength along the inference chain (semiring). Player lies
+are adversarial input to the same pipeline; contradictions produce
+superposed beliefs (primer's fork at knowledge timescale);
+unrefreshed beliefs decay. Misinformation, gossip, and being wrong
+for legible reasons are all emergent — and the audit trail shows
+which trusted source poisoned which inference.
+
+**4. The loop closes through generation and becomes testable.**
+Say "Jack is angry at Mary" and "Mary kissed Mark" to an NPC; ask
+why Jack is angry; the answer is mechanically checkable end-to-end
+(parse -> believe -> infer -> explain -> generate). The round-trip
+oracle extended through inference: testable NPC cognition.
+
+**Lineage note:** the inference scripts are Schank scripts (1977) —
+memory structures that drive inference and explanation — whose
+program stalled on hand-authoring brittleness and all-or-nothing
+matching. The two missing prerequisites were weighted accretion
+(scripts emit evidence, not brittle conclusions) and a scalable
+annotation source (LLM-as-annotator). Both now exist.
