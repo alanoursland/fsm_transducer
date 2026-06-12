@@ -40,6 +40,17 @@ coverage-balanced data generation and deterministic training.
    model maintains instead (this is a result, not a failure — it
    locates where transformers are NOT story machines).
 
+## Theoretical grounding
+
+See notes/what_class_is_a_transformer.md: the precise form of the
+mirror hypothesis is Krohn-Rhodes — transformers as shallow, weighted,
+counting-augmented cascades of simple machines (Liu et al. 2023), with
+the star-free boundary (Angluin/Hahn) explaining both why every story
+machine in this project probes as transformer-friendly (all aperiodic)
+and where failures should localize (modular counting / non-solvable
+monoids). The probing predictions in that note are this paper's
+hypothesis section.
+
 ## Related work
 
 Residual stream framing (Elhage et al. 2021); transformers and formal
