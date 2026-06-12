@@ -1,0 +1,68 @@
+# Machine specifications. Paren/brace K = 5 (imp's tracker, imported).
+
+# ---------------------------------------------------------------------------
+# Layer 1: slash story machine (anchored, runs on the NAIVE stream)
+# ---------------------------------------------------------------------------
+- layer: story
+  machines:
+    - name: slash_story
+      anchored: true
+      # Three states; narrative reading: "what the last event was,
+      # and are we inside a literal".
+      transitions_schema: |
+        states: expect_operand (start), expect_operator, in_regex
+        from expect_operand, on SLASH: -> in_regex; emit REGEX_START
+        from expect_operator, on SLASH: -> expect_operand;
+            emit DIV_OP, MULTIPLICATIVE      # the classes imp's
+                                             # imported emitters key on
+        from in_regex, on SLASH: -> expect_operator; emit REGEX_END
+            # a completed regex literal is a completed operand
+        on OPERAND_END (outside in_regex): -> expect_operator
+        on anything else (outside in_regex): -> expect_operand
+        in_regex, on anything but SLASH: stay
+      notes: >
+        The JS lexer's actual algorithm as an explicit story machine —
+        the minus expectation state, one level down: minus needed the
+        story to CLASSIFY a token; slash needs it to decide where
+        tokens END. Keys on the OPERAND_END event label (not token
+        classes): the first tier-1 story-event consumer.
+        Unterminated regex: the run ends in in_regex; runner check
+        emits ERROR:UNTERMINATED_REGEX (REGEX_START count exceeds
+        REGEX_END count).
+
+# ---------------------------------------------------------------------------
+# Layer 1b: retokenization (code — it REPLACES slots)
+# ---------------------------------------------------------------------------
+- layer: retokenize
+  notes: >
+    Each REGEX_START..REGEX_END span collapses to one synthesized
+    REGEX slot: text from source spans (exact, whitespace preserved),
+    VAL:<pattern>, OPERAND_END, provenance edges to the replaced
+    tokens. Mis-lexed interior tokens — including parens that would
+    corrupt the bracket tracker, and ERROR:UNKNOWN_TOKEN labels on
+    odd regex characters — vanish with the merge. Unmatched
+    REGEX_START: tokens are left as-is (plus the error label).
+
+# ---------------------------------------------------------------------------
+# Layers 2-4: imported from imp, unchanged, run on the RETOKENIZED stream
+# ---------------------------------------------------------------------------
+- layer: shape
+  machines: [imp.bracket_tracker]
+- layer: scopes
+  machines: [imp.scope_check@{x} forall ident x]
+- layer: story2
+  machines: [imp.minus_story]
+  notes: >
+    Documented leak: imp's minus story hardcodes operand-done as
+    NUM/IDENT/RPAREN and cannot learn that REGEX completes an operand;
+    `/a/ - 2` therefore mislabels the minus as unary (run goes
+    invalid; test-pinned). The recorded refactor: migrate minus_story
+    to the OPERAND_END event label, as slash_story already does.
+- layer: expressions
+  machines: [imp.expression_emitters]
+- layer: statements
+  machines: [imp.statement_emitters]
+  plus:
+    - name: push_regex
+      pattern: "<REGEX>"
+      emit: [{ label: "EXEC.0:PUSH(!{VAL})" }]   # resolves to a regex value

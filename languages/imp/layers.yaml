@@ -85,7 +85,7 @@
     - add/sub emitters: <op & DEPTH:d> mulchain <guard not-mul>
         -> EXEC.3:ADD|SUB at chain end (SUB requires MINUS:BINARY)
     - cmp emitters (GT/LT/EQ): <op & DEPTH:d> addchain <guard not-add-not-mul>
-        -> EXEC.4:GT|LT|EQ at chain end
+        -> EXEC.5:GT|LT|EQ at chain end
   notes: >
     Exactly arithmetic's guard-token construction, one precedence level
     deeper (comparisons below additive). Chains cannot cross statement
@@ -106,16 +106,16 @@
       emit: [{ label: "EXEC.0:LOAD(!{VAL})", anchor: the IDENT token }]
     - name: let_decl
       pattern: "<LET> <IDENT>{cap var: slot_id} <ASSIGN> <not SEMI>* <SEMI>"
-      emit: [{ label: "EXEC.5:DECL(!{VAL@{var}})", anchor: the SEMI }]
+      emit: [{ label: "EXEC.6:DECL(!{VAL@{var}})", anchor: the SEMI }]
       # {var} interpolates the captured slot id; the operand is a
       # cross-slot reference — DECL runs after the expression but
       # names the variable token. First use of both mechanisms.
     - name: assign
       pattern: "<not LET> <IDENT>{cap var} <ASSIGN> <not SEMI>* <SEMI>"
-      emit: [{ label: "EXEC.5:STORE(!{VAL@{var}})", anchor: the SEMI }]
+      emit: [{ label: "EXEC.6:STORE(!{VAL@{var}})", anchor: the SEMI }]
     - name: print_stmt
       pattern: "<PRINT_KW> <not SEMI>* <SEMI>"
-      emit: [{ label: "EXEC.5:PRINT", anchor: the SEMI }]
+      emit: [{ label: "EXEC.6:PRINT", anchor: the SEMI }]
     - name: block_open    # every block in v1 is an if-body
       pattern: "<LBRACE>"
       emit: [{ label: "EXEC.0:BRF" }, { label: "EXEC.1:ENTER" }]

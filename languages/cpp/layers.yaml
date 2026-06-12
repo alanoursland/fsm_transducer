@@ -1,0 +1,86 @@
+# Machine specifications. K_tpl = 3 (template nesting); paren/brace K=5.
+
+# ---------------------------------------------------------------------------
+# Layer 1: angle story machine (anchored, on the naive stream)
+# ---------------------------------------------------------------------------
+- layer: story
+  machines:
+    - name: angle_story
+      anchored: true
+      # States: (template depth 0..3) x (last-was-template-name bit).
+      # Transition table in README.md. Narrative reading: "how deep in
+      # type-land are we, and could a type application be starting".
+      notes: >
+        The split decision (TPLSPLIT_CC / TPLSPLIT_CG vs SHR_OP) is the
+        C++11 rule. '<' at max depth emits ERROR:TPL_DEPTH_EXCEEDED.
+        Ending at depth>0 => ERROR:UNTERMINATED_TEMPLATE (runner check,
+        TPL_OPEN count vs TPL_CLOSE count after retokenization).
+
+# ---------------------------------------------------------------------------
+# Layer 1b: retokenization by SPLITTING (code; the dual of jssub's merge)
+# ---------------------------------------------------------------------------
+- layer: retokenize
+  notes: >
+    Each TPLSPLIT-flagged ANGLE2 slot is replaced by two synthesized
+    '>' slots (ids angle:n, split source spans, provenance edges to
+    the original): CC -> TPL_CLOSE + TPL_CLOSE; CG -> TPL_CLOSE +
+    (GT_OP + CMP_OP). Unflagged ANGLE2 slots stay as one SHR token.
+
+# ---------------------------------------------------------------------------
+# Layers 2+: structure, scopes, stories
+# ---------------------------------------------------------------------------
+- layer: shape
+  machines: [imp.bracket_tracker]      # parens/braces; angles are NOT brackets
+- layer: decl_sites
+  machines:
+    - name: decl_site_marker
+      # type_expr := INT_TYPE | TEMPLATE TPL_OPEN type_expr
+      #              (COMMA type_expr)* TPL_CLOSE      (to K_tpl)
+      pattern: "type_expr <IDENT>"
+      emit: [{ label: "DECL_SITE", anchor: the IDENT }]
+- layer: scopes
+  schema: forall ident x occurring in the input
+  machines:
+    - name: scope_check@{x}
+      anchored: true
+      # imp's bit-stack checker, keyed on DECL_SITE instead of a
+      # preceding 'let' (C++ announces bindings with a type BEFORE the
+      # name; imp used a keyword; pysub marked targets AFTER — three
+      # adapters, one checker shape).
+- layer: story2
+  machines: [imp.minus_story]          # imported unchanged
+
+# ---------------------------------------------------------------------------
+# Layer 3: expression emitters — PARTIAL import (the reuse limit)
+# ---------------------------------------------------------------------------
+- layer: expressions
+  schema: forall d in 0..5
+  notes: >
+    NEG/MUL/DIV/ADD/SUB rebuilt from imp's shared chain helpers
+    (operand, mulchain, addchain) with identical ranks 1-3. NEW: shift
+    emitters at rank 4 (<SHL|SHR & DEPTH:d> addchain guard). REBUILT:
+    comparison emitters at rank 5 with a SHIFT CHAIN as right operand
+    — imp's cmp emitters take an additive chain and are therefore
+    wrong for C++ precedence ('a < b >> c' completes LT at c, after
+    SHR). Precedence tables are language-specific even when chain
+    machinery is shared.
+
+# ---------------------------------------------------------------------------
+# Layer 4: statement emitters
+# ---------------------------------------------------------------------------
+- layer: statements
+  machines:
+    - name: decl_init        # int x = expr;  /  vector<int> v = expr;
+      pattern: "type_expr <IDENT>{cap var} <ASSIGN> <not SEMI>* <SEMI>"
+      emit: [{ label: "EXEC.6:DECL(!{VAL@{var}})", anchor: the SEMI }]
+    - name: decl_default     # vector<vector<int>> v;
+      pattern: "type_expr <IDENT>{cap var} <SEMI>"
+      emit: [{ label: "EXEC.6:DECLD(!{VAL@{var}})", anchor: the SEMI }]
+    - name: assign
+      pattern: "<not TYPE-ish> <IDENT>{cap var} <ASSIGN> <not SEMI>* <SEMI>"
+      emit: [{ label: "EXEC.6:STORE(!{VAL@{var}})", anchor: the SEMI }]
+    - name: load
+      pattern: "<not TYPE-ish> <IDENT> <not ASSIGN>"
+      emit: [{ label: "EXEC.0:LOAD(!{VAL})", anchor: the IDENT }]
+    - name: push_num / print_stmt / block_open / block_close
+      notes: as imp (PUSH rank 0; PRINT rank 6; BRF+ENTER on '{', EXIT on '}')

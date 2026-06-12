@@ -1,0 +1,36 @@
+# Layer 0: naive tokenization with MAXIMAL MUNCH — '>>' lexes as one
+# ANGLE2 token, '<' and '>' as ambiguous ANGLE_L/ANGLE_R. The angle
+# story machine assigns meanings; the retokenizer splits flagged '>>'.
+
+classes:
+  INT_TYPE:  { match: { text: "int" }, also_emit: ["TYPE"] }
+  TEMPLATE:  { match: { text_in: ["vector", "pair"] }, also_emit: ["TYPE"] }
+  IF:        { match: { text: "if" } }
+  PRINT_KW:  { match: { text: "print" } }
+  IDENT:     { match: { regex: '[A-Za-z_]\w*' }, also_emit: ["VAL:{TEXT}"] }
+  NUM:       { match: { regex: '[0-9]+' }, also_emit: ["VAL:{TEXT}"] }
+  ANGLE_L:   { match: { text: "<" } }      # story decides: TPL_OPEN | LT_OP
+  ANGLE_R:   { match: { text: ">" } }      # story decides: TPL_CLOSE | GT_OP
+  ANGLE2:    { match: { text: ">>" } }     # story decides: split | SHR_OP
+  SHL_OP:    { match: { text: "<<" }, also_emit: ["SHIFT"] }   # unambiguous
+  ASSIGN: { match: { text: "=" } }
+  EQ_OP:  { match: { text: "==" }, also_emit: ["CMP_OP"] }
+  ADD_OP: { match: { text: "+" }, also_emit: ["ADDITIVE"] }
+  SUB_OP: { match: { text: "-" }, also_emit: ["ADDITIVE"] }
+  MUL_OP: { match: { text: "*" }, also_emit: ["MULTIPLICATIVE"] }
+  DIV_OP: { match: { text: "/" }, also_emit: ["MULTIPLICATIVE"] }
+  LPAREN: { match: { text: "(" }, also_emit: ["BRACKET"] }
+  RPAREN: { match: { text: ")" }, also_emit: ["BRACKET"] }
+  LBRACE: { match: { text: "{" }, also_emit: ["BRACKET"] }
+  RBRACE: { match: { text: "}" }, also_emit: ["BRACKET"] }
+  COMMA:  { match: { text: "," } }
+  SEMI:   { match: { text: ";" } }
+
+synthesized_after_retokenization:
+  ANGLE_SPLIT:
+    # each TPLSPLIT-flagged '>>' becomes two '>' slots with split
+    # source spans and provenance to the original; labels per the
+    # story's verdict (TPL_CLOSE / TPL_CLOSE or TPL_CLOSE / GT_OP)
+
+fallback:
+  emit: [ERROR:UNKNOWN_TOKEN]

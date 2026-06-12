@@ -1,0 +1,39 @@
+# Layer 0: tokenization with layout synthesis.
+#
+# The tokenizer splits lines, runs the indent-stack algorithm, and
+# synthesizes layout slots (kind "layout") that have no source text:
+#   NEWLINE  at each logical line end
+#   INDENT   when a line's column exceeds the stack top (push)
+#   DEDENT   one slot PER POP when a line's column is below the top
+# Errors: ERROR:DEDENT_MISMATCH (column not on the stack),
+# ERROR:UNEXPECTED_INDENT (first line indented),
+# ERROR:DEPTH_EXCEEDED (indent stack past K_layout=4).
+
+classes:
+  IF:       { match: { text: "if" } }
+  PRINT_KW: { match: { text: "print" } }
+  IDENT:    { match: { regex: '[A-Za-z_]\w*' }, also_emit: ["VAL:{TEXT}"] }
+  NUM:      { match: { regex: '[0-9]+' }, also_emit: ["VAL:{TEXT}"] }
+  ASSIGN: { match: { text: "=" } }
+  EQ_OP:  { match: { text: "==" }, also_emit: ["CMP_OP"] }
+  GT_OP:  { match: { text: ">" },  also_emit: ["CMP_OP"] }
+  LT_OP:  { match: { text: "<" },  also_emit: ["CMP_OP"] }
+  ADD_OP: { match: { text: "+" },  also_emit: ["ADDITIVE"] }
+  SUB_OP: { match: { text: "-" },  also_emit: ["ADDITIVE"] }
+  MUL_OP: { match: { text: "*" },  also_emit: ["MULTIPLICATIVE"] }
+  DIV_OP: { match: { text: "/" },  also_emit: ["MULTIPLICATIVE"] }
+  LPAREN: { match: { text: "(" }, also_emit: ["BRACKET"] }
+  RPAREN: { match: { text: ")" }, also_emit: ["BRACKET"] }
+  COLON:  { match: { text: ":" } }
+
+layout_classes:        # synthesized; kind "layout", no source span
+  NEWLINE: {}
+  INDENT:  {}
+  DEDENT:  {}
+
+fallback:
+  emit: [ERROR:UNKNOWN_TOKEN]
+
+# Class names deliberately match imp's lexicon: that identity is what
+# lets the minus story machine, the paren tracker, and the whole
+# expression-emitter layer be imported from imp unchanged.
