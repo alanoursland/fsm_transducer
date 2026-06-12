@@ -1,0 +1,50 @@
+# Machine specifications.
+
+# ---------------------------------------------------------------------------
+# Layer 1: clause story machine (anchored, WEIGHTED, NONDETERMINISTIC)
+# ---------------------------------------------------------------------------
+- layer: story
+  machines:
+    - name: clause_story
+      anchored: true
+      weighted: true        # first machine to use non-unit path weights
+      # ~20 states tracking clause progression; resets to S0 after
+      # each sentence-final PUNCT. The fork:
+      fork_at_S0: |
+        on token with V & N (play/run/look):
+          -> IMP  with weight 0.55   (imperative story)
+          -> SUBJ with weight 0.45   (subject story)
+        on token with V only:  -> IMP  (weight 1.0)
+        on token with N only / PRON: -> SUBJ (weight 1.0)
+        on DET: -> SUBJ_DET (weight 1.0)
+      eager_emissions: |
+        Every consuming transition emits its story/role label with the
+        PATH weight: STORY:IMP / STORY:DECL on the sentence-initial
+        token; ROLE:* along the way. These fire even on paths that
+        later die — the superposition record.
+      confirmed_emissions: |
+        Constituent positions are captured into registers (subj, verb,
+        obj, verb2, voc, adj) as the path consumes them. The
+        sentence-final PUNCT transition emits the full EXEC frame-op
+        set via CaptureAnchors, with the surviving path's weight —
+        dead stories never reach it. Eager labels record what was
+        considered; confirmed EXEC labels record what survived.
+      clause_shapes: |
+        S0 -> IMP -> (IMP_OBJ -> IMP_EMB?)? -> PUNCT      imperatives
+        S0 -> IMP -> COMMA VOC COMMA V -> PUNCT           "Run, Spot, run!"
+        S0 -> SUBJ(_DET) -> VP -> (OBJ -> EMB?)? -> PUNCT declaratives
+        S0 -> SUBJ -> CONJ -> SUBJ2 -> VP_G ...           coordination
+        S0 -> SUBJ(_DET) -> COPULA -> ADJ -> PUNCT        copula
+
+# ---------------------------------------------------------------------------
+# Projection (code)
+# ---------------------------------------------------------------------------
+- layer: projection
+  notes: >
+    EXEC labels per (slot, rank); on collision (two stories both
+    confirmed — possible in principle, not in the v1 grammar), take
+    the max-weight label. Argmax WITHOUT the formal languages'
+    0.5-margin error: natural language commits to the best story
+    rather than refusing — the margin is reported, not enforced.
+    Rank table within a slot: 0 ENT/IMPYOU/EVT-open, 1 EVT/GROUP,
+    2 AGENT/ATTR, 3 THEME; END on the punctuation slot.

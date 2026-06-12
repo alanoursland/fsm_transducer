@@ -1,0 +1,5 @@
+mcguffey_primer: 220 sentences, mean length 7.0 words, vocab 288
+mcguffey_first_reader: 381 sentences, mean length 7.0 words, vocab 513
+beacon_second_reader: 580 sentences, mean length 8.4 words, vocab 1067
+fifty_famous_stories: 825 sentences, mean length 7.7 words, vocab 1283
+combined: 2002 sentences, vocabulary 1988 words

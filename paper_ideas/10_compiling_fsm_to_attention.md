@@ -1,0 +1,74 @@
+# Compiling Weighted Finite-State Cascades into Transformer Attention
+
+**Target venue:** mechanistic-interpretability venues (BlackboxNLP,
+NeurIPS interp workshops), main track with strong capacity results.
+Companion and prerequisite to proposal 03; based on the author's
+delta->QKV research (references/prior_work_transformers_fsm.md, with
+review notes).
+
+## Core claim
+
+We construct a compiler from finite-state transition tables — and,
+beyond prior work, from *weighted, label-emitting FSM cascades* of the
+fsm_transducer architecture — into transformer attention parameters
+(delta(q, a) -> QKV), producing networks that execute the machines
+exactly. The compiled models serve three purposes: (1) constructive
+lower bounds on what attention can represent, at known parameter
+budgets (states vs embedding dimension — the capacity curve);
+(2) ground-truth reference models for interpretability and automata-
+extraction methods; (3) the *theoretical attractor* against which a
+trained twin (same data, same architecture; the regex_transformer
+project) is measured in weight and activation space.
+
+## Differentiation from Tracr/RASP (the question reviewers will ask)
+
+Tracr (Lindner et al. 2023) compiles RASP programs to weights. We
+compile a different and complementary source language: weighted
+automaton cascades with semiring path algebra, capture registers, and
+label emission — the substrate of a working parser for eight
+languages, including an English fragment. The deltas: (a) weights —
+compiled soft superposition, not boolean routing; (b) cascades —
+Krohn-Rhodes-structured stacks, aligning compiled depth with Liu et
+al.'s shortcut theory; (c) a trained twin and a behavioral label spec
+exist for every compiled machine, enabling attractor-distance
+measurements no Tracr-style pipeline currently has.
+
+## What exists
+
+**The compiler is already implemented** in the regex_transformer
+repository: hand-constructed transformers that execute simple regexes
+exactly, using one-hot embeddings (each state and symbol gets its own
+dimension) — an existence proof of delta->QKV, living in the same
+codebase as the training harness (deterministic training,
+state-classification head), so compiled and trained models are
+directly comparable by construction. fsm_transducer supplies the
+source machines, each with a complexity certificate.
+
+The one-hot construction defines the trivial-capacity regime
+(d_model >= |Q| + |Sigma|, exactness for free). The open compiler work
+is everything below that line: compressed embeddings (when must states
+share dimensions — the superposition question, cf. Elhage et al.
+2022), weighted cascades (semiring path weights as attention
+magnitudes), and multi-machine stacks (the cascade, not one machine).
+
+## Experiments
+
+1. Capacity: compress below one-hot — states encodable vs d_model,
+   where compilation needs superposition (cf. Toy Models of
+   Superposition); the existence proof anchors the curve's easy end.
+2. Exactness: compiled model vs symbolic machine, exhaustive on
+   bounded lengths (the project's standard differential discipline).
+3. Attractor distance: train the twin, measure convergence toward /
+   divergence from the compiled reference across monoid classes
+   (aperiodic vs solvable vs non-solvable) — Liu et al. predicts the
+   ordering.
+4. Extraction calibration: run automata-extraction methods on both
+   compiled and trained models; the compiled ones have known ground
+   truth.
+
+## Risks
+
+Compiled and learned solutions may be far apart in weight space even
+when behaviorally identical (many implementations of one machine);
+mitigate by comparing in activation/representation space and via
+interventions rather than raw weights.
