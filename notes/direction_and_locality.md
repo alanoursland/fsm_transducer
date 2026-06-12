@@ -71,6 +71,38 @@ out to be the same math: posteriors from two directions,
 synchronization after uncertainty, and associative state
 composition.
 
+## Addendum: warm-up and localization (the author's refinement)
+
+Mid-text starting implies a **warm-up stage**: a machine dropped into
+unknown context is in a superposed frontier and must LOCALIZE in
+state space before its outputs are trustworthy. Three consequences:
+
+1. **Warm-up is measurable.** Frontier entropy (count or weight
+   spread of live states) per token is a localization curve;
+   tokens-to-collapse is a property of the machine x the text, and
+   synchronizing events are where it drops to one. Labels emitted
+   during warm-up should carry that uncertainty (weights scaled by
+   frontier spread — the eager/confirmed discipline already points
+   the right way).
+2. **The repair behavior: LTR until localized, then RTL back-fill.**
+   Cheaper than full forward-backward: only the warm-up window —
+   the prefix before the synchronization point — has suspect labels.
+   Once the forward pass settles, run the reversed machine backward
+   FROM the known state over just that window; forward-superposition
+   x backward-certainty resolves the warm-up region's labels. After
+   the sync point, the forward pass alone is already correct.
+3. **The cognitive analog is exact**: opening a book mid-page, you
+   read forward shakily, orient at a sentence boundary, and reread
+   the fragment behind you with the context you now have. Editors do
+   the machine version (checkpoint rescan); humans do it with
+   regressive eye movements.
+
+Status: behavior identified, deliberately not implemented yet (the
+author's call); slot it with next-step 1 below when wanted — the
+sync demo should measure the localization curve, and the back-fill
+is next-step 2's reverse() applied to a window instead of the
+whole text.
+
 ## Recorded next steps (when wanted)
 
 1. transduce(start_states="all") + a synchronization demo (clause
