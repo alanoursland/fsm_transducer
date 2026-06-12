@@ -366,6 +366,7 @@ def build_clause_story() -> FSM:  # noqa: PLR0915 - one grammar, one place
     loop("C2V", adv)
     go("C2V", N, "C2O", "b_obj")
     go("C2V", adj, "C2O", "b_adj")
+    go("C2V", HasLabel("POSS"), "C2O", "b_adj")
     accept("C2V", "decl_a", second=True)
     accept("C2O", "decl_a", second=True)
 
