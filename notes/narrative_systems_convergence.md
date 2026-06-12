@@ -1,13 +1,24 @@
 # Convergence: the game's narrative system and this parser
 
-The author imported brainstorming documents from a separate game
+The author imported brainstorming documents from his own game
 project (`brainstorming/narrative_system/` — NPCs performing
 narratives the player can participate in, symbolic token
-communication, an FST bridge to English). Those documents and this
-project converged on the same architecture independently, from
-opposite directions. This note records the mapping, because
-independent convergence is the strongest evidence yet that the ideas
-are natural attractors rather than artifacts of either project.
+communication, an FST bridge to English). Both projects are the same
+author's, expressing one idea he has been developing for a while —
+so the convergence between the two repos is common cause, not
+independence.
+
+The genuine independence in the picture is different, and stronger:
+the parser-side machinery in this repo (story machines, frames as
+interlingua, eager/confirmed emissions, layered accretion) was
+designed in working sessions by a model that had never seen the game
+documents — and arrived at the same mechanisms in near-identical
+vocabulary ("each layer annotates tokens until full English emerges"
+vs. the accretion pipeline; "canonical meaning representation" vs.
+the interlingua claim). One idea, two derivations, one of them blind.
+That is a replication of the idea's internal coherence: it is
+specified enough that an independent derivation lands in the same
+place. This note records the mapping.
 
 ## The mapping
 
