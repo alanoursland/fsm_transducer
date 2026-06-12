@@ -1,0 +1,2564 @@
+# GENERATED machine dump — do not edit.
+# Regenerate: python codex/build_catalog.py
+machine: mcguffey1_clause
+generated: true
+generated_by: fsm_parser.mcguffey1_lang:build_clause_story
+params: {}
+states:
+- S0
+- S0D
+- FRAGV
+- FRAGN
+- FRAGD
+- SUBJ_AND
+- FRAG2
+- MODAL
+- VP
+- OBJ
+- OBJ_AND
+- OBJ2
+- EMB
+- PP1
+- PP1O
+- PP2
+- PP2O
+- COPS
+- COPX
+- IMP
+- IMPO
+- IMPEMB
+- IMPPP
+- IMPPPO
+- VOC
+- VOC2
+- VOC3
+- IMPV2
+- QA
+- QS
+- WHQ
+- WHN
+- CC
+- C2S
+- C2SN
+- C2F
+- C2V
+- C2O
+- DOIMP
+- APP
+- SPP
+- SPPO
+- DONE
+start: S0
+accept:
+- DONE
+transitions:
+- from: S0
+  to: S0
+  'on':
+    has: INTERJ
+- from: S0
+  to: S0
+  'on':
+    has: COMMA
+- from: S0
+  to: S0
+  'on':
+    has: ADV
+- from: S0
+  to: S0D
+  'on':
+    or:
+    - has: DET
+    - has: ADJ
+    - has: POSS
+    - has: NUM
+- from: S0
+  to: FRAGN
+  'on':
+    and:
+    - has: N
+    - not:
+        has: V
+  captures:
+  - name: subj
+    kind: slot_id
+  emissions:
+  - emit: STORY:DECL
+- from: S0
+  to: FRAGV
+  'on':
+    and:
+    - has: V
+    - has: N
+  weight: 0.45
+  captures:
+  - name: subj
+    kind: slot_id
+  emissions:
+  - emit: STORY:DECL
+    weight: 0.45
+- from: S0
+  to: IMP
+  'on':
+    and:
+    - has: V
+    - not:
+        has: N
+  captures:
+  - name: verb
+    kind: slot_id
+  emissions:
+  - emit: STORY:IMP
+- from: S0
+  to: IMP
+  'on':
+    and:
+    - has: V
+    - has: N
+  weight: 0.55
+  captures:
+  - name: verb
+    kind: slot_id
+  emissions:
+  - emit: STORY:IMP
+    weight: 0.55
+- from: S0
+  to: COPS
+  'on':
+    has: COP
+  captures:
+  - name: verb
+    kind: slot_id
+  emissions:
+  - emit: STORY:DECL
+- from: S0
+  to: QA
+  'on':
+    has: AUX
+  weight: 0.6
+  captures:
+  - name: verb
+    kind: slot_id
+  emissions:
+  - emit: STORY:Q
+    weight: 0.6
+- from: S0
+  to: QA
+  'on':
+    has: MOD
+  captures:
+  - name: mod
+    kind: slot_id
+  emissions:
+  - emit: STORY:Q
+- from: S0
+  to: WHQ
+  'on':
+    has: WH
+  captures:
+  - name: wh
+    kind: slot_id
+  emissions:
+  - emit: STORY:Q
+- from: S0
+  to: DOIMP
+  'on':
+    has: AUX
+  weight: 0.4
+  captures:
+  - name: mod
+    kind: slot_id
+- from: S0
+  to: S0
+  'on':
+    has: CONJ
+- from: S0
+  to: SPP
+  'on':
+    has: PREP
+  captures:
+  - name: prep2
+    kind: slot_id
+- from: S0D
+  to: S0D
+  'on':
+    or:
+    - has: DET
+    - has: ADJ
+    - has: POSS
+    - has: NUM
+- from: S0D
+  to: FRAGD
+  'on':
+    has: N
+  captures:
+  - name: subj
+    kind: slot_id
+  emissions:
+  - emit: STORY:DECL
+- from: FRAGV
+  to: VP
+  'on':
+    has: V
+  captures:
+  - name: verb
+    kind: slot_id
+- from: FRAGV
+  to: COPS
+  'on':
+    has: COP
+  captures:
+  - name: verb
+    kind: slot_id
+- from: FRAGV
+  to: MODAL
+  'on':
+    has: MOD
+  captures:
+  - name: mod
+    kind: slot_id
+- from: FRAGV
+  to: MODAL
+  'on':
+    has: AUX
+  captures:
+  - name: mod
+    kind: slot_id
+- from: FRAGV
+  to: SUBJ_AND
+  'on':
+    has: CONJ
+- from: FRAGN
+  to: VP
+  'on':
+    has: V
+  captures:
+  - name: verb
+    kind: slot_id
+- from: FRAGN
+  to: COPS
+  'on':
+    has: COP
+  captures:
+  - name: verb
+    kind: slot_id
+- from: FRAGN
+  to: MODAL
+  'on':
+    has: MOD
+  captures:
+  - name: mod
+    kind: slot_id
+- from: FRAGN
+  to: MODAL
+  'on':
+    has: AUX
+  captures:
+  - name: mod
+    kind: slot_id
+- from: FRAGN
+  to: SUBJ_AND
+  'on':
+    has: CONJ
+- from: FRAGN
+  to: FRAGN
+  'on':
+    and:
+    - has: N
+    - not:
+        has: V
+    - not:
+        has: PRON
+  captures:
+  - name: subj
+    kind: slot_id
+- from: FRAGN
+  to: APP
+  'on':
+    has: COMMA
+- from: FRAGD
+  to: VP
+  'on':
+    has: V
+  captures:
+  - name: verb
+    kind: slot_id
+- from: FRAGD
+  to: COPS
+  'on':
+    has: COP
+  captures:
+  - name: verb
+    kind: slot_id
+- from: FRAGD
+  to: MODAL
+  'on':
+    has: MOD
+  captures:
+  - name: mod
+    kind: slot_id
+- from: FRAGD
+  to: MODAL
+  'on':
+    has: AUX
+  captures:
+  - name: mod
+    kind: slot_id
+- from: FRAGD
+  to: SUBJ_AND
+  'on':
+    has: CONJ
+- from: FRAGD
+  to: DONE
+  'on':
+    and:
+    - has: PUNCT
+    - not:
+        has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.4:INTRO
+  - emit: EXEC.7:AGENT
+  - emit: EXEC.9:END
+- from: FRAGD
+  to: DONE
+  'on':
+    has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.4:INTRO
+  - emit: EXEC.7:AGENT
+  - emit: EXEC.8:MOODQ
+  - emit: EXEC.9:END
+- from: FRAGD
+  to: FRAGD
+  'on':
+    and:
+    - has: N
+    - not:
+        has: V
+    - not:
+        has: PRON
+  captures:
+  - name: subj
+    kind: slot_id
+- from: FRAGD
+  to: APP
+  'on':
+    has: COMMA
+- from: SUBJ_AND
+  to: SUBJ_AND
+  'on':
+    or:
+    - has: DET
+    - has: ADJ
+    - has: POSS
+    - has: NUM
+- from: SUBJ_AND
+  to: FRAG2
+  'on':
+    has: N
+  captures:
+  - name: subj2
+    kind: slot_id
+- from: FRAG2
+  to: VP
+  'on':
+    has: V
+  captures:
+  - name: verb
+    kind: slot_id
+- from: FRAG2
+  to: COPS
+  'on':
+    has: COP
+  captures:
+  - name: verb
+    kind: slot_id
+- from: FRAG2
+  to: MODAL
+  'on':
+    has: MOD
+  captures:
+  - name: mod
+    kind: slot_id
+- from: FRAG2
+  to: DONE
+  'on':
+    and:
+    - has: PUNCT
+    - not:
+        has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.4:INTRO
+  - emit: EXEC.7:AGENT
+  - emit: EXEC.9:END
+- from: FRAG2
+  to: DONE
+  'on':
+    has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.4:INTRO
+  - emit: EXEC.7:AGENT
+  - emit: EXEC.8:MOODQ
+  - emit: EXEC.9:END
+- from: MODAL
+  to: MODAL
+  'on':
+    has: NEG
+  captures:
+  - name: neg
+    kind: slot_id
+- from: MODAL
+  to: VP
+  'on':
+    has: V
+  captures:
+  - name: verb
+    kind: slot_id
+- from: MODAL
+  to: COPS
+  'on':
+    has: COP
+  captures:
+  - name: verb
+    kind: slot_id
+- from: VP
+  to: VP
+  'on':
+    has: ADV
+- from: VP
+  to: VP
+  'on':
+    or:
+    - has: DET
+    - has: ADJ
+    - has: POSS
+    - has: NUM
+- from: VP
+  to: VP
+  'on':
+    has: TO
+- from: VP
+  to: VP
+  'on':
+    has: NEG
+  captures:
+  - name: neg
+    kind: slot_id
+- from: VP
+  to: OBJ
+  'on':
+    has: N
+  captures:
+  - name: obj
+    kind: slot_id
+- from: VP
+  to: PP1
+  'on':
+    has: PREP
+  captures:
+  - name: prep1
+    kind: slot_id
+- from: VP
+  to: EMB
+  'on':
+    and:
+    - has: V
+    - not:
+        has: N
+  captures:
+  - name: verb2
+    kind: slot_id
+- from: VP
+  to: CC
+  'on':
+    has: COMMA
+- from: VP
+  to: C2S
+  'on':
+    has: CONJ
+  captures:
+  - name: cnj
+    kind: slot_id
+- from: VP
+  to: DONE
+  'on':
+    and:
+    - has: PUNCT
+    - not:
+        has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: subj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: adj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.9:END
+- from: VP
+  to: DONE
+  'on':
+    has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: subj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: adj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.8:MOODQ
+  - emit: EXEC.9:END
+- from: OBJ
+  to: OBJ
+  'on':
+    has: ADV
+- from: OBJ
+  to: OBJ
+  'on':
+    has: TO
+- from: OBJ
+  to: EMB
+  'on':
+    has: V
+  captures:
+  - name: verb2
+    kind: slot_id
+- from: OBJ
+  to: PP1
+  'on':
+    has: PREP
+  captures:
+  - name: prep1
+    kind: slot_id
+- from: OBJ
+  to: CC
+  'on':
+    has: COMMA
+- from: OBJ
+  to: C2S
+  'on':
+    has: CONJ
+  weight: 0.5
+  captures:
+  - name: cnj
+    kind: slot_id
+- from: OBJ
+  to: OBJ_AND
+  'on':
+    has: CONJ
+  weight: 0.5
+- from: OBJ
+  to: DONE
+  'on':
+    and:
+    - has: PUNCT
+    - not:
+        has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: subj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: adj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.9:END
+- from: OBJ
+  to: DONE
+  'on':
+    has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: subj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: adj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.8:MOODQ
+  - emit: EXEC.9:END
+- from: OBJ
+  to: OBJ
+  'on':
+    and:
+    - has: N
+    - not:
+        has: V
+    - not:
+        has: PRON
+  captures:
+  - name: obj
+    kind: slot_id
+- from: OBJ_AND
+  to: OBJ_AND
+  'on':
+    or:
+    - has: DET
+    - has: ADJ
+    - has: POSS
+    - has: NUM
+- from: OBJ_AND
+  to: OBJ2
+  'on':
+    has: N
+  captures:
+  - name: obj2
+    kind: slot_id
+- from: OBJ2
+  to: DONE
+  'on':
+    and:
+    - has: PUNCT
+    - not:
+        has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: subj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: adj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: obj2
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj2
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.9:END
+- from: OBJ2
+  to: DONE
+  'on':
+    has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: subj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: adj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: obj2
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj2
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.8:MOODQ
+  - emit: EXEC.9:END
+- from: EMB
+  to: PP1
+  'on':
+    has: PREP
+  captures:
+  - name: prep1
+    kind: slot_id
+- from: EMB
+  to: DONE
+  'on':
+    and:
+    - has: PUNCT
+    - not:
+        has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: subj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: adj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb2
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb2
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: verb2
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.9:END
+- from: EMB
+  to: DONE
+  'on':
+    has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: subj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: adj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb2
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb2
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: verb2
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.8:MOODQ
+  - emit: EXEC.9:END
+- from: EMB
+  to: EMB
+  'on':
+    or:
+    - has: DET
+    - has: ADJ
+    - has: POSS
+    - has: NUM
+- from: EMB
+  to: EMB
+  'on':
+    has: N
+- from: PP1
+  to: PP1
+  'on':
+    or:
+    - has: DET
+    - has: ADJ
+    - has: POSS
+    - has: NUM
+- from: PP1
+  to: PP1O
+  'on':
+    has: N
+  captures:
+  - name: pobj1
+    kind: slot_id
+- from: PP1O
+  to: PP1O
+  'on':
+    has: ADV
+- from: PP1O
+  to: PP2
+  'on':
+    has: PREP
+  captures:
+  - name: prep2
+    kind: slot_id
+- from: PP1O
+  to: CC
+  'on':
+    has: COMMA
+- from: PP1O
+  to: C2S
+  'on':
+    has: CONJ
+  captures:
+  - name: cnj
+    kind: slot_id
+- from: PP1O
+  to: DONE
+  'on':
+    and:
+    - has: PUNCT
+    - not:
+        has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: subj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: adj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.9:END
+- from: PP1O
+  to: DONE
+  'on':
+    has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: subj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: adj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.8:MOODQ
+  - emit: EXEC.9:END
+- from: PP1O
+  to: PP1O
+  'on':
+    and:
+    - has: N
+    - not:
+        has: V
+    - not:
+        has: PRON
+  captures:
+  - name: pobj1
+    kind: slot_id
+- from: PP2
+  to: PP2
+  'on':
+    or:
+    - has: DET
+    - has: ADJ
+    - has: POSS
+    - has: NUM
+- from: PP2
+  to: PP2O
+  'on':
+    has: N
+  captures:
+  - name: pobj2
+    kind: slot_id
+- from: PP2O
+  to: DONE
+  'on':
+    and:
+    - has: PUNCT
+    - not:
+        has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: subj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: adj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.9:END
+- from: PP2O
+  to: DONE
+  'on':
+    has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: subj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: adj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.8:MOODQ
+  - emit: EXEC.9:END
+- from: COPS
+  to: COPS
+  'on':
+    has: NEG
+  captures:
+  - name: neg
+    kind: slot_id
+- from: COPS
+  to: COPS
+  'on':
+    or:
+    - has: DET
+    - has: ADJ
+    - has: POSS
+    - has: NUM
+- from: COPS
+  to: COPX
+  'on':
+    has: ADJ
+  captures:
+  - name: adj
+    kind: slot_id
+- from: COPS
+  to: COPX
+  'on':
+    and:
+    - has: ADV
+    - not:
+        has: ADJ
+  captures:
+  - name: adj
+    kind: slot_id
+- from: COPS
+  to: COPX
+  'on':
+    and:
+    - has: N
+    - not:
+        has: V
+    - not:
+        has: ADJ
+  captures:
+  - name: obj
+    kind: slot_id
+- from: COPS
+  to: PP1
+  'on':
+    has: PREP
+  captures:
+  - name: prep1
+    kind: slot_id
+- from: COPS
+  to: COPX
+  'on':
+    has: POSS
+  captures:
+  - name: adj
+    kind: slot_id
+- from: COPX
+  to: COPX
+  'on':
+    has: ADV
+- from: COPX
+  to: PP1
+  'on':
+    has: PREP
+  captures:
+  - name: prep1
+    kind: slot_id
+- from: COPX
+  to: CC
+  'on':
+    has: COMMA
+- from: COPX
+  to: C2S
+  'on':
+    has: CONJ
+  captures:
+  - name: cnj
+    kind: slot_id
+- from: COPX
+  to: DONE
+  'on':
+    and:
+    - has: PUNCT
+    - not:
+        has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: subj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: adj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.9:END
+- from: COPX
+  to: DONE
+  'on':
+    has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: subj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: adj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.8:MOODQ
+  - emit: EXEC.9:END
+- from: COPX
+  to: COPX
+  'on':
+    and:
+    - has: N
+    - not:
+        has: V
+    - not:
+        has: PRON
+  captures:
+  - name: obj
+    kind: slot_id
+- from: IMP
+  to: IMP
+  'on':
+    has: ADV
+- from: IMP
+  to: IMP
+  'on':
+    or:
+    - has: DET
+    - has: ADJ
+    - has: POSS
+    - has: NUM
+- from: IMP
+  to: IMP
+  'on':
+    has: TO
+- from: IMP
+  to: IMP
+  'on':
+    has: NEG
+  captures:
+  - name: neg
+    kind: slot_id
+- from: IMP
+  to: IMPO
+  'on':
+    has: N
+  captures:
+  - name: obj
+    kind: slot_id
+- from: IMP
+  to: IMPPP
+  'on':
+    has: PREP
+  captures:
+  - name: prep1
+    kind: slot_id
+- from: IMP
+  to: VOC
+  'on':
+    has: COMMA
+- from: IMP
+  to: DONE
+  'on':
+    and:
+    - has: PUNCT
+    - not:
+        has: QMARK
+  emissions:
+  - emit: EXEC.0:IMPYOU
+    anchor:
+      capture: verb
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.9:END
+- from: IMP
+  to: DONE
+  'on':
+    has: QMARK
+  emissions:
+  - emit: EXEC.0:IMPYOU
+    anchor:
+      capture: verb
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.8:MOODQ
+  - emit: EXEC.9:END
+- from: IMPO
+  to: IMPO
+  'on':
+    has: ADV
+- from: IMPO
+  to: IMPEMB
+  'on':
+    has: V
+  captures:
+  - name: verb2
+    kind: slot_id
+- from: IMPO
+  to: IMPPP
+  'on':
+    has: PREP
+  captures:
+  - name: prep1
+    kind: slot_id
+- from: IMPO
+  to: DONE
+  'on':
+    and:
+    - has: PUNCT
+    - not:
+        has: QMARK
+  emissions:
+  - emit: EXEC.0:IMPYOU
+    anchor:
+      capture: verb
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.9:END
+- from: IMPO
+  to: DONE
+  'on':
+    has: QMARK
+  emissions:
+  - emit: EXEC.0:IMPYOU
+    anchor:
+      capture: verb
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.8:MOODQ
+  - emit: EXEC.9:END
+- from: IMPO
+  to: IMPO
+  'on':
+    and:
+    - has: N
+    - not:
+        has: V
+    - not:
+        has: PRON
+  captures:
+  - name: obj
+    kind: slot_id
+- from: IMPEMB
+  to: DONE
+  'on':
+    and:
+    - has: PUNCT
+    - not:
+        has: QMARK
+  emissions:
+  - emit: EXEC.0:IMPYOU
+    anchor:
+      capture: verb
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb2
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb2
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: verb2
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.9:END
+- from: IMPEMB
+  to: DONE
+  'on':
+    has: QMARK
+  emissions:
+  - emit: EXEC.0:IMPYOU
+    anchor:
+      capture: verb
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb2
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb2
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: verb2
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.8:MOODQ
+  - emit: EXEC.9:END
+- from: IMPPP
+  to: IMPPP
+  'on':
+    or:
+    - has: DET
+    - has: ADJ
+    - has: POSS
+    - has: NUM
+- from: IMPPP
+  to: IMPPPO
+  'on':
+    has: N
+  captures:
+  - name: pobj1
+    kind: slot_id
+- from: IMPPPO
+  to: DONE
+  'on':
+    and:
+    - has: PUNCT
+    - not:
+        has: QMARK
+  emissions:
+  - emit: EXEC.0:IMPYOU
+    anchor:
+      capture: verb
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.9:END
+- from: IMPPPO
+  to: DONE
+  'on':
+    has: QMARK
+  emissions:
+  - emit: EXEC.0:IMPYOU
+    anchor:
+      capture: verb
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.8:MOODQ
+  - emit: EXEC.9:END
+- from: VOC
+  to: VOC2
+  'on':
+    has: NAME
+  captures:
+  - name: voc
+    kind: slot_id
+- from: VOC2
+  to: DONE
+  'on':
+    and:
+    - has: PUNCT
+    - not:
+        has: QMARK
+  emissions:
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: voc
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: voc
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.9:END
+- from: VOC2
+  to: DONE
+  'on':
+    has: QMARK
+  emissions:
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: voc
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: voc
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.8:MOODQ
+  - emit: EXEC.9:END
+- from: VOC2
+  to: VOC3
+  'on':
+    has: COMMA
+- from: VOC3
+  to: IMPV2
+  'on':
+    has: V
+- from: IMPV2
+  to: DONE
+  'on':
+    and:
+    - has: PUNCT
+    - not:
+        has: QMARK
+  emissions:
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: voc
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: voc
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.9:END
+- from: IMPV2
+  to: DONE
+  'on':
+    has: QMARK
+  emissions:
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: voc
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: voc
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.8:MOODQ
+  - emit: EXEC.9:END
+- from: QA
+  to: QA
+  'on':
+    or:
+    - has: DET
+    - has: ADJ
+    - has: POSS
+    - has: NUM
+- from: QA
+  to: QS
+  'on':
+    has: N
+  captures:
+  - name: subj
+    kind: slot_id
+- from: QA
+  to: PP1
+  'on':
+    has: PREP
+  captures:
+  - name: prep1
+    kind: slot_id
+- from: QS
+  to: VP
+  'on':
+    has: V
+  captures:
+  - name: verb
+    kind: slot_id
+- from: QS
+  to: QS
+  'on':
+    or:
+    - has: DET
+    - has: ADJ
+    - has: POSS
+    - has: NUM
+- from: QS
+  to: OBJ
+  'on':
+    has: N
+  captures:
+  - name: obj
+    kind: slot_id
+- from: QS
+  to: COPX
+  'on':
+    has: ADJ
+  captures:
+  - name: adj
+    kind: slot_id
+- from: QS
+  to: COPX
+  'on':
+    has: ADV
+  captures:
+  - name: adj
+    kind: slot_id
+- from: QS
+  to: PP1
+  'on':
+    has: PREP
+  captures:
+  - name: prep1
+    kind: slot_id
+- from: QS
+  to: QS
+  'on':
+    has: NEG
+  captures:
+  - name: neg
+    kind: slot_id
+- from: WHQ
+  to: QA
+  'on':
+    or:
+    - has: COP
+    - has: AUX
+  captures:
+  - name: verb
+    kind: slot_id
+- from: WHQ
+  to: QA
+  'on':
+    has: MOD
+  captures:
+  - name: mod
+    kind: slot_id
+- from: WHQ
+  to: WHQ
+  'on':
+    or:
+    - has: DET
+    - has: ADJ
+    - has: POSS
+    - has: NUM
+- from: WHQ
+  to: WHN
+  'on':
+    has: N
+  captures:
+  - name: subj
+    kind: slot_id
+- from: WHN
+  to: VP
+  'on':
+    or:
+    - has: COP
+    - has: V
+  captures:
+  - name: verb
+    kind: slot_id
+- from: CC
+  to: C2S
+  'on':
+    has: CONJ
+  captures:
+  - name: cnj
+    kind: slot_id
+- from: C2S
+  to: C2SN
+  'on':
+    or:
+    - has: DET
+    - has: ADJ
+    - has: POSS
+    - has: NUM
+- from: C2S
+  to: C2S
+  'on':
+    has: ADV
+- from: C2S
+  to: C2F
+  'on':
+    has: N
+  captures:
+  - name: b_subj
+    kind: slot_id
+- from: C2S
+  to: C2S
+  'on':
+    has: MOD
+- from: C2S
+  to: C2S
+  'on':
+    has: NEG
+- from: C2S
+  to: C2V
+  'on':
+    has: V
+  captures:
+  - name: b_verb
+    kind: slot_id
+- from: C2S
+  to: C2V
+  'on':
+    has: COP
+  captures:
+  - name: b_verb
+    kind: slot_id
+- from: C2SN
+  to: C2SN
+  'on':
+    or:
+    - has: DET
+    - has: ADJ
+    - has: POSS
+    - has: NUM
+- from: C2SN
+  to: C2F
+  'on':
+    has: N
+  captures:
+  - name: b_subj
+    kind: slot_id
+- from: C2F
+  to: C2V
+  'on':
+    has: V
+  captures:
+  - name: b_verb
+    kind: slot_id
+- from: C2F
+  to: C2V
+  'on':
+    has: COP
+  captures:
+  - name: b_verb
+    kind: slot_id
+- from: C2V
+  to: C2V
+  'on':
+    or:
+    - has: DET
+    - has: ADJ
+    - has: POSS
+    - has: NUM
+- from: C2V
+  to: C2V
+  'on':
+    has: ADV
+- from: C2V
+  to: C2O
+  'on':
+    has: N
+  captures:
+  - name: b_obj
+    kind: slot_id
+- from: C2V
+  to: C2O
+  'on':
+    has: ADJ
+  captures:
+  - name: b_adj
+    kind: slot_id
+- from: C2V
+  to: C2O
+  'on':
+    has: POSS
+  captures:
+  - name: b_adj
+    kind: slot_id
+- from: C2V
+  to: DONE
+  'on':
+    and:
+    - has: PUNCT
+    - not:
+        has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: subj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: adj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+    anchor:
+      capture: cnj
+  - emit: EXEC.9:END
+    anchor:
+      capture: cnj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: b_subj
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: b_subj
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: b_verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: b_verb
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: b_obj
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: b_obj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: b_adj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.9:END
+- from: C2V
+  to: DONE
+  'on':
+    has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: subj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: adj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+    anchor:
+      capture: cnj
+  - emit: EXEC.9:END
+    anchor:
+      capture: cnj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: b_subj
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: b_subj
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: b_verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: b_verb
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: b_obj
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: b_obj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: b_adj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.8:MOODQ
+  - emit: EXEC.9:END
+- from: C2V
+  to: C2V
+  'on':
+    has: NEG
+- from: C2O
+  to: DONE
+  'on':
+    and:
+    - has: PUNCT
+    - not:
+        has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: subj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: adj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+    anchor:
+      capture: cnj
+  - emit: EXEC.9:END
+    anchor:
+      capture: cnj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: b_subj
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: b_subj
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: b_verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: b_verb
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: b_obj
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: b_obj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: b_adj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.9:END
+- from: C2O
+  to: DONE
+  'on':
+    has: QMARK
+  emissions:
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:GROUP
+    anchor:
+      capture: subj2
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: verb
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: subj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: adj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.3:PREP(!{VAL@{prep1}})
+    anchor:
+      capture: pobj1
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.3:PREP(!{VAL@{prep2}})
+    anchor:
+      capture: pobj2
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: obj
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: obj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+    anchor:
+      capture: cnj
+  - emit: EXEC.9:END
+    anchor:
+      capture: cnj
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: b_subj
+  - emit: EXEC.4:AGENTI
+    anchor:
+      capture: b_subj
+  - emit: EXEC.1:EVT(!{VAL})
+    anchor:
+      capture: b_verb
+  - emit: EXEC.2:AGENT
+    anchor:
+      capture: b_verb
+  - emit: EXEC.0:ENT(!{VAL})
+    anchor:
+      capture: b_obj
+  - emit: EXEC.3:THEME
+    anchor:
+      capture: b_obj
+  - emit: EXEC.3:ATTR(!{VAL})
+    anchor:
+      capture: b_adj
+  - emit: EXEC.5:MOD(!{VAL@{mod}})
+  - emit: EXEC.6:WH(!{VAL@{wh}})
+  - emit: EXEC.7:NEGSET(!{VAL@{neg}})
+  - emit: EXEC.8:MOODQ
+  - emit: EXEC.9:END
+- from: DOIMP
+  to: DOIMP
+  'on':
+    has: NEG
+  captures:
+  - name: neg
+    kind: slot_id
+- from: DOIMP
+  to: IMP
+  'on':
+    has: V
+  captures:
+  - name: verb
+    kind: slot_id
+- from: APP
+  to: APP
+  'on':
+    has: NAME
+  captures:
+  - name: subj
+    kind: slot_id
+- from: APP
+  to: FRAGN
+  'on':
+    has: COMMA
+- from: SPP
+  to: SPP
+  'on':
+    or:
+    - has: DET
+    - has: ADJ
+    - has: POSS
+    - has: NUM
+- from: SPP
+  to: SPPO
+  'on':
+    has: N
+  captures:
+  - name: pobj2
+    kind: slot_id
+- from: SPPO
+  to: SPPO
+  'on':
+    has: COMMA
+- from: SPPO
+  to: FRAGN
+  'on':
+    has: N
+  captures:
+  - name: subj
+    kind: slot_id

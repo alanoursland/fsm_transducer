@@ -1,0 +1,105 @@
+# GENERATED machine dump — do not edit.
+# Regenerate: python codex/build_catalog.py
+machine: depth_tracker
+generated: true
+generated_by: fsm_parser.arithmetic:build_depth_tracker
+params:
+  max_depth: 3
+states:
+- d0
+- d1
+- d2
+- d3
+- overflow
+start: d0
+accept:
+- d0
+transitions:
+- from: d0
+  to: d1
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:1
+  - emit: GROUP_START:1
+- from: d0
+  to: d0
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: ERROR:UNBALANCED_CLOSE
+- from: d0
+  to: d0
+  'on':
+    not:
+      has: PAREN
+  emissions:
+  - emit: DEPTH:0
+- from: d1
+  to: d0
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:1
+  - emit: GROUP_END:1
+- from: d1
+  to: d2
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_START:2
+- from: d1
+  to: d1
+  'on':
+    not:
+      has: PAREN
+  emissions:
+  - emit: DEPTH:1
+- from: d2
+  to: d1
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+- from: d2
+  to: d3
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+- from: d2
+  to: d2
+  'on':
+    not:
+      has: PAREN
+  emissions:
+  - emit: DEPTH:2
+- from: d3
+  to: d2
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+- from: d3
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: d3
+  to: d3
+  'on':
+    not:
+      has: PAREN
+  emissions:
+  - emit: DEPTH:3
+- from: overflow
+  to: overflow
+  'on':
+    any: true
+  emissions:
+  - emit: DEPTH:OVERFLOW

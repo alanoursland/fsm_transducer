@@ -1,0 +1,9 @@
+id: checker.scope.let
+kind: checker
+status: gold
+factory: fsm_parser.imp_lang:build_scope_checker
+params: {name: x}
+schema_params: [name]
+search_terms: [scope, declared, undeclared, redeclare, let, block, per-identifier]
+used_by: [imp, jssub]
+notes: Bit-stack declared-before-use checker, keyword-before-name binding. Input-indexed schema (one per identifier).

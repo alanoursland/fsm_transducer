@@ -1,0 +1,61 @@
+# GENERATED machine dump — do not edit.
+# Regenerate: python codex/build_catalog.py
+machine: slash_story
+generated: true
+generated_by: fsm_parser.jssub_lang:build_slash_story
+params: {}
+states:
+- expect_operand
+- expect_operator
+- in_regex
+start: expect_operand
+accept:
+- expect_operand
+- expect_operator
+transitions:
+- from: expect_operand
+  to: in_regex
+  'on':
+    has: SLASH
+  emissions:
+  - emit: REGEX_START
+- from: expect_operand
+  to: expect_operator
+  'on':
+    has: OPERAND_END
+- from: expect_operand
+  to: expect_operand
+  'on':
+    not:
+      or:
+      - has: SLASH
+      - has: OPERAND_END
+- from: expect_operator
+  to: expect_operand
+  'on':
+    has: SLASH
+  emissions:
+  - emit: DIV_OP
+  - emit: MULTIPLICATIVE
+- from: expect_operator
+  to: expect_operator
+  'on':
+    has: OPERAND_END
+- from: expect_operator
+  to: expect_operand
+  'on':
+    not:
+      or:
+      - has: SLASH
+      - has: OPERAND_END
+- from: in_regex
+  to: expect_operator
+  'on':
+    has: SLASH
+  emissions:
+  - emit: REGEX_END
+- from: in_regex
+  to: in_regex
+  'on':
+    not:
+      has: SLASH

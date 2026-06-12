@@ -1,0 +1,7 @@
+id: lexicon.mcguffey.tier1
+kind: vocabulary
+status: silver
+path: languages/mcguffey_primer/lexicon.yaml
+search_terms: [english, primer, McGuffey, words, POS, weighted tags, 288]
+used_by: [mcguffey_primer]
+notes: All 288 tier-1 words + primer seed; LLM-as-annotator tagged (silver; spot-check).

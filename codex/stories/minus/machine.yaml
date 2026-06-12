@@ -1,0 +1,60 @@
+# GENERATED machine dump — do not edit.
+# Regenerate: python codex/build_catalog.py
+machine: minus_story
+generated: true
+generated_by: fsm_parser.imp_lang:build_minus_story
+params: {}
+states:
+- expect_operand
+- expect_operator
+start: expect_operand
+accept:
+- expect_operand
+- expect_operator
+transitions:
+- from: expect_operand
+  to: expect_operand
+  'on':
+    has: SUB_OP
+  emissions:
+  - emit: MINUS:UNARY
+- from: expect_operand
+  to: expect_operator
+  'on':
+    or:
+    - has: NUM
+    - has: IDENT
+    - has: RPAREN
+- from: expect_operand
+  to: expect_operand
+  'on':
+    not:
+      or:
+      - or:
+        - has: NUM
+        - has: IDENT
+        - has: RPAREN
+      - has: SUB_OP
+- from: expect_operator
+  to: expect_operand
+  'on':
+    has: SUB_OP
+  emissions:
+  - emit: MINUS:BINARY
+- from: expect_operator
+  to: expect_operator
+  'on':
+    or:
+    - has: NUM
+    - has: IDENT
+    - has: RPAREN
+- from: expect_operator
+  to: expect_operand
+  'on':
+    not:
+      or:
+      - or:
+        - has: NUM
+        - has: IDENT
+        - has: RPAREN
+      - has: SUB_OP

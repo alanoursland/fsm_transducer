@@ -1,0 +1,8 @@
+id: emitters.expression.imp
+kind: emitter_set
+status: gold
+factory: fsm_parser.imp_lang:_expression_emitters
+params: {max_depth: 5}
+search_terms: [arithmetic, precedence, NEG, MUL, ADD, comparison, chain, guard]
+used_by: [imp, pysub]
+notes: Per-depth expression emitters (ranks 1-3,5). cpp rebuilds its own (shift precedence) from the shared chain helpers.

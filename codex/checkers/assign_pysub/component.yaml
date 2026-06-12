@@ -1,0 +1,9 @@
+id: checker.assign.pysub
+kind: checker
+status: gold
+factory: fsm_parser.pysub_lang:build_assign_checker
+params: {name: x}
+schema_params: [name]
+search_terms: [assignment, target, python, use before assignment, per-identifier]
+used_by: [pysub]
+notes: Two-state assigned/unassigned checker keyed on TARGET labels (binding marked after the name).

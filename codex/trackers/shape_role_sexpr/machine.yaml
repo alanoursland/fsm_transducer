@@ -1,0 +1,371 @@
+# GENERATED machine dump — do not edit.
+# Regenerate: python codex/build_catalog.py
+machine: shape_role_tracker
+generated: true
+generated_by: fsm_parser.sexpr_lang:build_shape_role_tracker
+params:
+  max_depth: 3
+states:
+- top
+- F
+- R
+- FF
+- FR
+- RF
+- RR
+- FFF
+- FFR
+- FRF
+- FRR
+- RFF
+- RFR
+- RRF
+- RRR
+- overflow
+start: top
+accept:
+- top
+transitions:
+- from: top
+  to: F
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:1
+  - emit: GROUP_START:1
+- from: top
+  to: top
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: ERROR:UNBALANCED_CLOSE
+- from: top
+  to: top
+  'on':
+    has: ATOM
+  emissions:
+  - emit: DEPTH:0
+- from: F
+  to: RF
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_START:2
+  - emit: ROLE:HEAD:1
+- from: F
+  to: top
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:1
+  - emit: GROUP_END:1
+- from: F
+  to: R
+  'on':
+    has: ATOM
+  emissions:
+  - emit: DEPTH:1
+  - emit: CTX:LIST:1
+  - emit: ROLE:HEAD:1
+- from: R
+  to: RF
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_START:2
+  - emit: ROLE:ARG:1
+- from: R
+  to: top
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:1
+  - emit: GROUP_END:1
+- from: R
+  to: R
+  'on':
+    has: ATOM
+  emissions:
+  - emit: DEPTH:1
+  - emit: CTX:LIST:1
+  - emit: ROLE:ARG:1
+- from: FF
+  to: FRF
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+  - emit: ROLE:HEAD:2
+- from: FF
+  to: F
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+  - emit: ENCL:LIST:1
+- from: FF
+  to: FR
+  'on':
+    has: ATOM
+  emissions:
+  - emit: DEPTH:2
+  - emit: CTX:LIST:2
+  - emit: ROLE:HEAD:2
+- from: FR
+  to: FRF
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+  - emit: ROLE:ARG:2
+- from: FR
+  to: F
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+  - emit: ENCL:LIST:1
+- from: FR
+  to: FR
+  'on':
+    has: ATOM
+  emissions:
+  - emit: DEPTH:2
+  - emit: CTX:LIST:2
+  - emit: ROLE:ARG:2
+- from: RF
+  to: RRF
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+  - emit: ROLE:HEAD:2
+- from: RF
+  to: R
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+  - emit: ENCL:LIST:1
+- from: RF
+  to: RR
+  'on':
+    has: ATOM
+  emissions:
+  - emit: DEPTH:2
+  - emit: CTX:LIST:2
+  - emit: ROLE:HEAD:2
+- from: RR
+  to: RRF
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+  - emit: ROLE:ARG:2
+- from: RR
+  to: R
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+  - emit: ENCL:LIST:1
+- from: RR
+  to: RR
+  'on':
+    has: ATOM
+  emissions:
+  - emit: DEPTH:2
+  - emit: CTX:LIST:2
+  - emit: ROLE:ARG:2
+- from: FFF
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: FFF
+  to: FF
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:LIST:2
+- from: FFF
+  to: FFR
+  'on':
+    has: ATOM
+  emissions:
+  - emit: DEPTH:3
+  - emit: CTX:LIST:3
+  - emit: ROLE:HEAD:3
+- from: FFR
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: FFR
+  to: FF
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:LIST:2
+- from: FFR
+  to: FFR
+  'on':
+    has: ATOM
+  emissions:
+  - emit: DEPTH:3
+  - emit: CTX:LIST:3
+  - emit: ROLE:ARG:3
+- from: FRF
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: FRF
+  to: FR
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:LIST:2
+- from: FRF
+  to: FRR
+  'on':
+    has: ATOM
+  emissions:
+  - emit: DEPTH:3
+  - emit: CTX:LIST:3
+  - emit: ROLE:HEAD:3
+- from: FRR
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: FRR
+  to: FR
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:LIST:2
+- from: FRR
+  to: FRR
+  'on':
+    has: ATOM
+  emissions:
+  - emit: DEPTH:3
+  - emit: CTX:LIST:3
+  - emit: ROLE:ARG:3
+- from: RFF
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: RFF
+  to: RF
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:LIST:2
+- from: RFF
+  to: RFR
+  'on':
+    has: ATOM
+  emissions:
+  - emit: DEPTH:3
+  - emit: CTX:LIST:3
+  - emit: ROLE:HEAD:3
+- from: RFR
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: RFR
+  to: RF
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:LIST:2
+- from: RFR
+  to: RFR
+  'on':
+    has: ATOM
+  emissions:
+  - emit: DEPTH:3
+  - emit: CTX:LIST:3
+  - emit: ROLE:ARG:3
+- from: RRF
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: RRF
+  to: RR
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:LIST:2
+- from: RRF
+  to: RRR
+  'on':
+    has: ATOM
+  emissions:
+  - emit: DEPTH:3
+  - emit: CTX:LIST:3
+  - emit: ROLE:HEAD:3
+- from: RRR
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: RRR
+  to: RR
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:LIST:2
+- from: RRR
+  to: RRR
+  'on':
+    has: ATOM
+  emissions:
+  - emit: DEPTH:3
+  - emit: CTX:LIST:3
+  - emit: ROLE:ARG:3
+- from: overflow
+  to: overflow
+  'on':
+    any: true
+  emissions:
+  - emit: DEPTH:OVERFLOW

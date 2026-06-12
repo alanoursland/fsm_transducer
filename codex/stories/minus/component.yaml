@@ -1,0 +1,8 @@
+id: story.minus
+kind: story
+status: gold
+factory: fsm_parser.imp_lang:build_minus_story
+params: {}
+search_terms: [unary, binary, minus, negation, expectation, operand done]
+used_by: [imp, pysub, jssub, cpp]
+notes: Two-state expectation story; classifies '-' as MINUS:UNARY/BINARY. Most-shared machine in the repo.

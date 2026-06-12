@@ -1,0 +1,7961 @@
+# GENERATED machine dump — do not edit.
+# Regenerate: python codex/build_catalog.py
+machine: scope_check@x
+generated: true
+generated_by: fsm_parser.imp_lang:build_scope_checker
+params:
+  name: x
+states:
+- '0'
+- 0E
+- '1'
+- 1E
+- '00'
+- 00E
+- '01'
+- 01E
+- '10'
+- 10E
+- '11'
+- 11E
+- '000'
+- 000E
+- '001'
+- 001E
+- '010'
+- 010E
+- '011'
+- 011E
+- '100'
+- 100E
+- '101'
+- 101E
+- '110'
+- 110E
+- '111'
+- 111E
+- '0000'
+- 0000E
+- '0001'
+- 0001E
+- '0010'
+- 0010E
+- '0011'
+- 0011E
+- '0100'
+- 0100E
+- '0101'
+- 0101E
+- '0110'
+- 0110E
+- '0111'
+- 0111E
+- '1000'
+- 1000E
+- '1001'
+- 1001E
+- '1010'
+- 1010E
+- '1011'
+- 1011E
+- '1100'
+- 1100E
+- '1101'
+- 1101E
+- '1110'
+- 1110E
+- '1111'
+- 1111E
+- '00000'
+- 00000E
+- '00001'
+- 00001E
+- '00010'
+- 00010E
+- '00011'
+- 00011E
+- '00100'
+- 00100E
+- '00101'
+- 00101E
+- '00110'
+- 00110E
+- '00111'
+- 00111E
+- '01000'
+- 01000E
+- '01001'
+- 01001E
+- '01010'
+- 01010E
+- '01011'
+- 01011E
+- '01100'
+- 01100E
+- '01101'
+- 01101E
+- '01110'
+- 01110E
+- '01111'
+- 01111E
+- '10000'
+- 10000E
+- '10001'
+- 10001E
+- '10010'
+- 10010E
+- '10011'
+- 10011E
+- '10100'
+- 10100E
+- '10101'
+- 10101E
+- '10110'
+- 10110E
+- '10111'
+- 10111E
+- '11000'
+- 11000E
+- '11001'
+- 11001E
+- '11010'
+- 11010E
+- '11011'
+- 11011E
+- '11100'
+- 11100E
+- '11101'
+- 11101E
+- '11110'
+- 11110E
+- '11111'
+- 11111E
+- '000000'
+- 000000E
+- '000001'
+- 000001E
+- '000010'
+- 000010E
+- '000011'
+- 000011E
+- '000100'
+- 000100E
+- '000101'
+- 000101E
+- '000110'
+- 000110E
+- '000111'
+- 000111E
+- '001000'
+- 001000E
+- '001001'
+- 001001E
+- '001010'
+- 001010E
+- '001011'
+- 001011E
+- '001100'
+- 001100E
+- '001101'
+- 001101E
+- '001110'
+- 001110E
+- '001111'
+- 001111E
+- '010000'
+- 010000E
+- '010001'
+- 010001E
+- '010010'
+- 010010E
+- '010011'
+- 010011E
+- '010100'
+- 010100E
+- '010101'
+- 010101E
+- '010110'
+- 010110E
+- '010111'
+- 010111E
+- '011000'
+- 011000E
+- '011001'
+- 011001E
+- '011010'
+- 011010E
+- '011011'
+- 011011E
+- '011100'
+- 011100E
+- '011101'
+- 011101E
+- '011110'
+- 011110E
+- '011111'
+- 011111E
+- '100000'
+- 100000E
+- '100001'
+- 100001E
+- '100010'
+- 100010E
+- '100011'
+- 100011E
+- '100100'
+- 100100E
+- '100101'
+- 100101E
+- '100110'
+- 100110E
+- '100111'
+- 100111E
+- '101000'
+- 101000E
+- '101001'
+- 101001E
+- '101010'
+- 101010E
+- '101011'
+- 101011E
+- '101100'
+- 101100E
+- '101101'
+- 101101E
+- '101110'
+- 101110E
+- '101111'
+- 101111E
+- '110000'
+- 110000E
+- '110001'
+- 110001E
+- '110010'
+- 110010E
+- '110011'
+- 110011E
+- '110100'
+- 110100E
+- '110101'
+- 110101E
+- '110110'
+- 110110E
+- '110111'
+- 110111E
+- '111000'
+- 111000E
+- '111001'
+- 111001E
+- '111010'
+- 111010E
+- '111011'
+- 111011E
+- '111100'
+- 111100E
+- '111101'
+- 111101E
+- '111110'
+- 111110E
+- '111111'
+- 111111E
+start: '0'
+accept:
+- '0'
+- '00'
+- '000'
+- '0000'
+- '00000'
+- '000000'
+- 000000E
+- '000001'
+- 000001E
+- 00000E
+- '00001'
+- '000010'
+- 000010E
+- '000011'
+- 000011E
+- 00001E
+- 0000E
+- '0001'
+- '00010'
+- '000100'
+- 000100E
+- '000101'
+- 000101E
+- 00010E
+- '00011'
+- '000110'
+- 000110E
+- '000111'
+- 000111E
+- 00011E
+- 0001E
+- 000E
+- '001'
+- '0010'
+- '00100'
+- '001000'
+- 001000E
+- '001001'
+- 001001E
+- 00100E
+- '00101'
+- '001010'
+- 001010E
+- '001011'
+- 001011E
+- 00101E
+- 0010E
+- '0011'
+- '00110'
+- '001100'
+- 001100E
+- '001101'
+- 001101E
+- 00110E
+- '00111'
+- '001110'
+- 001110E
+- '001111'
+- 001111E
+- 00111E
+- 0011E
+- 001E
+- 00E
+- '01'
+- '010'
+- '0100'
+- '01000'
+- '010000'
+- 010000E
+- '010001'
+- 010001E
+- 01000E
+- '01001'
+- '010010'
+- 010010E
+- '010011'
+- 010011E
+- 01001E
+- 0100E
+- '0101'
+- '01010'
+- '010100'
+- 010100E
+- '010101'
+- 010101E
+- 01010E
+- '01011'
+- '010110'
+- 010110E
+- '010111'
+- 010111E
+- 01011E
+- 0101E
+- 010E
+- '011'
+- '0110'
+- '01100'
+- '011000'
+- 011000E
+- '011001'
+- 011001E
+- 01100E
+- '01101'
+- '011010'
+- 011010E
+- '011011'
+- 011011E
+- 01101E
+- 0110E
+- '0111'
+- '01110'
+- '011100'
+- 011100E
+- '011101'
+- 011101E
+- 01110E
+- '01111'
+- '011110'
+- 011110E
+- '011111'
+- 011111E
+- 01111E
+- 0111E
+- 011E
+- 01E
+- 0E
+- '1'
+- '10'
+- '100'
+- '1000'
+- '10000'
+- '100000'
+- 100000E
+- '100001'
+- 100001E
+- 10000E
+- '10001'
+- '100010'
+- 100010E
+- '100011'
+- 100011E
+- 10001E
+- 1000E
+- '1001'
+- '10010'
+- '100100'
+- 100100E
+- '100101'
+- 100101E
+- 10010E
+- '10011'
+- '100110'
+- 100110E
+- '100111'
+- 100111E
+- 10011E
+- 1001E
+- 100E
+- '101'
+- '1010'
+- '10100'
+- '101000'
+- 101000E
+- '101001'
+- 101001E
+- 10100E
+- '10101'
+- '101010'
+- 101010E
+- '101011'
+- 101011E
+- 10101E
+- 1010E
+- '1011'
+- '10110'
+- '101100'
+- 101100E
+- '101101'
+- 101101E
+- 10110E
+- '10111'
+- '101110'
+- 101110E
+- '101111'
+- 101111E
+- 10111E
+- 1011E
+- 101E
+- 10E
+- '11'
+- '110'
+- '1100'
+- '11000'
+- '110000'
+- 110000E
+- '110001'
+- 110001E
+- 11000E
+- '11001'
+- '110010'
+- 110010E
+- '110011'
+- 110011E
+- 11001E
+- 1100E
+- '1101'
+- '11010'
+- '110100'
+- 110100E
+- '110101'
+- 110101E
+- 11010E
+- '11011'
+- '110110'
+- 110110E
+- '110111'
+- 110111E
+- 11011E
+- 1101E
+- 110E
+- '111'
+- '1110'
+- '11100'
+- '111000'
+- 111000E
+- '111001'
+- 111001E
+- 11100E
+- '11101'
+- '111010'
+- 111010E
+- '111011'
+- 111011E
+- 11101E
+- 1110E
+- '1111'
+- '11110'
+- '111100'
+- 111100E
+- '111101'
+- 111101E
+- 11110E
+- '11111'
+- '111110'
+- 111110E
+- '111111'
+- 111111E
+- 11111E
+- 1111E
+- 111E
+- 11E
+- 1E
+transitions:
+- from: '0'
+  to: 0E
+  'on':
+    has: LET
+- from: '0'
+  to: '0'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:UNDECLARED
+- from: '0'
+  to: '00'
+  'on':
+    has: LBRACE
+- from: '0'
+  to: '0'
+  'on':
+    has: RBRACE
+- from: '0'
+  to: '0'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 0E
+  to: 0E
+  'on':
+    has: LET
+- from: 0E
+  to: '1'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 0E
+  to: '00'
+  'on':
+    has: LBRACE
+- from: 0E
+  to: '0'
+  'on':
+    has: RBRACE
+- from: 0E
+  to: '0'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '1'
+  to: 1E
+  'on':
+    has: LET
+- from: '1'
+  to: '1'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '1'
+  to: '10'
+  'on':
+    has: LBRACE
+- from: '1'
+  to: '1'
+  'on':
+    has: RBRACE
+- from: '1'
+  to: '1'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 1E
+  to: 1E
+  'on':
+    has: LET
+- from: 1E
+  to: '1'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 1E
+  to: '10'
+  'on':
+    has: LBRACE
+- from: 1E
+  to: '1'
+  'on':
+    has: RBRACE
+- from: 1E
+  to: '1'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '00'
+  to: 00E
+  'on':
+    has: LET
+- from: '00'
+  to: '00'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:UNDECLARED
+- from: '00'
+  to: '000'
+  'on':
+    has: LBRACE
+- from: '00'
+  to: '0'
+  'on':
+    has: RBRACE
+- from: '00'
+  to: '00'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 00E
+  to: 00E
+  'on':
+    has: LET
+- from: 00E
+  to: '01'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 00E
+  to: '000'
+  'on':
+    has: LBRACE
+- from: 00E
+  to: '0'
+  'on':
+    has: RBRACE
+- from: 00E
+  to: '00'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '01'
+  to: 01E
+  'on':
+    has: LET
+- from: '01'
+  to: '01'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '01'
+  to: '010'
+  'on':
+    has: LBRACE
+- from: '01'
+  to: '0'
+  'on':
+    has: RBRACE
+- from: '01'
+  to: '01'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 01E
+  to: 01E
+  'on':
+    has: LET
+- from: 01E
+  to: '01'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 01E
+  to: '010'
+  'on':
+    has: LBRACE
+- from: 01E
+  to: '0'
+  'on':
+    has: RBRACE
+- from: 01E
+  to: '01'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '10'
+  to: 10E
+  'on':
+    has: LET
+- from: '10'
+  to: '10'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '10'
+  to: '100'
+  'on':
+    has: LBRACE
+- from: '10'
+  to: '1'
+  'on':
+    has: RBRACE
+- from: '10'
+  to: '10'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 10E
+  to: 10E
+  'on':
+    has: LET
+- from: 10E
+  to: '11'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 10E
+  to: '100'
+  'on':
+    has: LBRACE
+- from: 10E
+  to: '1'
+  'on':
+    has: RBRACE
+- from: 10E
+  to: '10'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '11'
+  to: 11E
+  'on':
+    has: LET
+- from: '11'
+  to: '11'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '11'
+  to: '110'
+  'on':
+    has: LBRACE
+- from: '11'
+  to: '1'
+  'on':
+    has: RBRACE
+- from: '11'
+  to: '11'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 11E
+  to: 11E
+  'on':
+    has: LET
+- from: 11E
+  to: '11'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 11E
+  to: '110'
+  'on':
+    has: LBRACE
+- from: 11E
+  to: '1'
+  'on':
+    has: RBRACE
+- from: 11E
+  to: '11'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '000'
+  to: 000E
+  'on':
+    has: LET
+- from: '000'
+  to: '000'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:UNDECLARED
+- from: '000'
+  to: '0000'
+  'on':
+    has: LBRACE
+- from: '000'
+  to: '00'
+  'on':
+    has: RBRACE
+- from: '000'
+  to: '000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 000E
+  to: 000E
+  'on':
+    has: LET
+- from: 000E
+  to: '001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 000E
+  to: '0000'
+  'on':
+    has: LBRACE
+- from: 000E
+  to: '00'
+  'on':
+    has: RBRACE
+- from: 000E
+  to: '000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '001'
+  to: 001E
+  'on':
+    has: LET
+- from: '001'
+  to: '001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '001'
+  to: '0010'
+  'on':
+    has: LBRACE
+- from: '001'
+  to: '00'
+  'on':
+    has: RBRACE
+- from: '001'
+  to: '001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 001E
+  to: 001E
+  'on':
+    has: LET
+- from: 001E
+  to: '001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 001E
+  to: '0010'
+  'on':
+    has: LBRACE
+- from: 001E
+  to: '00'
+  'on':
+    has: RBRACE
+- from: 001E
+  to: '001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '010'
+  to: 010E
+  'on':
+    has: LET
+- from: '010'
+  to: '010'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '010'
+  to: '0100'
+  'on':
+    has: LBRACE
+- from: '010'
+  to: '01'
+  'on':
+    has: RBRACE
+- from: '010'
+  to: '010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 010E
+  to: 010E
+  'on':
+    has: LET
+- from: 010E
+  to: '011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 010E
+  to: '0100'
+  'on':
+    has: LBRACE
+- from: 010E
+  to: '01'
+  'on':
+    has: RBRACE
+- from: 010E
+  to: '010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '011'
+  to: 011E
+  'on':
+    has: LET
+- from: '011'
+  to: '011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '011'
+  to: '0110'
+  'on':
+    has: LBRACE
+- from: '011'
+  to: '01'
+  'on':
+    has: RBRACE
+- from: '011'
+  to: '011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 011E
+  to: 011E
+  'on':
+    has: LET
+- from: 011E
+  to: '011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 011E
+  to: '0110'
+  'on':
+    has: LBRACE
+- from: 011E
+  to: '01'
+  'on':
+    has: RBRACE
+- from: 011E
+  to: '011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '100'
+  to: 100E
+  'on':
+    has: LET
+- from: '100'
+  to: '100'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '100'
+  to: '1000'
+  'on':
+    has: LBRACE
+- from: '100'
+  to: '10'
+  'on':
+    has: RBRACE
+- from: '100'
+  to: '100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 100E
+  to: 100E
+  'on':
+    has: LET
+- from: 100E
+  to: '101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 100E
+  to: '1000'
+  'on':
+    has: LBRACE
+- from: 100E
+  to: '10'
+  'on':
+    has: RBRACE
+- from: 100E
+  to: '100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '101'
+  to: 101E
+  'on':
+    has: LET
+- from: '101'
+  to: '101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '101'
+  to: '1010'
+  'on':
+    has: LBRACE
+- from: '101'
+  to: '10'
+  'on':
+    has: RBRACE
+- from: '101'
+  to: '101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 101E
+  to: 101E
+  'on':
+    has: LET
+- from: 101E
+  to: '101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 101E
+  to: '1010'
+  'on':
+    has: LBRACE
+- from: 101E
+  to: '10'
+  'on':
+    has: RBRACE
+- from: 101E
+  to: '101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '110'
+  to: 110E
+  'on':
+    has: LET
+- from: '110'
+  to: '110'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '110'
+  to: '1100'
+  'on':
+    has: LBRACE
+- from: '110'
+  to: '11'
+  'on':
+    has: RBRACE
+- from: '110'
+  to: '110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 110E
+  to: 110E
+  'on':
+    has: LET
+- from: 110E
+  to: '111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 110E
+  to: '1100'
+  'on':
+    has: LBRACE
+- from: 110E
+  to: '11'
+  'on':
+    has: RBRACE
+- from: 110E
+  to: '110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '111'
+  to: 111E
+  'on':
+    has: LET
+- from: '111'
+  to: '111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '111'
+  to: '1110'
+  'on':
+    has: LBRACE
+- from: '111'
+  to: '11'
+  'on':
+    has: RBRACE
+- from: '111'
+  to: '111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 111E
+  to: 111E
+  'on':
+    has: LET
+- from: 111E
+  to: '111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 111E
+  to: '1110'
+  'on':
+    has: LBRACE
+- from: 111E
+  to: '11'
+  'on':
+    has: RBRACE
+- from: 111E
+  to: '111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '0000'
+  to: 0000E
+  'on':
+    has: LET
+- from: '0000'
+  to: '0000'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:UNDECLARED
+- from: '0000'
+  to: '00000'
+  'on':
+    has: LBRACE
+- from: '0000'
+  to: '000'
+  'on':
+    has: RBRACE
+- from: '0000'
+  to: '0000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 0000E
+  to: 0000E
+  'on':
+    has: LET
+- from: 0000E
+  to: '0001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 0000E
+  to: '00000'
+  'on':
+    has: LBRACE
+- from: 0000E
+  to: '000'
+  'on':
+    has: RBRACE
+- from: 0000E
+  to: '0000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '0001'
+  to: 0001E
+  'on':
+    has: LET
+- from: '0001'
+  to: '0001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '0001'
+  to: '00010'
+  'on':
+    has: LBRACE
+- from: '0001'
+  to: '000'
+  'on':
+    has: RBRACE
+- from: '0001'
+  to: '0001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 0001E
+  to: 0001E
+  'on':
+    has: LET
+- from: 0001E
+  to: '0001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 0001E
+  to: '00010'
+  'on':
+    has: LBRACE
+- from: 0001E
+  to: '000'
+  'on':
+    has: RBRACE
+- from: 0001E
+  to: '0001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '0010'
+  to: 0010E
+  'on':
+    has: LET
+- from: '0010'
+  to: '0010'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '0010'
+  to: '00100'
+  'on':
+    has: LBRACE
+- from: '0010'
+  to: '001'
+  'on':
+    has: RBRACE
+- from: '0010'
+  to: '0010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 0010E
+  to: 0010E
+  'on':
+    has: LET
+- from: 0010E
+  to: '0011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 0010E
+  to: '00100'
+  'on':
+    has: LBRACE
+- from: 0010E
+  to: '001'
+  'on':
+    has: RBRACE
+- from: 0010E
+  to: '0010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '0011'
+  to: 0011E
+  'on':
+    has: LET
+- from: '0011'
+  to: '0011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '0011'
+  to: '00110'
+  'on':
+    has: LBRACE
+- from: '0011'
+  to: '001'
+  'on':
+    has: RBRACE
+- from: '0011'
+  to: '0011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 0011E
+  to: 0011E
+  'on':
+    has: LET
+- from: 0011E
+  to: '0011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 0011E
+  to: '00110'
+  'on':
+    has: LBRACE
+- from: 0011E
+  to: '001'
+  'on':
+    has: RBRACE
+- from: 0011E
+  to: '0011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '0100'
+  to: 0100E
+  'on':
+    has: LET
+- from: '0100'
+  to: '0100'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '0100'
+  to: '01000'
+  'on':
+    has: LBRACE
+- from: '0100'
+  to: '010'
+  'on':
+    has: RBRACE
+- from: '0100'
+  to: '0100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 0100E
+  to: 0100E
+  'on':
+    has: LET
+- from: 0100E
+  to: '0101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 0100E
+  to: '01000'
+  'on':
+    has: LBRACE
+- from: 0100E
+  to: '010'
+  'on':
+    has: RBRACE
+- from: 0100E
+  to: '0100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '0101'
+  to: 0101E
+  'on':
+    has: LET
+- from: '0101'
+  to: '0101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '0101'
+  to: '01010'
+  'on':
+    has: LBRACE
+- from: '0101'
+  to: '010'
+  'on':
+    has: RBRACE
+- from: '0101'
+  to: '0101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 0101E
+  to: 0101E
+  'on':
+    has: LET
+- from: 0101E
+  to: '0101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 0101E
+  to: '01010'
+  'on':
+    has: LBRACE
+- from: 0101E
+  to: '010'
+  'on':
+    has: RBRACE
+- from: 0101E
+  to: '0101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '0110'
+  to: 0110E
+  'on':
+    has: LET
+- from: '0110'
+  to: '0110'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '0110'
+  to: '01100'
+  'on':
+    has: LBRACE
+- from: '0110'
+  to: '011'
+  'on':
+    has: RBRACE
+- from: '0110'
+  to: '0110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 0110E
+  to: 0110E
+  'on':
+    has: LET
+- from: 0110E
+  to: '0111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 0110E
+  to: '01100'
+  'on':
+    has: LBRACE
+- from: 0110E
+  to: '011'
+  'on':
+    has: RBRACE
+- from: 0110E
+  to: '0110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '0111'
+  to: 0111E
+  'on':
+    has: LET
+- from: '0111'
+  to: '0111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '0111'
+  to: '01110'
+  'on':
+    has: LBRACE
+- from: '0111'
+  to: '011'
+  'on':
+    has: RBRACE
+- from: '0111'
+  to: '0111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 0111E
+  to: 0111E
+  'on':
+    has: LET
+- from: 0111E
+  to: '0111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 0111E
+  to: '01110'
+  'on':
+    has: LBRACE
+- from: 0111E
+  to: '011'
+  'on':
+    has: RBRACE
+- from: 0111E
+  to: '0111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '1000'
+  to: 1000E
+  'on':
+    has: LET
+- from: '1000'
+  to: '1000'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '1000'
+  to: '10000'
+  'on':
+    has: LBRACE
+- from: '1000'
+  to: '100'
+  'on':
+    has: RBRACE
+- from: '1000'
+  to: '1000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 1000E
+  to: 1000E
+  'on':
+    has: LET
+- from: 1000E
+  to: '1001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 1000E
+  to: '10000'
+  'on':
+    has: LBRACE
+- from: 1000E
+  to: '100'
+  'on':
+    has: RBRACE
+- from: 1000E
+  to: '1000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '1001'
+  to: 1001E
+  'on':
+    has: LET
+- from: '1001'
+  to: '1001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '1001'
+  to: '10010'
+  'on':
+    has: LBRACE
+- from: '1001'
+  to: '100'
+  'on':
+    has: RBRACE
+- from: '1001'
+  to: '1001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 1001E
+  to: 1001E
+  'on':
+    has: LET
+- from: 1001E
+  to: '1001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 1001E
+  to: '10010'
+  'on':
+    has: LBRACE
+- from: 1001E
+  to: '100'
+  'on':
+    has: RBRACE
+- from: 1001E
+  to: '1001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '1010'
+  to: 1010E
+  'on':
+    has: LET
+- from: '1010'
+  to: '1010'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '1010'
+  to: '10100'
+  'on':
+    has: LBRACE
+- from: '1010'
+  to: '101'
+  'on':
+    has: RBRACE
+- from: '1010'
+  to: '1010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 1010E
+  to: 1010E
+  'on':
+    has: LET
+- from: 1010E
+  to: '1011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 1010E
+  to: '10100'
+  'on':
+    has: LBRACE
+- from: 1010E
+  to: '101'
+  'on':
+    has: RBRACE
+- from: 1010E
+  to: '1010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '1011'
+  to: 1011E
+  'on':
+    has: LET
+- from: '1011'
+  to: '1011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '1011'
+  to: '10110'
+  'on':
+    has: LBRACE
+- from: '1011'
+  to: '101'
+  'on':
+    has: RBRACE
+- from: '1011'
+  to: '1011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 1011E
+  to: 1011E
+  'on':
+    has: LET
+- from: 1011E
+  to: '1011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 1011E
+  to: '10110'
+  'on':
+    has: LBRACE
+- from: 1011E
+  to: '101'
+  'on':
+    has: RBRACE
+- from: 1011E
+  to: '1011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '1100'
+  to: 1100E
+  'on':
+    has: LET
+- from: '1100'
+  to: '1100'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '1100'
+  to: '11000'
+  'on':
+    has: LBRACE
+- from: '1100'
+  to: '110'
+  'on':
+    has: RBRACE
+- from: '1100'
+  to: '1100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 1100E
+  to: 1100E
+  'on':
+    has: LET
+- from: 1100E
+  to: '1101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 1100E
+  to: '11000'
+  'on':
+    has: LBRACE
+- from: 1100E
+  to: '110'
+  'on':
+    has: RBRACE
+- from: 1100E
+  to: '1100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '1101'
+  to: 1101E
+  'on':
+    has: LET
+- from: '1101'
+  to: '1101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '1101'
+  to: '11010'
+  'on':
+    has: LBRACE
+- from: '1101'
+  to: '110'
+  'on':
+    has: RBRACE
+- from: '1101'
+  to: '1101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 1101E
+  to: 1101E
+  'on':
+    has: LET
+- from: 1101E
+  to: '1101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 1101E
+  to: '11010'
+  'on':
+    has: LBRACE
+- from: 1101E
+  to: '110'
+  'on':
+    has: RBRACE
+- from: 1101E
+  to: '1101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '1110'
+  to: 1110E
+  'on':
+    has: LET
+- from: '1110'
+  to: '1110'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '1110'
+  to: '11100'
+  'on':
+    has: LBRACE
+- from: '1110'
+  to: '111'
+  'on':
+    has: RBRACE
+- from: '1110'
+  to: '1110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 1110E
+  to: 1110E
+  'on':
+    has: LET
+- from: 1110E
+  to: '1111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 1110E
+  to: '11100'
+  'on':
+    has: LBRACE
+- from: 1110E
+  to: '111'
+  'on':
+    has: RBRACE
+- from: 1110E
+  to: '1110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '1111'
+  to: 1111E
+  'on':
+    has: LET
+- from: '1111'
+  to: '1111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '1111'
+  to: '11110'
+  'on':
+    has: LBRACE
+- from: '1111'
+  to: '111'
+  'on':
+    has: RBRACE
+- from: '1111'
+  to: '1111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 1111E
+  to: 1111E
+  'on':
+    has: LET
+- from: 1111E
+  to: '1111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 1111E
+  to: '11110'
+  'on':
+    has: LBRACE
+- from: 1111E
+  to: '111'
+  'on':
+    has: RBRACE
+- from: 1111E
+  to: '1111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '00000'
+  to: 00000E
+  'on':
+    has: LET
+- from: '00000'
+  to: '00000'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:UNDECLARED
+- from: '00000'
+  to: '000000'
+  'on':
+    has: LBRACE
+- from: '00000'
+  to: '0000'
+  'on':
+    has: RBRACE
+- from: '00000'
+  to: '00000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 00000E
+  to: 00000E
+  'on':
+    has: LET
+- from: 00000E
+  to: '00001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 00000E
+  to: '000000'
+  'on':
+    has: LBRACE
+- from: 00000E
+  to: '0000'
+  'on':
+    has: RBRACE
+- from: 00000E
+  to: '00000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '00001'
+  to: 00001E
+  'on':
+    has: LET
+- from: '00001'
+  to: '00001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '00001'
+  to: '000010'
+  'on':
+    has: LBRACE
+- from: '00001'
+  to: '0000'
+  'on':
+    has: RBRACE
+- from: '00001'
+  to: '00001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 00001E
+  to: 00001E
+  'on':
+    has: LET
+- from: 00001E
+  to: '00001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 00001E
+  to: '000010'
+  'on':
+    has: LBRACE
+- from: 00001E
+  to: '0000'
+  'on':
+    has: RBRACE
+- from: 00001E
+  to: '00001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '00010'
+  to: 00010E
+  'on':
+    has: LET
+- from: '00010'
+  to: '00010'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '00010'
+  to: '000100'
+  'on':
+    has: LBRACE
+- from: '00010'
+  to: '0001'
+  'on':
+    has: RBRACE
+- from: '00010'
+  to: '00010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 00010E
+  to: 00010E
+  'on':
+    has: LET
+- from: 00010E
+  to: '00011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 00010E
+  to: '000100'
+  'on':
+    has: LBRACE
+- from: 00010E
+  to: '0001'
+  'on':
+    has: RBRACE
+- from: 00010E
+  to: '00010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '00011'
+  to: 00011E
+  'on':
+    has: LET
+- from: '00011'
+  to: '00011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '00011'
+  to: '000110'
+  'on':
+    has: LBRACE
+- from: '00011'
+  to: '0001'
+  'on':
+    has: RBRACE
+- from: '00011'
+  to: '00011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 00011E
+  to: 00011E
+  'on':
+    has: LET
+- from: 00011E
+  to: '00011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 00011E
+  to: '000110'
+  'on':
+    has: LBRACE
+- from: 00011E
+  to: '0001'
+  'on':
+    has: RBRACE
+- from: 00011E
+  to: '00011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '00100'
+  to: 00100E
+  'on':
+    has: LET
+- from: '00100'
+  to: '00100'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '00100'
+  to: '001000'
+  'on':
+    has: LBRACE
+- from: '00100'
+  to: '0010'
+  'on':
+    has: RBRACE
+- from: '00100'
+  to: '00100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 00100E
+  to: 00100E
+  'on':
+    has: LET
+- from: 00100E
+  to: '00101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 00100E
+  to: '001000'
+  'on':
+    has: LBRACE
+- from: 00100E
+  to: '0010'
+  'on':
+    has: RBRACE
+- from: 00100E
+  to: '00100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '00101'
+  to: 00101E
+  'on':
+    has: LET
+- from: '00101'
+  to: '00101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '00101'
+  to: '001010'
+  'on':
+    has: LBRACE
+- from: '00101'
+  to: '0010'
+  'on':
+    has: RBRACE
+- from: '00101'
+  to: '00101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 00101E
+  to: 00101E
+  'on':
+    has: LET
+- from: 00101E
+  to: '00101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 00101E
+  to: '001010'
+  'on':
+    has: LBRACE
+- from: 00101E
+  to: '0010'
+  'on':
+    has: RBRACE
+- from: 00101E
+  to: '00101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '00110'
+  to: 00110E
+  'on':
+    has: LET
+- from: '00110'
+  to: '00110'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '00110'
+  to: '001100'
+  'on':
+    has: LBRACE
+- from: '00110'
+  to: '0011'
+  'on':
+    has: RBRACE
+- from: '00110'
+  to: '00110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 00110E
+  to: 00110E
+  'on':
+    has: LET
+- from: 00110E
+  to: '00111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 00110E
+  to: '001100'
+  'on':
+    has: LBRACE
+- from: 00110E
+  to: '0011'
+  'on':
+    has: RBRACE
+- from: 00110E
+  to: '00110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '00111'
+  to: 00111E
+  'on':
+    has: LET
+- from: '00111'
+  to: '00111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '00111'
+  to: '001110'
+  'on':
+    has: LBRACE
+- from: '00111'
+  to: '0011'
+  'on':
+    has: RBRACE
+- from: '00111'
+  to: '00111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 00111E
+  to: 00111E
+  'on':
+    has: LET
+- from: 00111E
+  to: '00111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 00111E
+  to: '001110'
+  'on':
+    has: LBRACE
+- from: 00111E
+  to: '0011'
+  'on':
+    has: RBRACE
+- from: 00111E
+  to: '00111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '01000'
+  to: 01000E
+  'on':
+    has: LET
+- from: '01000'
+  to: '01000'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '01000'
+  to: '010000'
+  'on':
+    has: LBRACE
+- from: '01000'
+  to: '0100'
+  'on':
+    has: RBRACE
+- from: '01000'
+  to: '01000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 01000E
+  to: 01000E
+  'on':
+    has: LET
+- from: 01000E
+  to: '01001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 01000E
+  to: '010000'
+  'on':
+    has: LBRACE
+- from: 01000E
+  to: '0100'
+  'on':
+    has: RBRACE
+- from: 01000E
+  to: '01000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '01001'
+  to: 01001E
+  'on':
+    has: LET
+- from: '01001'
+  to: '01001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '01001'
+  to: '010010'
+  'on':
+    has: LBRACE
+- from: '01001'
+  to: '0100'
+  'on':
+    has: RBRACE
+- from: '01001'
+  to: '01001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 01001E
+  to: 01001E
+  'on':
+    has: LET
+- from: 01001E
+  to: '01001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 01001E
+  to: '010010'
+  'on':
+    has: LBRACE
+- from: 01001E
+  to: '0100'
+  'on':
+    has: RBRACE
+- from: 01001E
+  to: '01001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '01010'
+  to: 01010E
+  'on':
+    has: LET
+- from: '01010'
+  to: '01010'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '01010'
+  to: '010100'
+  'on':
+    has: LBRACE
+- from: '01010'
+  to: '0101'
+  'on':
+    has: RBRACE
+- from: '01010'
+  to: '01010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 01010E
+  to: 01010E
+  'on':
+    has: LET
+- from: 01010E
+  to: '01011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 01010E
+  to: '010100'
+  'on':
+    has: LBRACE
+- from: 01010E
+  to: '0101'
+  'on':
+    has: RBRACE
+- from: 01010E
+  to: '01010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '01011'
+  to: 01011E
+  'on':
+    has: LET
+- from: '01011'
+  to: '01011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '01011'
+  to: '010110'
+  'on':
+    has: LBRACE
+- from: '01011'
+  to: '0101'
+  'on':
+    has: RBRACE
+- from: '01011'
+  to: '01011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 01011E
+  to: 01011E
+  'on':
+    has: LET
+- from: 01011E
+  to: '01011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 01011E
+  to: '010110'
+  'on':
+    has: LBRACE
+- from: 01011E
+  to: '0101'
+  'on':
+    has: RBRACE
+- from: 01011E
+  to: '01011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '01100'
+  to: 01100E
+  'on':
+    has: LET
+- from: '01100'
+  to: '01100'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '01100'
+  to: '011000'
+  'on':
+    has: LBRACE
+- from: '01100'
+  to: '0110'
+  'on':
+    has: RBRACE
+- from: '01100'
+  to: '01100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 01100E
+  to: 01100E
+  'on':
+    has: LET
+- from: 01100E
+  to: '01101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 01100E
+  to: '011000'
+  'on':
+    has: LBRACE
+- from: 01100E
+  to: '0110'
+  'on':
+    has: RBRACE
+- from: 01100E
+  to: '01100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '01101'
+  to: 01101E
+  'on':
+    has: LET
+- from: '01101'
+  to: '01101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '01101'
+  to: '011010'
+  'on':
+    has: LBRACE
+- from: '01101'
+  to: '0110'
+  'on':
+    has: RBRACE
+- from: '01101'
+  to: '01101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 01101E
+  to: 01101E
+  'on':
+    has: LET
+- from: 01101E
+  to: '01101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 01101E
+  to: '011010'
+  'on':
+    has: LBRACE
+- from: 01101E
+  to: '0110'
+  'on':
+    has: RBRACE
+- from: 01101E
+  to: '01101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '01110'
+  to: 01110E
+  'on':
+    has: LET
+- from: '01110'
+  to: '01110'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '01110'
+  to: '011100'
+  'on':
+    has: LBRACE
+- from: '01110'
+  to: '0111'
+  'on':
+    has: RBRACE
+- from: '01110'
+  to: '01110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 01110E
+  to: 01110E
+  'on':
+    has: LET
+- from: 01110E
+  to: '01111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 01110E
+  to: '011100'
+  'on':
+    has: LBRACE
+- from: 01110E
+  to: '0111'
+  'on':
+    has: RBRACE
+- from: 01110E
+  to: '01110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '01111'
+  to: 01111E
+  'on':
+    has: LET
+- from: '01111'
+  to: '01111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '01111'
+  to: '011110'
+  'on':
+    has: LBRACE
+- from: '01111'
+  to: '0111'
+  'on':
+    has: RBRACE
+- from: '01111'
+  to: '01111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 01111E
+  to: 01111E
+  'on':
+    has: LET
+- from: 01111E
+  to: '01111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 01111E
+  to: '011110'
+  'on':
+    has: LBRACE
+- from: 01111E
+  to: '0111'
+  'on':
+    has: RBRACE
+- from: 01111E
+  to: '01111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '10000'
+  to: 10000E
+  'on':
+    has: LET
+- from: '10000'
+  to: '10000'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '10000'
+  to: '100000'
+  'on':
+    has: LBRACE
+- from: '10000'
+  to: '1000'
+  'on':
+    has: RBRACE
+- from: '10000'
+  to: '10000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 10000E
+  to: 10000E
+  'on':
+    has: LET
+- from: 10000E
+  to: '10001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 10000E
+  to: '100000'
+  'on':
+    has: LBRACE
+- from: 10000E
+  to: '1000'
+  'on':
+    has: RBRACE
+- from: 10000E
+  to: '10000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '10001'
+  to: 10001E
+  'on':
+    has: LET
+- from: '10001'
+  to: '10001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '10001'
+  to: '100010'
+  'on':
+    has: LBRACE
+- from: '10001'
+  to: '1000'
+  'on':
+    has: RBRACE
+- from: '10001'
+  to: '10001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 10001E
+  to: 10001E
+  'on':
+    has: LET
+- from: 10001E
+  to: '10001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 10001E
+  to: '100010'
+  'on':
+    has: LBRACE
+- from: 10001E
+  to: '1000'
+  'on':
+    has: RBRACE
+- from: 10001E
+  to: '10001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '10010'
+  to: 10010E
+  'on':
+    has: LET
+- from: '10010'
+  to: '10010'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '10010'
+  to: '100100'
+  'on':
+    has: LBRACE
+- from: '10010'
+  to: '1001'
+  'on':
+    has: RBRACE
+- from: '10010'
+  to: '10010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 10010E
+  to: 10010E
+  'on':
+    has: LET
+- from: 10010E
+  to: '10011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 10010E
+  to: '100100'
+  'on':
+    has: LBRACE
+- from: 10010E
+  to: '1001'
+  'on':
+    has: RBRACE
+- from: 10010E
+  to: '10010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '10011'
+  to: 10011E
+  'on':
+    has: LET
+- from: '10011'
+  to: '10011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '10011'
+  to: '100110'
+  'on':
+    has: LBRACE
+- from: '10011'
+  to: '1001'
+  'on':
+    has: RBRACE
+- from: '10011'
+  to: '10011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 10011E
+  to: 10011E
+  'on':
+    has: LET
+- from: 10011E
+  to: '10011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 10011E
+  to: '100110'
+  'on':
+    has: LBRACE
+- from: 10011E
+  to: '1001'
+  'on':
+    has: RBRACE
+- from: 10011E
+  to: '10011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '10100'
+  to: 10100E
+  'on':
+    has: LET
+- from: '10100'
+  to: '10100'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '10100'
+  to: '101000'
+  'on':
+    has: LBRACE
+- from: '10100'
+  to: '1010'
+  'on':
+    has: RBRACE
+- from: '10100'
+  to: '10100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 10100E
+  to: 10100E
+  'on':
+    has: LET
+- from: 10100E
+  to: '10101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 10100E
+  to: '101000'
+  'on':
+    has: LBRACE
+- from: 10100E
+  to: '1010'
+  'on':
+    has: RBRACE
+- from: 10100E
+  to: '10100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '10101'
+  to: 10101E
+  'on':
+    has: LET
+- from: '10101'
+  to: '10101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '10101'
+  to: '101010'
+  'on':
+    has: LBRACE
+- from: '10101'
+  to: '1010'
+  'on':
+    has: RBRACE
+- from: '10101'
+  to: '10101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 10101E
+  to: 10101E
+  'on':
+    has: LET
+- from: 10101E
+  to: '10101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 10101E
+  to: '101010'
+  'on':
+    has: LBRACE
+- from: 10101E
+  to: '1010'
+  'on':
+    has: RBRACE
+- from: 10101E
+  to: '10101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '10110'
+  to: 10110E
+  'on':
+    has: LET
+- from: '10110'
+  to: '10110'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '10110'
+  to: '101100'
+  'on':
+    has: LBRACE
+- from: '10110'
+  to: '1011'
+  'on':
+    has: RBRACE
+- from: '10110'
+  to: '10110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 10110E
+  to: 10110E
+  'on':
+    has: LET
+- from: 10110E
+  to: '10111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 10110E
+  to: '101100'
+  'on':
+    has: LBRACE
+- from: 10110E
+  to: '1011'
+  'on':
+    has: RBRACE
+- from: 10110E
+  to: '10110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '10111'
+  to: 10111E
+  'on':
+    has: LET
+- from: '10111'
+  to: '10111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '10111'
+  to: '101110'
+  'on':
+    has: LBRACE
+- from: '10111'
+  to: '1011'
+  'on':
+    has: RBRACE
+- from: '10111'
+  to: '10111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 10111E
+  to: 10111E
+  'on':
+    has: LET
+- from: 10111E
+  to: '10111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 10111E
+  to: '101110'
+  'on':
+    has: LBRACE
+- from: 10111E
+  to: '1011'
+  'on':
+    has: RBRACE
+- from: 10111E
+  to: '10111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '11000'
+  to: 11000E
+  'on':
+    has: LET
+- from: '11000'
+  to: '11000'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '11000'
+  to: '110000'
+  'on':
+    has: LBRACE
+- from: '11000'
+  to: '1100'
+  'on':
+    has: RBRACE
+- from: '11000'
+  to: '11000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 11000E
+  to: 11000E
+  'on':
+    has: LET
+- from: 11000E
+  to: '11001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 11000E
+  to: '110000'
+  'on':
+    has: LBRACE
+- from: 11000E
+  to: '1100'
+  'on':
+    has: RBRACE
+- from: 11000E
+  to: '11000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '11001'
+  to: 11001E
+  'on':
+    has: LET
+- from: '11001'
+  to: '11001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '11001'
+  to: '110010'
+  'on':
+    has: LBRACE
+- from: '11001'
+  to: '1100'
+  'on':
+    has: RBRACE
+- from: '11001'
+  to: '11001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 11001E
+  to: 11001E
+  'on':
+    has: LET
+- from: 11001E
+  to: '11001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 11001E
+  to: '110010'
+  'on':
+    has: LBRACE
+- from: 11001E
+  to: '1100'
+  'on':
+    has: RBRACE
+- from: 11001E
+  to: '11001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '11010'
+  to: 11010E
+  'on':
+    has: LET
+- from: '11010'
+  to: '11010'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '11010'
+  to: '110100'
+  'on':
+    has: LBRACE
+- from: '11010'
+  to: '1101'
+  'on':
+    has: RBRACE
+- from: '11010'
+  to: '11010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 11010E
+  to: 11010E
+  'on':
+    has: LET
+- from: 11010E
+  to: '11011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 11010E
+  to: '110100'
+  'on':
+    has: LBRACE
+- from: 11010E
+  to: '1101'
+  'on':
+    has: RBRACE
+- from: 11010E
+  to: '11010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '11011'
+  to: 11011E
+  'on':
+    has: LET
+- from: '11011'
+  to: '11011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '11011'
+  to: '110110'
+  'on':
+    has: LBRACE
+- from: '11011'
+  to: '1101'
+  'on':
+    has: RBRACE
+- from: '11011'
+  to: '11011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 11011E
+  to: 11011E
+  'on':
+    has: LET
+- from: 11011E
+  to: '11011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 11011E
+  to: '110110'
+  'on':
+    has: LBRACE
+- from: 11011E
+  to: '1101'
+  'on':
+    has: RBRACE
+- from: 11011E
+  to: '11011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '11100'
+  to: 11100E
+  'on':
+    has: LET
+- from: '11100'
+  to: '11100'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '11100'
+  to: '111000'
+  'on':
+    has: LBRACE
+- from: '11100'
+  to: '1110'
+  'on':
+    has: RBRACE
+- from: '11100'
+  to: '11100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 11100E
+  to: 11100E
+  'on':
+    has: LET
+- from: 11100E
+  to: '11101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 11100E
+  to: '111000'
+  'on':
+    has: LBRACE
+- from: 11100E
+  to: '1110'
+  'on':
+    has: RBRACE
+- from: 11100E
+  to: '11100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '11101'
+  to: 11101E
+  'on':
+    has: LET
+- from: '11101'
+  to: '11101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '11101'
+  to: '111010'
+  'on':
+    has: LBRACE
+- from: '11101'
+  to: '1110'
+  'on':
+    has: RBRACE
+- from: '11101'
+  to: '11101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 11101E
+  to: 11101E
+  'on':
+    has: LET
+- from: 11101E
+  to: '11101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 11101E
+  to: '111010'
+  'on':
+    has: LBRACE
+- from: 11101E
+  to: '1110'
+  'on':
+    has: RBRACE
+- from: 11101E
+  to: '11101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '11110'
+  to: 11110E
+  'on':
+    has: LET
+- from: '11110'
+  to: '11110'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '11110'
+  to: '111100'
+  'on':
+    has: LBRACE
+- from: '11110'
+  to: '1111'
+  'on':
+    has: RBRACE
+- from: '11110'
+  to: '11110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 11110E
+  to: 11110E
+  'on':
+    has: LET
+- from: 11110E
+  to: '11111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 11110E
+  to: '111100'
+  'on':
+    has: LBRACE
+- from: 11110E
+  to: '1111'
+  'on':
+    has: RBRACE
+- from: 11110E
+  to: '11110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '11111'
+  to: 11111E
+  'on':
+    has: LET
+- from: '11111'
+  to: '11111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '11111'
+  to: '111110'
+  'on':
+    has: LBRACE
+- from: '11111'
+  to: '1111'
+  'on':
+    has: RBRACE
+- from: '11111'
+  to: '11111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 11111E
+  to: 11111E
+  'on':
+    has: LET
+- from: 11111E
+  to: '11111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 11111E
+  to: '111110'
+  'on':
+    has: LBRACE
+- from: 11111E
+  to: '1111'
+  'on':
+    has: RBRACE
+- from: 11111E
+  to: '11111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '000000'
+  to: 000000E
+  'on':
+    has: LET
+- from: '000000'
+  to: '000000'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:UNDECLARED
+- from: '000000'
+  to: '000000'
+  'on':
+    has: LBRACE
+- from: '000000'
+  to: '00000'
+  'on':
+    has: RBRACE
+- from: '000000'
+  to: '000000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 000000E
+  to: 000000E
+  'on':
+    has: LET
+- from: 000000E
+  to: '000001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 000000E
+  to: '000000'
+  'on':
+    has: LBRACE
+- from: 000000E
+  to: '00000'
+  'on':
+    has: RBRACE
+- from: 000000E
+  to: '000000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '000001'
+  to: 000001E
+  'on':
+    has: LET
+- from: '000001'
+  to: '000001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '000001'
+  to: '000001'
+  'on':
+    has: LBRACE
+- from: '000001'
+  to: '00000'
+  'on':
+    has: RBRACE
+- from: '000001'
+  to: '000001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 000001E
+  to: 000001E
+  'on':
+    has: LET
+- from: 000001E
+  to: '000001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 000001E
+  to: '000001'
+  'on':
+    has: LBRACE
+- from: 000001E
+  to: '00000'
+  'on':
+    has: RBRACE
+- from: 000001E
+  to: '000001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '000010'
+  to: 000010E
+  'on':
+    has: LET
+- from: '000010'
+  to: '000010'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '000010'
+  to: '000010'
+  'on':
+    has: LBRACE
+- from: '000010'
+  to: '00001'
+  'on':
+    has: RBRACE
+- from: '000010'
+  to: '000010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 000010E
+  to: 000010E
+  'on':
+    has: LET
+- from: 000010E
+  to: '000011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 000010E
+  to: '000010'
+  'on':
+    has: LBRACE
+- from: 000010E
+  to: '00001'
+  'on':
+    has: RBRACE
+- from: 000010E
+  to: '000010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '000011'
+  to: 000011E
+  'on':
+    has: LET
+- from: '000011'
+  to: '000011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '000011'
+  to: '000011'
+  'on':
+    has: LBRACE
+- from: '000011'
+  to: '00001'
+  'on':
+    has: RBRACE
+- from: '000011'
+  to: '000011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 000011E
+  to: 000011E
+  'on':
+    has: LET
+- from: 000011E
+  to: '000011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 000011E
+  to: '000011'
+  'on':
+    has: LBRACE
+- from: 000011E
+  to: '00001'
+  'on':
+    has: RBRACE
+- from: 000011E
+  to: '000011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '000100'
+  to: 000100E
+  'on':
+    has: LET
+- from: '000100'
+  to: '000100'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '000100'
+  to: '000100'
+  'on':
+    has: LBRACE
+- from: '000100'
+  to: '00010'
+  'on':
+    has: RBRACE
+- from: '000100'
+  to: '000100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 000100E
+  to: 000100E
+  'on':
+    has: LET
+- from: 000100E
+  to: '000101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 000100E
+  to: '000100'
+  'on':
+    has: LBRACE
+- from: 000100E
+  to: '00010'
+  'on':
+    has: RBRACE
+- from: 000100E
+  to: '000100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '000101'
+  to: 000101E
+  'on':
+    has: LET
+- from: '000101'
+  to: '000101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '000101'
+  to: '000101'
+  'on':
+    has: LBRACE
+- from: '000101'
+  to: '00010'
+  'on':
+    has: RBRACE
+- from: '000101'
+  to: '000101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 000101E
+  to: 000101E
+  'on':
+    has: LET
+- from: 000101E
+  to: '000101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 000101E
+  to: '000101'
+  'on':
+    has: LBRACE
+- from: 000101E
+  to: '00010'
+  'on':
+    has: RBRACE
+- from: 000101E
+  to: '000101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '000110'
+  to: 000110E
+  'on':
+    has: LET
+- from: '000110'
+  to: '000110'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '000110'
+  to: '000110'
+  'on':
+    has: LBRACE
+- from: '000110'
+  to: '00011'
+  'on':
+    has: RBRACE
+- from: '000110'
+  to: '000110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 000110E
+  to: 000110E
+  'on':
+    has: LET
+- from: 000110E
+  to: '000111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 000110E
+  to: '000110'
+  'on':
+    has: LBRACE
+- from: 000110E
+  to: '00011'
+  'on':
+    has: RBRACE
+- from: 000110E
+  to: '000110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '000111'
+  to: 000111E
+  'on':
+    has: LET
+- from: '000111'
+  to: '000111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '000111'
+  to: '000111'
+  'on':
+    has: LBRACE
+- from: '000111'
+  to: '00011'
+  'on':
+    has: RBRACE
+- from: '000111'
+  to: '000111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 000111E
+  to: 000111E
+  'on':
+    has: LET
+- from: 000111E
+  to: '000111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 000111E
+  to: '000111'
+  'on':
+    has: LBRACE
+- from: 000111E
+  to: '00011'
+  'on':
+    has: RBRACE
+- from: 000111E
+  to: '000111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '001000'
+  to: 001000E
+  'on':
+    has: LET
+- from: '001000'
+  to: '001000'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '001000'
+  to: '001000'
+  'on':
+    has: LBRACE
+- from: '001000'
+  to: '00100'
+  'on':
+    has: RBRACE
+- from: '001000'
+  to: '001000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 001000E
+  to: 001000E
+  'on':
+    has: LET
+- from: 001000E
+  to: '001001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 001000E
+  to: '001000'
+  'on':
+    has: LBRACE
+- from: 001000E
+  to: '00100'
+  'on':
+    has: RBRACE
+- from: 001000E
+  to: '001000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '001001'
+  to: 001001E
+  'on':
+    has: LET
+- from: '001001'
+  to: '001001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '001001'
+  to: '001001'
+  'on':
+    has: LBRACE
+- from: '001001'
+  to: '00100'
+  'on':
+    has: RBRACE
+- from: '001001'
+  to: '001001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 001001E
+  to: 001001E
+  'on':
+    has: LET
+- from: 001001E
+  to: '001001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 001001E
+  to: '001001'
+  'on':
+    has: LBRACE
+- from: 001001E
+  to: '00100'
+  'on':
+    has: RBRACE
+- from: 001001E
+  to: '001001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '001010'
+  to: 001010E
+  'on':
+    has: LET
+- from: '001010'
+  to: '001010'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '001010'
+  to: '001010'
+  'on':
+    has: LBRACE
+- from: '001010'
+  to: '00101'
+  'on':
+    has: RBRACE
+- from: '001010'
+  to: '001010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 001010E
+  to: 001010E
+  'on':
+    has: LET
+- from: 001010E
+  to: '001011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 001010E
+  to: '001010'
+  'on':
+    has: LBRACE
+- from: 001010E
+  to: '00101'
+  'on':
+    has: RBRACE
+- from: 001010E
+  to: '001010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '001011'
+  to: 001011E
+  'on':
+    has: LET
+- from: '001011'
+  to: '001011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '001011'
+  to: '001011'
+  'on':
+    has: LBRACE
+- from: '001011'
+  to: '00101'
+  'on':
+    has: RBRACE
+- from: '001011'
+  to: '001011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 001011E
+  to: 001011E
+  'on':
+    has: LET
+- from: 001011E
+  to: '001011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 001011E
+  to: '001011'
+  'on':
+    has: LBRACE
+- from: 001011E
+  to: '00101'
+  'on':
+    has: RBRACE
+- from: 001011E
+  to: '001011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '001100'
+  to: 001100E
+  'on':
+    has: LET
+- from: '001100'
+  to: '001100'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '001100'
+  to: '001100'
+  'on':
+    has: LBRACE
+- from: '001100'
+  to: '00110'
+  'on':
+    has: RBRACE
+- from: '001100'
+  to: '001100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 001100E
+  to: 001100E
+  'on':
+    has: LET
+- from: 001100E
+  to: '001101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 001100E
+  to: '001100'
+  'on':
+    has: LBRACE
+- from: 001100E
+  to: '00110'
+  'on':
+    has: RBRACE
+- from: 001100E
+  to: '001100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '001101'
+  to: 001101E
+  'on':
+    has: LET
+- from: '001101'
+  to: '001101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '001101'
+  to: '001101'
+  'on':
+    has: LBRACE
+- from: '001101'
+  to: '00110'
+  'on':
+    has: RBRACE
+- from: '001101'
+  to: '001101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 001101E
+  to: 001101E
+  'on':
+    has: LET
+- from: 001101E
+  to: '001101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 001101E
+  to: '001101'
+  'on':
+    has: LBRACE
+- from: 001101E
+  to: '00110'
+  'on':
+    has: RBRACE
+- from: 001101E
+  to: '001101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '001110'
+  to: 001110E
+  'on':
+    has: LET
+- from: '001110'
+  to: '001110'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '001110'
+  to: '001110'
+  'on':
+    has: LBRACE
+- from: '001110'
+  to: '00111'
+  'on':
+    has: RBRACE
+- from: '001110'
+  to: '001110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 001110E
+  to: 001110E
+  'on':
+    has: LET
+- from: 001110E
+  to: '001111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 001110E
+  to: '001110'
+  'on':
+    has: LBRACE
+- from: 001110E
+  to: '00111'
+  'on':
+    has: RBRACE
+- from: 001110E
+  to: '001110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '001111'
+  to: 001111E
+  'on':
+    has: LET
+- from: '001111'
+  to: '001111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '001111'
+  to: '001111'
+  'on':
+    has: LBRACE
+- from: '001111'
+  to: '00111'
+  'on':
+    has: RBRACE
+- from: '001111'
+  to: '001111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 001111E
+  to: 001111E
+  'on':
+    has: LET
+- from: 001111E
+  to: '001111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 001111E
+  to: '001111'
+  'on':
+    has: LBRACE
+- from: 001111E
+  to: '00111'
+  'on':
+    has: RBRACE
+- from: 001111E
+  to: '001111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '010000'
+  to: 010000E
+  'on':
+    has: LET
+- from: '010000'
+  to: '010000'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '010000'
+  to: '010000'
+  'on':
+    has: LBRACE
+- from: '010000'
+  to: '01000'
+  'on':
+    has: RBRACE
+- from: '010000'
+  to: '010000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 010000E
+  to: 010000E
+  'on':
+    has: LET
+- from: 010000E
+  to: '010001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 010000E
+  to: '010000'
+  'on':
+    has: LBRACE
+- from: 010000E
+  to: '01000'
+  'on':
+    has: RBRACE
+- from: 010000E
+  to: '010000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '010001'
+  to: 010001E
+  'on':
+    has: LET
+- from: '010001'
+  to: '010001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '010001'
+  to: '010001'
+  'on':
+    has: LBRACE
+- from: '010001'
+  to: '01000'
+  'on':
+    has: RBRACE
+- from: '010001'
+  to: '010001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 010001E
+  to: 010001E
+  'on':
+    has: LET
+- from: 010001E
+  to: '010001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 010001E
+  to: '010001'
+  'on':
+    has: LBRACE
+- from: 010001E
+  to: '01000'
+  'on':
+    has: RBRACE
+- from: 010001E
+  to: '010001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '010010'
+  to: 010010E
+  'on':
+    has: LET
+- from: '010010'
+  to: '010010'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '010010'
+  to: '010010'
+  'on':
+    has: LBRACE
+- from: '010010'
+  to: '01001'
+  'on':
+    has: RBRACE
+- from: '010010'
+  to: '010010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 010010E
+  to: 010010E
+  'on':
+    has: LET
+- from: 010010E
+  to: '010011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 010010E
+  to: '010010'
+  'on':
+    has: LBRACE
+- from: 010010E
+  to: '01001'
+  'on':
+    has: RBRACE
+- from: 010010E
+  to: '010010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '010011'
+  to: 010011E
+  'on':
+    has: LET
+- from: '010011'
+  to: '010011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '010011'
+  to: '010011'
+  'on':
+    has: LBRACE
+- from: '010011'
+  to: '01001'
+  'on':
+    has: RBRACE
+- from: '010011'
+  to: '010011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 010011E
+  to: 010011E
+  'on':
+    has: LET
+- from: 010011E
+  to: '010011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 010011E
+  to: '010011'
+  'on':
+    has: LBRACE
+- from: 010011E
+  to: '01001'
+  'on':
+    has: RBRACE
+- from: 010011E
+  to: '010011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '010100'
+  to: 010100E
+  'on':
+    has: LET
+- from: '010100'
+  to: '010100'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '010100'
+  to: '010100'
+  'on':
+    has: LBRACE
+- from: '010100'
+  to: '01010'
+  'on':
+    has: RBRACE
+- from: '010100'
+  to: '010100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 010100E
+  to: 010100E
+  'on':
+    has: LET
+- from: 010100E
+  to: '010101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 010100E
+  to: '010100'
+  'on':
+    has: LBRACE
+- from: 010100E
+  to: '01010'
+  'on':
+    has: RBRACE
+- from: 010100E
+  to: '010100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '010101'
+  to: 010101E
+  'on':
+    has: LET
+- from: '010101'
+  to: '010101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '010101'
+  to: '010101'
+  'on':
+    has: LBRACE
+- from: '010101'
+  to: '01010'
+  'on':
+    has: RBRACE
+- from: '010101'
+  to: '010101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 010101E
+  to: 010101E
+  'on':
+    has: LET
+- from: 010101E
+  to: '010101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 010101E
+  to: '010101'
+  'on':
+    has: LBRACE
+- from: 010101E
+  to: '01010'
+  'on':
+    has: RBRACE
+- from: 010101E
+  to: '010101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '010110'
+  to: 010110E
+  'on':
+    has: LET
+- from: '010110'
+  to: '010110'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '010110'
+  to: '010110'
+  'on':
+    has: LBRACE
+- from: '010110'
+  to: '01011'
+  'on':
+    has: RBRACE
+- from: '010110'
+  to: '010110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 010110E
+  to: 010110E
+  'on':
+    has: LET
+- from: 010110E
+  to: '010111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 010110E
+  to: '010110'
+  'on':
+    has: LBRACE
+- from: 010110E
+  to: '01011'
+  'on':
+    has: RBRACE
+- from: 010110E
+  to: '010110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '010111'
+  to: 010111E
+  'on':
+    has: LET
+- from: '010111'
+  to: '010111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '010111'
+  to: '010111'
+  'on':
+    has: LBRACE
+- from: '010111'
+  to: '01011'
+  'on':
+    has: RBRACE
+- from: '010111'
+  to: '010111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 010111E
+  to: 010111E
+  'on':
+    has: LET
+- from: 010111E
+  to: '010111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 010111E
+  to: '010111'
+  'on':
+    has: LBRACE
+- from: 010111E
+  to: '01011'
+  'on':
+    has: RBRACE
+- from: 010111E
+  to: '010111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '011000'
+  to: 011000E
+  'on':
+    has: LET
+- from: '011000'
+  to: '011000'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '011000'
+  to: '011000'
+  'on':
+    has: LBRACE
+- from: '011000'
+  to: '01100'
+  'on':
+    has: RBRACE
+- from: '011000'
+  to: '011000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 011000E
+  to: 011000E
+  'on':
+    has: LET
+- from: 011000E
+  to: '011001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 011000E
+  to: '011000'
+  'on':
+    has: LBRACE
+- from: 011000E
+  to: '01100'
+  'on':
+    has: RBRACE
+- from: 011000E
+  to: '011000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '011001'
+  to: 011001E
+  'on':
+    has: LET
+- from: '011001'
+  to: '011001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '011001'
+  to: '011001'
+  'on':
+    has: LBRACE
+- from: '011001'
+  to: '01100'
+  'on':
+    has: RBRACE
+- from: '011001'
+  to: '011001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 011001E
+  to: 011001E
+  'on':
+    has: LET
+- from: 011001E
+  to: '011001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 011001E
+  to: '011001'
+  'on':
+    has: LBRACE
+- from: 011001E
+  to: '01100'
+  'on':
+    has: RBRACE
+- from: 011001E
+  to: '011001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '011010'
+  to: 011010E
+  'on':
+    has: LET
+- from: '011010'
+  to: '011010'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '011010'
+  to: '011010'
+  'on':
+    has: LBRACE
+- from: '011010'
+  to: '01101'
+  'on':
+    has: RBRACE
+- from: '011010'
+  to: '011010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 011010E
+  to: 011010E
+  'on':
+    has: LET
+- from: 011010E
+  to: '011011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 011010E
+  to: '011010'
+  'on':
+    has: LBRACE
+- from: 011010E
+  to: '01101'
+  'on':
+    has: RBRACE
+- from: 011010E
+  to: '011010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '011011'
+  to: 011011E
+  'on':
+    has: LET
+- from: '011011'
+  to: '011011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '011011'
+  to: '011011'
+  'on':
+    has: LBRACE
+- from: '011011'
+  to: '01101'
+  'on':
+    has: RBRACE
+- from: '011011'
+  to: '011011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 011011E
+  to: 011011E
+  'on':
+    has: LET
+- from: 011011E
+  to: '011011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 011011E
+  to: '011011'
+  'on':
+    has: LBRACE
+- from: 011011E
+  to: '01101'
+  'on':
+    has: RBRACE
+- from: 011011E
+  to: '011011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '011100'
+  to: 011100E
+  'on':
+    has: LET
+- from: '011100'
+  to: '011100'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '011100'
+  to: '011100'
+  'on':
+    has: LBRACE
+- from: '011100'
+  to: '01110'
+  'on':
+    has: RBRACE
+- from: '011100'
+  to: '011100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 011100E
+  to: 011100E
+  'on':
+    has: LET
+- from: 011100E
+  to: '011101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 011100E
+  to: '011100'
+  'on':
+    has: LBRACE
+- from: 011100E
+  to: '01110'
+  'on':
+    has: RBRACE
+- from: 011100E
+  to: '011100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '011101'
+  to: 011101E
+  'on':
+    has: LET
+- from: '011101'
+  to: '011101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '011101'
+  to: '011101'
+  'on':
+    has: LBRACE
+- from: '011101'
+  to: '01110'
+  'on':
+    has: RBRACE
+- from: '011101'
+  to: '011101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 011101E
+  to: 011101E
+  'on':
+    has: LET
+- from: 011101E
+  to: '011101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 011101E
+  to: '011101'
+  'on':
+    has: LBRACE
+- from: 011101E
+  to: '01110'
+  'on':
+    has: RBRACE
+- from: 011101E
+  to: '011101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '011110'
+  to: 011110E
+  'on':
+    has: LET
+- from: '011110'
+  to: '011110'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '011110'
+  to: '011110'
+  'on':
+    has: LBRACE
+- from: '011110'
+  to: '01111'
+  'on':
+    has: RBRACE
+- from: '011110'
+  to: '011110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 011110E
+  to: 011110E
+  'on':
+    has: LET
+- from: 011110E
+  to: '011111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 011110E
+  to: '011110'
+  'on':
+    has: LBRACE
+- from: 011110E
+  to: '01111'
+  'on':
+    has: RBRACE
+- from: 011110E
+  to: '011110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '011111'
+  to: 011111E
+  'on':
+    has: LET
+- from: '011111'
+  to: '011111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '011111'
+  to: '011111'
+  'on':
+    has: LBRACE
+- from: '011111'
+  to: '01111'
+  'on':
+    has: RBRACE
+- from: '011111'
+  to: '011111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 011111E
+  to: 011111E
+  'on':
+    has: LET
+- from: 011111E
+  to: '011111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 011111E
+  to: '011111'
+  'on':
+    has: LBRACE
+- from: 011111E
+  to: '01111'
+  'on':
+    has: RBRACE
+- from: 011111E
+  to: '011111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '100000'
+  to: 100000E
+  'on':
+    has: LET
+- from: '100000'
+  to: '100000'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '100000'
+  to: '100000'
+  'on':
+    has: LBRACE
+- from: '100000'
+  to: '10000'
+  'on':
+    has: RBRACE
+- from: '100000'
+  to: '100000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 100000E
+  to: 100000E
+  'on':
+    has: LET
+- from: 100000E
+  to: '100001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 100000E
+  to: '100000'
+  'on':
+    has: LBRACE
+- from: 100000E
+  to: '10000'
+  'on':
+    has: RBRACE
+- from: 100000E
+  to: '100000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '100001'
+  to: 100001E
+  'on':
+    has: LET
+- from: '100001'
+  to: '100001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '100001'
+  to: '100001'
+  'on':
+    has: LBRACE
+- from: '100001'
+  to: '10000'
+  'on':
+    has: RBRACE
+- from: '100001'
+  to: '100001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 100001E
+  to: 100001E
+  'on':
+    has: LET
+- from: 100001E
+  to: '100001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 100001E
+  to: '100001'
+  'on':
+    has: LBRACE
+- from: 100001E
+  to: '10000'
+  'on':
+    has: RBRACE
+- from: 100001E
+  to: '100001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '100010'
+  to: 100010E
+  'on':
+    has: LET
+- from: '100010'
+  to: '100010'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '100010'
+  to: '100010'
+  'on':
+    has: LBRACE
+- from: '100010'
+  to: '10001'
+  'on':
+    has: RBRACE
+- from: '100010'
+  to: '100010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 100010E
+  to: 100010E
+  'on':
+    has: LET
+- from: 100010E
+  to: '100011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 100010E
+  to: '100010'
+  'on':
+    has: LBRACE
+- from: 100010E
+  to: '10001'
+  'on':
+    has: RBRACE
+- from: 100010E
+  to: '100010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '100011'
+  to: 100011E
+  'on':
+    has: LET
+- from: '100011'
+  to: '100011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '100011'
+  to: '100011'
+  'on':
+    has: LBRACE
+- from: '100011'
+  to: '10001'
+  'on':
+    has: RBRACE
+- from: '100011'
+  to: '100011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 100011E
+  to: 100011E
+  'on':
+    has: LET
+- from: 100011E
+  to: '100011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 100011E
+  to: '100011'
+  'on':
+    has: LBRACE
+- from: 100011E
+  to: '10001'
+  'on':
+    has: RBRACE
+- from: 100011E
+  to: '100011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '100100'
+  to: 100100E
+  'on':
+    has: LET
+- from: '100100'
+  to: '100100'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '100100'
+  to: '100100'
+  'on':
+    has: LBRACE
+- from: '100100'
+  to: '10010'
+  'on':
+    has: RBRACE
+- from: '100100'
+  to: '100100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 100100E
+  to: 100100E
+  'on':
+    has: LET
+- from: 100100E
+  to: '100101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 100100E
+  to: '100100'
+  'on':
+    has: LBRACE
+- from: 100100E
+  to: '10010'
+  'on':
+    has: RBRACE
+- from: 100100E
+  to: '100100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '100101'
+  to: 100101E
+  'on':
+    has: LET
+- from: '100101'
+  to: '100101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '100101'
+  to: '100101'
+  'on':
+    has: LBRACE
+- from: '100101'
+  to: '10010'
+  'on':
+    has: RBRACE
+- from: '100101'
+  to: '100101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 100101E
+  to: 100101E
+  'on':
+    has: LET
+- from: 100101E
+  to: '100101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 100101E
+  to: '100101'
+  'on':
+    has: LBRACE
+- from: 100101E
+  to: '10010'
+  'on':
+    has: RBRACE
+- from: 100101E
+  to: '100101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '100110'
+  to: 100110E
+  'on':
+    has: LET
+- from: '100110'
+  to: '100110'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '100110'
+  to: '100110'
+  'on':
+    has: LBRACE
+- from: '100110'
+  to: '10011'
+  'on':
+    has: RBRACE
+- from: '100110'
+  to: '100110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 100110E
+  to: 100110E
+  'on':
+    has: LET
+- from: 100110E
+  to: '100111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 100110E
+  to: '100110'
+  'on':
+    has: LBRACE
+- from: 100110E
+  to: '10011'
+  'on':
+    has: RBRACE
+- from: 100110E
+  to: '100110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '100111'
+  to: 100111E
+  'on':
+    has: LET
+- from: '100111'
+  to: '100111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '100111'
+  to: '100111'
+  'on':
+    has: LBRACE
+- from: '100111'
+  to: '10011'
+  'on':
+    has: RBRACE
+- from: '100111'
+  to: '100111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 100111E
+  to: 100111E
+  'on':
+    has: LET
+- from: 100111E
+  to: '100111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 100111E
+  to: '100111'
+  'on':
+    has: LBRACE
+- from: 100111E
+  to: '10011'
+  'on':
+    has: RBRACE
+- from: 100111E
+  to: '100111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '101000'
+  to: 101000E
+  'on':
+    has: LET
+- from: '101000'
+  to: '101000'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '101000'
+  to: '101000'
+  'on':
+    has: LBRACE
+- from: '101000'
+  to: '10100'
+  'on':
+    has: RBRACE
+- from: '101000'
+  to: '101000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 101000E
+  to: 101000E
+  'on':
+    has: LET
+- from: 101000E
+  to: '101001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 101000E
+  to: '101000'
+  'on':
+    has: LBRACE
+- from: 101000E
+  to: '10100'
+  'on':
+    has: RBRACE
+- from: 101000E
+  to: '101000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '101001'
+  to: 101001E
+  'on':
+    has: LET
+- from: '101001'
+  to: '101001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '101001'
+  to: '101001'
+  'on':
+    has: LBRACE
+- from: '101001'
+  to: '10100'
+  'on':
+    has: RBRACE
+- from: '101001'
+  to: '101001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 101001E
+  to: 101001E
+  'on':
+    has: LET
+- from: 101001E
+  to: '101001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 101001E
+  to: '101001'
+  'on':
+    has: LBRACE
+- from: 101001E
+  to: '10100'
+  'on':
+    has: RBRACE
+- from: 101001E
+  to: '101001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '101010'
+  to: 101010E
+  'on':
+    has: LET
+- from: '101010'
+  to: '101010'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '101010'
+  to: '101010'
+  'on':
+    has: LBRACE
+- from: '101010'
+  to: '10101'
+  'on':
+    has: RBRACE
+- from: '101010'
+  to: '101010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 101010E
+  to: 101010E
+  'on':
+    has: LET
+- from: 101010E
+  to: '101011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 101010E
+  to: '101010'
+  'on':
+    has: LBRACE
+- from: 101010E
+  to: '10101'
+  'on':
+    has: RBRACE
+- from: 101010E
+  to: '101010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '101011'
+  to: 101011E
+  'on':
+    has: LET
+- from: '101011'
+  to: '101011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '101011'
+  to: '101011'
+  'on':
+    has: LBRACE
+- from: '101011'
+  to: '10101'
+  'on':
+    has: RBRACE
+- from: '101011'
+  to: '101011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 101011E
+  to: 101011E
+  'on':
+    has: LET
+- from: 101011E
+  to: '101011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 101011E
+  to: '101011'
+  'on':
+    has: LBRACE
+- from: 101011E
+  to: '10101'
+  'on':
+    has: RBRACE
+- from: 101011E
+  to: '101011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '101100'
+  to: 101100E
+  'on':
+    has: LET
+- from: '101100'
+  to: '101100'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '101100'
+  to: '101100'
+  'on':
+    has: LBRACE
+- from: '101100'
+  to: '10110'
+  'on':
+    has: RBRACE
+- from: '101100'
+  to: '101100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 101100E
+  to: 101100E
+  'on':
+    has: LET
+- from: 101100E
+  to: '101101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 101100E
+  to: '101100'
+  'on':
+    has: LBRACE
+- from: 101100E
+  to: '10110'
+  'on':
+    has: RBRACE
+- from: 101100E
+  to: '101100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '101101'
+  to: 101101E
+  'on':
+    has: LET
+- from: '101101'
+  to: '101101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '101101'
+  to: '101101'
+  'on':
+    has: LBRACE
+- from: '101101'
+  to: '10110'
+  'on':
+    has: RBRACE
+- from: '101101'
+  to: '101101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 101101E
+  to: 101101E
+  'on':
+    has: LET
+- from: 101101E
+  to: '101101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 101101E
+  to: '101101'
+  'on':
+    has: LBRACE
+- from: 101101E
+  to: '10110'
+  'on':
+    has: RBRACE
+- from: 101101E
+  to: '101101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '101110'
+  to: 101110E
+  'on':
+    has: LET
+- from: '101110'
+  to: '101110'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '101110'
+  to: '101110'
+  'on':
+    has: LBRACE
+- from: '101110'
+  to: '10111'
+  'on':
+    has: RBRACE
+- from: '101110'
+  to: '101110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 101110E
+  to: 101110E
+  'on':
+    has: LET
+- from: 101110E
+  to: '101111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 101110E
+  to: '101110'
+  'on':
+    has: LBRACE
+- from: 101110E
+  to: '10111'
+  'on':
+    has: RBRACE
+- from: 101110E
+  to: '101110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '101111'
+  to: 101111E
+  'on':
+    has: LET
+- from: '101111'
+  to: '101111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '101111'
+  to: '101111'
+  'on':
+    has: LBRACE
+- from: '101111'
+  to: '10111'
+  'on':
+    has: RBRACE
+- from: '101111'
+  to: '101111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 101111E
+  to: 101111E
+  'on':
+    has: LET
+- from: 101111E
+  to: '101111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 101111E
+  to: '101111'
+  'on':
+    has: LBRACE
+- from: 101111E
+  to: '10111'
+  'on':
+    has: RBRACE
+- from: 101111E
+  to: '101111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '110000'
+  to: 110000E
+  'on':
+    has: LET
+- from: '110000'
+  to: '110000'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '110000'
+  to: '110000'
+  'on':
+    has: LBRACE
+- from: '110000'
+  to: '11000'
+  'on':
+    has: RBRACE
+- from: '110000'
+  to: '110000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 110000E
+  to: 110000E
+  'on':
+    has: LET
+- from: 110000E
+  to: '110001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 110000E
+  to: '110000'
+  'on':
+    has: LBRACE
+- from: 110000E
+  to: '11000'
+  'on':
+    has: RBRACE
+- from: 110000E
+  to: '110000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '110001'
+  to: 110001E
+  'on':
+    has: LET
+- from: '110001'
+  to: '110001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '110001'
+  to: '110001'
+  'on':
+    has: LBRACE
+- from: '110001'
+  to: '11000'
+  'on':
+    has: RBRACE
+- from: '110001'
+  to: '110001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 110001E
+  to: 110001E
+  'on':
+    has: LET
+- from: 110001E
+  to: '110001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 110001E
+  to: '110001'
+  'on':
+    has: LBRACE
+- from: 110001E
+  to: '11000'
+  'on':
+    has: RBRACE
+- from: 110001E
+  to: '110001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '110010'
+  to: 110010E
+  'on':
+    has: LET
+- from: '110010'
+  to: '110010'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '110010'
+  to: '110010'
+  'on':
+    has: LBRACE
+- from: '110010'
+  to: '11001'
+  'on':
+    has: RBRACE
+- from: '110010'
+  to: '110010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 110010E
+  to: 110010E
+  'on':
+    has: LET
+- from: 110010E
+  to: '110011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 110010E
+  to: '110010'
+  'on':
+    has: LBRACE
+- from: 110010E
+  to: '11001'
+  'on':
+    has: RBRACE
+- from: 110010E
+  to: '110010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '110011'
+  to: 110011E
+  'on':
+    has: LET
+- from: '110011'
+  to: '110011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '110011'
+  to: '110011'
+  'on':
+    has: LBRACE
+- from: '110011'
+  to: '11001'
+  'on':
+    has: RBRACE
+- from: '110011'
+  to: '110011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 110011E
+  to: 110011E
+  'on':
+    has: LET
+- from: 110011E
+  to: '110011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 110011E
+  to: '110011'
+  'on':
+    has: LBRACE
+- from: 110011E
+  to: '11001'
+  'on':
+    has: RBRACE
+- from: 110011E
+  to: '110011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '110100'
+  to: 110100E
+  'on':
+    has: LET
+- from: '110100'
+  to: '110100'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '110100'
+  to: '110100'
+  'on':
+    has: LBRACE
+- from: '110100'
+  to: '11010'
+  'on':
+    has: RBRACE
+- from: '110100'
+  to: '110100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 110100E
+  to: 110100E
+  'on':
+    has: LET
+- from: 110100E
+  to: '110101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 110100E
+  to: '110100'
+  'on':
+    has: LBRACE
+- from: 110100E
+  to: '11010'
+  'on':
+    has: RBRACE
+- from: 110100E
+  to: '110100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '110101'
+  to: 110101E
+  'on':
+    has: LET
+- from: '110101'
+  to: '110101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '110101'
+  to: '110101'
+  'on':
+    has: LBRACE
+- from: '110101'
+  to: '11010'
+  'on':
+    has: RBRACE
+- from: '110101'
+  to: '110101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 110101E
+  to: 110101E
+  'on':
+    has: LET
+- from: 110101E
+  to: '110101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 110101E
+  to: '110101'
+  'on':
+    has: LBRACE
+- from: 110101E
+  to: '11010'
+  'on':
+    has: RBRACE
+- from: 110101E
+  to: '110101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '110110'
+  to: 110110E
+  'on':
+    has: LET
+- from: '110110'
+  to: '110110'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '110110'
+  to: '110110'
+  'on':
+    has: LBRACE
+- from: '110110'
+  to: '11011'
+  'on':
+    has: RBRACE
+- from: '110110'
+  to: '110110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 110110E
+  to: 110110E
+  'on':
+    has: LET
+- from: 110110E
+  to: '110111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 110110E
+  to: '110110'
+  'on':
+    has: LBRACE
+- from: 110110E
+  to: '11011'
+  'on':
+    has: RBRACE
+- from: 110110E
+  to: '110110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '110111'
+  to: 110111E
+  'on':
+    has: LET
+- from: '110111'
+  to: '110111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '110111'
+  to: '110111'
+  'on':
+    has: LBRACE
+- from: '110111'
+  to: '11011'
+  'on':
+    has: RBRACE
+- from: '110111'
+  to: '110111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 110111E
+  to: 110111E
+  'on':
+    has: LET
+- from: 110111E
+  to: '110111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 110111E
+  to: '110111'
+  'on':
+    has: LBRACE
+- from: 110111E
+  to: '11011'
+  'on':
+    has: RBRACE
+- from: 110111E
+  to: '110111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '111000'
+  to: 111000E
+  'on':
+    has: LET
+- from: '111000'
+  to: '111000'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '111000'
+  to: '111000'
+  'on':
+    has: LBRACE
+- from: '111000'
+  to: '11100'
+  'on':
+    has: RBRACE
+- from: '111000'
+  to: '111000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 111000E
+  to: 111000E
+  'on':
+    has: LET
+- from: 111000E
+  to: '111001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 111000E
+  to: '111000'
+  'on':
+    has: LBRACE
+- from: 111000E
+  to: '11100'
+  'on':
+    has: RBRACE
+- from: 111000E
+  to: '111000'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '111001'
+  to: 111001E
+  'on':
+    has: LET
+- from: '111001'
+  to: '111001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '111001'
+  to: '111001'
+  'on':
+    has: LBRACE
+- from: '111001'
+  to: '11100'
+  'on':
+    has: RBRACE
+- from: '111001'
+  to: '111001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 111001E
+  to: 111001E
+  'on':
+    has: LET
+- from: 111001E
+  to: '111001'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 111001E
+  to: '111001'
+  'on':
+    has: LBRACE
+- from: 111001E
+  to: '11100'
+  'on':
+    has: RBRACE
+- from: 111001E
+  to: '111001'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '111010'
+  to: 111010E
+  'on':
+    has: LET
+- from: '111010'
+  to: '111010'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '111010'
+  to: '111010'
+  'on':
+    has: LBRACE
+- from: '111010'
+  to: '11101'
+  'on':
+    has: RBRACE
+- from: '111010'
+  to: '111010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 111010E
+  to: 111010E
+  'on':
+    has: LET
+- from: 111010E
+  to: '111011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 111010E
+  to: '111010'
+  'on':
+    has: LBRACE
+- from: 111010E
+  to: '11101'
+  'on':
+    has: RBRACE
+- from: 111010E
+  to: '111010'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '111011'
+  to: 111011E
+  'on':
+    has: LET
+- from: '111011'
+  to: '111011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '111011'
+  to: '111011'
+  'on':
+    has: LBRACE
+- from: '111011'
+  to: '11101'
+  'on':
+    has: RBRACE
+- from: '111011'
+  to: '111011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 111011E
+  to: 111011E
+  'on':
+    has: LET
+- from: 111011E
+  to: '111011'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 111011E
+  to: '111011'
+  'on':
+    has: LBRACE
+- from: 111011E
+  to: '11101'
+  'on':
+    has: RBRACE
+- from: 111011E
+  to: '111011'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '111100'
+  to: 111100E
+  'on':
+    has: LET
+- from: '111100'
+  to: '111100'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '111100'
+  to: '111100'
+  'on':
+    has: LBRACE
+- from: '111100'
+  to: '11110'
+  'on':
+    has: RBRACE
+- from: '111100'
+  to: '111100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 111100E
+  to: 111100E
+  'on':
+    has: LET
+- from: 111100E
+  to: '111101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 111100E
+  to: '111100'
+  'on':
+    has: LBRACE
+- from: 111100E
+  to: '11110'
+  'on':
+    has: RBRACE
+- from: 111100E
+  to: '111100'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '111101'
+  to: 111101E
+  'on':
+    has: LET
+- from: '111101'
+  to: '111101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '111101'
+  to: '111101'
+  'on':
+    has: LBRACE
+- from: '111101'
+  to: '11110'
+  'on':
+    has: RBRACE
+- from: '111101'
+  to: '111101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 111101E
+  to: 111101E
+  'on':
+    has: LET
+- from: 111101E
+  to: '111101'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 111101E
+  to: '111101'
+  'on':
+    has: LBRACE
+- from: 111101E
+  to: '11110'
+  'on':
+    has: RBRACE
+- from: 111101E
+  to: '111101'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '111110'
+  to: 111110E
+  'on':
+    has: LET
+- from: '111110'
+  to: '111110'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '111110'
+  to: '111110'
+  'on':
+    has: LBRACE
+- from: '111110'
+  to: '11111'
+  'on':
+    has: RBRACE
+- from: '111110'
+  to: '111110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 111110E
+  to: 111110E
+  'on':
+    has: LET
+- from: 111110E
+  to: '111111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: 111110E
+  to: '111110'
+  'on':
+    has: LBRACE
+- from: 111110E
+  to: '11111'
+  'on':
+    has: RBRACE
+- from: 111110E
+  to: '111110'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: '111111'
+  to: 111111E
+  'on':
+    has: LET
+- from: '111111'
+  to: '111111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+- from: '111111'
+  to: '111111'
+  'on':
+    has: LBRACE
+- from: '111111'
+  to: '11111'
+  'on':
+    has: RBRACE
+- from: '111111'
+  to: '111111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE
+- from: 111111E
+  to: 111111E
+  'on':
+    has: LET
+- from: 111111E
+  to: '111111'
+  'on':
+    and:
+    - has: IDENT
+    - has: TEXT:x
+  emissions:
+  - emit: ERROR:REDECLARE
+- from: 111111E
+  to: '111111'
+  'on':
+    has: LBRACE
+- from: 111111E
+  to: '11111'
+  'on':
+    has: RBRACE
+- from: 111111E
+  to: '111111'
+  'on':
+    not:
+      or:
+      - has: LET
+      - and:
+        - has: IDENT
+        - has: TEXT:x
+      - has: LBRACE
+      - has: RBRACE

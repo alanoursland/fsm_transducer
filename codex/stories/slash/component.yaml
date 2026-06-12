@@ -1,0 +1,8 @@
+id: story.slash
+kind: story
+status: gold
+factory: fsm_parser.jssub_lang:build_slash_story
+params: {}
+search_terms: [regex literal, division, slash, retokenize, OPERAND_END, javascript]
+used_by: [jssub]
+notes: Three-state story (expect-operand/operator/in-regex); keys on the OPERAND_END event label.

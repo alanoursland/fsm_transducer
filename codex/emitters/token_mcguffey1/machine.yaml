@@ -1,0 +1,44 @@
+# GENERATED machine dump — do not edit.
+# Regenerate: python codex/build_catalog.py
+machine: token_emitter
+generated: true
+generated_by: fsm_parser.mcguffey1_gen:build_token_emitter
+params: {}
+states:
+- emit
+start: emit
+accept:
+- emit
+transitions:
+- from: emit
+  to: emit
+  'on':
+    and:
+    - has: EL:ENT
+    - not:
+        or:
+        - has: NAME
+        - has: PRON
+  emissions:
+  - emit: TOKEN.0:the
+    weight: 0.7
+  - emit: TOKEN.0:a
+    weight: 0.3
+  - emit: TOKEN.1:SELF
+- from: emit
+  to: emit
+  'on':
+    and:
+    - has: EL:ENT
+    - or:
+      - has: NAME
+      - has: PRON
+  emissions:
+  - emit: TOKEN.1:SELF
+- from: emit
+  to: emit
+  'on':
+    not:
+      has: EL:ENT
+  emissions:
+  - emit: TOKEN.1:SELF

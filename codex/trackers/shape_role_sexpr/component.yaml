@@ -1,0 +1,8 @@
+id: tracker.shape_role.sexpr
+kind: tracker
+status: gold
+factory: fsm_parser.sexpr_lang:build_shape_role_tracker
+params: {max_depth: 3}
+search_terms: [sexpr, lisp, head, argument, role, expectation]
+used_by: [sexpr]
+notes: Expectation stacks {head-pending,in-body}; first grammatical-relation labels (ROLE:HEAD/ARG).

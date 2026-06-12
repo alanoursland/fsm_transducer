@@ -1,0 +1,65 @@
+# GENERATED machine dump — do not edit.
+# Regenerate: python codex/build_catalog.py
+machine: assign_check@x
+generated: true
+generated_by: fsm_parser.pysub_lang:build_assign_checker
+params:
+  name: x
+states:
+- unassigned
+- assigned
+start: unassigned
+accept:
+- assigned
+- unassigned
+transitions:
+- from: unassigned
+  to: assigned
+  'on':
+    and:
+    - and:
+      - has: IDENT
+      - has: TEXT:x
+    - has: TARGET
+- from: unassigned
+  to: unassigned
+  'on':
+    and:
+    - and:
+      - has: IDENT
+      - has: TEXT:x
+    - not:
+        has: TARGET
+  emissions:
+  - emit: ERROR:UNDECLARED
+- from: unassigned
+  to: unassigned
+  'on':
+    not:
+      and:
+      - has: IDENT
+      - has: TEXT:x
+- from: assigned
+  to: assigned
+  'on':
+    and:
+    - and:
+      - has: IDENT
+      - has: TEXT:x
+    - has: TARGET
+- from: assigned
+  to: assigned
+  'on':
+    and:
+    - and:
+      - has: IDENT
+      - has: TEXT:x
+    - not:
+        has: TARGET
+- from: assigned
+  to: assigned
+  'on':
+    not:
+      and:
+      - has: IDENT
+      - has: TEXT:x

@@ -574,6 +574,7 @@ class FSMScanner:
         stream: str = "token",
         slot_filter: Callable[[Slot], bool] | None = None,
         anchored: bool = False,
+        frontier_out: "list[_Path] | None" = None,
     ) -> list[LabelDelta]:
         """Single left-to-right pass covering all start offsets.
 
@@ -594,6 +595,11 @@ class FSMScanner:
         machines whose live paths die within ``k`` positions (every acyclic
         machine; any machine whose conditions eventually reject), the
         frontier is ``O(k * |Q|)`` — independent of input length.
+
+        ``frontier_out``, if given, receives the live paths remaining
+        after the final position — the machine's belief state over the
+        consumed prefix (used by the autoregressive LM to score
+        next-token continuations).
         """
         deltas: list[LabelDelta] = []
         slots = state.stream(stream)
@@ -656,6 +662,14 @@ class FSMScanner:
                     )
             successors = self._merge(successors)
             frontier = self._epsilon_close(successors, fsm, deltas, slots=slots)
+        if frontier_out is not None:
+            if n == 0:  # empty prefix: the frontier is the closed start state
+                frontier = self._epsilon_close(
+                    [_Path(state=fsm.start, weight=self.semiring.one,
+                           captures={}, last_consumed=None, scan_start=0)],
+                    fsm, deltas, slots=slots,
+                )
+            frontier_out.extend(frontier)
         return deltas
 
     # -- internals -----------------------------------------------------------

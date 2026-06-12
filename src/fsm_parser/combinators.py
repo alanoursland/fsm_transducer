@@ -24,7 +24,10 @@ def _embed(builder: FSMBuilder, machine: FSM) -> tuple[StateId, frozenset[StateI
     """Copy machine's states and transitions into builder, returning the
     new start state and accept state set."""
     mapping: dict[StateId, StateId] = {}
-    for s in machine.states():
+    # sorted: states() is a set, and StateId hashing involves strings,
+    # so iteration order varies per process (PYTHONHASHSEED); embedding
+    # must renumber deterministically or serialized dumps churn
+    for s in sorted(machine.states(), key=lambda st: st.value):
         mapping[s] = builder.state(s.name)
     for src, trs in machine.transitions.items():
         new_src = mapping[src]
