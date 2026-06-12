@@ -8,7 +8,7 @@ New machinery relative to the earlier languages:
   one declared-bit per block level);
 * **cross-slot operands**: ``DECL``/``STORE`` execute at the statement's
   ``;`` but name the variable token via a slot-id capture interpolated
-  into the emission label (``EXEC.5:DECL(!{VAL@token:1})``) — first use
+  into the emission label (``EXEC.6:DECL(!{VAL@token:1})``) — first use
   of template interpolation and the ``!{FAMILY@id}`` reference form;
 * **structured control flow**: ``BRF``/``ENTER``/``EXIT`` matched
   markers instead of address jumps (emissions cannot point forward).
@@ -19,7 +19,7 @@ comparison precedence level below additive. Unary minus is resolved
 by a two-state *story machine* (expect-operand / expect-operator)
 labeling each '-' as MINUS:UNARY or MINUS:BINARY; emitters key off the
 labels. Ranks: 0 PUSH/LOAD/BRF/EXIT, 1 NEG/ENTER, 2 MUL/DIV,
-3 ADD/SUB, 4 cmp, 5 statement ops.
+3 ADD/SUB, 4 shifts (reserved; used by cpp), 5 cmp, 6 statement ops.
 
 Known limitation (documented in the spec): consecutive unary minuses
 without parens (``--x``) collapse — identical EXEC.1:NEG labels on the
@@ -353,7 +353,7 @@ def _expression_emitters(max_depth: int) -> list[FSM]:
                 literal(And((HasLabel(label), _d(d)))),
                 _addchain(d),
                 literal(Not(Or((_mulop(d), _addop(d)))),
-                        emissions=[Emission(f"EXEC.4:{instr}", 1.0,
+                        emissions=[Emission(f"EXEC.5:{instr}", 1.0,
                                             anchor=CaptureAnchor("end"))]),
             )
             m.name = f"{instr.lower()}@{d}"
@@ -388,7 +388,7 @@ def _statement_emitters() -> list[FSM]:
         literal(HasLabel("ASSIGN")),
         star(literal(Not(HasLabel("SEMI")))),
         literal(HasLabel("SEMI"),
-                emissions=[Emission("EXEC.5:DECL(!{VAL@{var}})", 1.0, offset=0)]),
+                emissions=[Emission("EXEC.6:DECL(!{VAL@{var}})", 1.0, offset=0)]),
     )
     let_decl.name = "let_decl"
     machines.append(let_decl)
@@ -399,7 +399,7 @@ def _statement_emitters() -> list[FSM]:
         literal(HasLabel("ASSIGN")),
         star(literal(Not(HasLabel("SEMI")))),
         literal(HasLabel("SEMI"),
-                emissions=[Emission("EXEC.5:STORE(!{VAL@{var}})", 1.0, offset=0)]),
+                emissions=[Emission("EXEC.6:STORE(!{VAL@{var}})", 1.0, offset=0)]),
     )
     assign.name = "assign"
     machines.append(assign)
@@ -408,7 +408,7 @@ def _statement_emitters() -> list[FSM]:
         literal(HasLabel("PRINT_KW")),
         star(literal(Not(HasLabel("SEMI")))),
         literal(HasLabel("SEMI"),
-                emissions=[Emission("EXEC.5:PRINT", 1.0, offset=0)]),
+                emissions=[Emission("EXEC.6:PRINT", 1.0, offset=0)]),
     )
     print_stmt.name = "print_stmt"
     machines.append(print_stmt)

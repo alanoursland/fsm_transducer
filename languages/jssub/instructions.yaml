@@ -1,0 +1,15 @@
+# Instruction set: imp's, unchanged (PUSH LOAD DECL STORE NEG ADD SUB
+# MUL DIV GT LT EQ PRINT BRF ENTER EXIT; same rank table). The VM is
+# imp's run_program, imported.
+#
+# One value-domain extension: PUSH's operand may be a regex value
+# (pattern string, rendered "/pattern/"). Regex values flow through
+# PUSH / DECL / STORE / LOAD / PRINT; arithmetic on them is out of
+# scope (the VM run goes invalid, as for any type error).
+
+# --- Validity conditions ------------------------------------------------------
+# imp's, plus:
+# 5. Token boundaries: every '/' in the source is accounted for as
+#    exactly one of DIV_OP or a REGEX literal delimiter; the
+#    differential against imp on the regex-free fragment guarantees
+#    the division reading agrees with imp's direct lexer.

@@ -1,0 +1,22 @@
+# Instruction set: imp's minus DECL (assignment binds in Python).
+# PUSH LOAD STORE NEG ADD SUB MUL DIV GT LT EQ PRINT BRF ENTER EXIT.
+# Rank table identical to imp (0 PUSH/LOAD/BRF/EXIT, 1 NEG/ENTER,
+# 2 MUL/DIV, 3 ADD/SUB, 4 cmp, 5 STORE/PRINT).
+
+semantics_changes_vs_imp:
+  STORE: "pop v; bind name in THE environment (assignment declares; single global env)"
+  DECL: removed
+  ENTER_EXIT: "pure control markers for BRF matching; no scope push/pop (Python blocks do not scope)"
+  BRF: "lands on the ':' of an if; the matched ENTER is the following INDENT slot, the matched EXIT the corresponding DEDENT slot"
+
+# --- Validity conditions ------------------------------------------------------
+# 1. Value stack ends empty.
+# 2. Output sequence and final environment equal real Python's, run on
+#    the SAME source: exec(src, {"print": out.append}) — the oracle is
+#    not a transpilation, it is the same text.
+# 3. LOAD of an unbound name fails at runtime; the static
+#    ERROR:UNDECLARED label predicts it except in the documented
+#    `x = x + 1` may-analysis gap, where runtime (ours) and Python
+#    still agree with each other.
+# 4. With ERROR:* labels present, 1-3 are waived; fragments are
+#    correctly built.

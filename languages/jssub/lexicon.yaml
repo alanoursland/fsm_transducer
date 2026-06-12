@@ -1,0 +1,37 @@
+# Layer 0: NAIVE tokenization — '/' is always a single SLASH token of
+# ambiguous class; regex interiors are deliberately mis-lexed and fixed
+# by retokenization after the slash story machine runs.
+
+classes:
+  LET: { match: { text: "let" } }
+  IF: { match: { text: "if" } }
+  PRINT_KW: { match: { text: "print" } }
+  IDENT: { match: { regex: '[A-Za-z_]\w*' }, also_emit: ["VAL:{TEXT}", "OPERAND_END"] }
+  NUM: { match: { regex: '[0-9]+' }, also_emit: ["VAL:{TEXT}", "OPERAND_END"] }
+  SLASH: { match: { text: "/" } }          # ambiguous: story machine decides
+  ASSIGN: { match: { text: "=" } }
+  EQ_OP: { match: { text: "==" }, also_emit: ["CMP_OP"] }
+  GT_OP: { match: { text: ">" }, also_emit: ["CMP_OP"] }
+  LT_OP: { match: { text: "<" }, also_emit: ["CMP_OP"] }
+  ADD_OP: { match: { text: "+" }, also_emit: ["ADDITIVE"] }
+  SUB_OP: { match: { text: "-" }, also_emit: ["ADDITIVE"] }
+  MUL_OP: { match: { text: "*" }, also_emit: ["MULTIPLICATIVE"] }
+  LPAREN: { match: { text: "(" }, also_emit: ["BRACKET"] }
+  RPAREN: { match: { text: ")" }, also_emit: ["BRACKET", "OPERAND_END"] }
+  LBRACE: { match: { text: "{" }, also_emit: ["BRACKET"] }
+  RBRACE: { match: { text: "}" }, also_emit: ["BRACKET"] }
+  SEMI: { match: { text: ";" } }
+
+synthesized_after_retokenization:
+  REGEX:
+    # one slot per regex literal; text recovered from source spans;
+    # carries VAL:<pattern>, OPERAND_END, and provenance edges to the
+    # raw tokens it replaced
+    also_emit: ["VAL:{pattern}", "OPERAND_END"]
+
+# OPERAND_END is the first explicit story-EVENT label (tier-1 adapter
+# vocabulary): "an operand just completed here." The slash story
+# machine keys on it rather than on token classes.
+
+fallback:
+  emit: [ERROR:UNKNOWN_TOKEN]   # harmless inside regex bodies: merged away

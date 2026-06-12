@@ -1,0 +1,18 @@
+# Instruction set: imp's plus shifts and default declaration.
+# Rank table (the renumbered global standard):
+#   0 PUSH/LOAD/BRF/EXIT, 1 NEG/ENTER, 2 MUL/DIV, 3 ADD/SUB,
+#   4 SHL/SHR, 5 GT/LT/EQ, 6 DECL/DECLD/STORE/PRINT.
+
+additions_vs_imp:
+  SHL:   { operands: 0, semantics: "pop b, a; push a << b (integer)" }
+  SHR:   { operands: 0, semantics: "pop b, a; push a >> b (integer)" }
+  DECLD: { operands: 1, semantics: "bind name in CURRENT scope to the default value 0 (no pop) — default initialization for template-typed declarations" }
+
+# ENTER/EXIT push/pop scopes (C++ blocks scope, like imp; unlike pysub).
+
+# --- Validity conditions ------------------------------------------------------
+# imp's, plus:
+# 5. Every '>>' in the source is accounted for as exactly one of: one
+#    SHR operator, or two template closers (or closer+GT at depth 1).
+#    The differential (transpiled Python, where '>>' is native) covers
+#    the shift reading; goldens cover the splits.
