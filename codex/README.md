@@ -41,8 +41,13 @@ notes: one-line purpose
 The generator LOADS each factory, builds the machine, and extracts
 its I/O alphabets with `fsm_parser.analysis.signature()` — the
 catalog's alphabets are **measured, never declared**, and a component
-that does not build cannot be catalogued. LLMs get all three
-surfaces: grep the manifests, scan the jsonl, read the markdown.
+that does not build cannot be catalogued. It also dumps every machine
+component's full built form to `machine.yaml` beside its manifest
+(states, transitions, conditions, emissions), provenance-tagged with
+the generating factory and params. The dumps are write-only artifacts
+— the builders remain the source of truth; freshness is test-enforced
+— but the machines themselves are now greppable: four search
+surfaces (manifests, jsonl, markdown, and the machines).
 
 ## Loading
 

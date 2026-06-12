@@ -1,0 +1,277 @@
+# GENERATED machine dump — do not edit.
+# Regenerate: python codex/build_catalog.py
+machine: angle_story
+generated: true
+generated_by: fsm_parser.cpp_lang:build_angle_story
+params:
+  max_tpl: 3
+states:
+- d0
+- d0T
+- d1
+- d1T
+- d2
+- d2T
+- d3
+- d3T
+start: d0
+accept:
+- d0
+- d0T
+transitions:
+- from: d0
+  to: d0T
+  'on':
+    has: TEMPLATE
+- from: d0
+  to: d0
+  'on':
+    has: ANGLE_L
+  emissions:
+  - emit: LT_OP
+  - emit: CMP_OP
+- from: d0
+  to: d0
+  'on':
+    has: ANGLE_R
+  emissions:
+  - emit: GT_OP
+  - emit: CMP_OP
+- from: d0
+  to: d0
+  'on':
+    has: ANGLE2
+  emissions:
+  - emit: SHR_OP
+  - emit: SHIFT
+- from: d0
+  to: d0
+  'on':
+    not:
+      or:
+      - has: TEMPLATE
+      - has: ANGLE_L
+      - has: ANGLE_R
+      - has: ANGLE2
+- from: d0T
+  to: d0T
+  'on':
+    has: TEMPLATE
+- from: d0T
+  to: d1
+  'on':
+    has: ANGLE_L
+  emissions:
+  - emit: TPL_OPEN
+- from: d0T
+  to: d0
+  'on':
+    has: ANGLE_R
+  emissions:
+  - emit: GT_OP
+  - emit: CMP_OP
+- from: d0T
+  to: d0
+  'on':
+    has: ANGLE2
+  emissions:
+  - emit: SHR_OP
+  - emit: SHIFT
+- from: d0T
+  to: d0
+  'on':
+    not:
+      or:
+      - has: TEMPLATE
+      - has: ANGLE_L
+      - has: ANGLE_R
+      - has: ANGLE2
+- from: d1
+  to: d1T
+  'on':
+    has: TEMPLATE
+- from: d1
+  to: d1
+  'on':
+    has: ANGLE_L
+  emissions:
+  - emit: LT_OP
+  - emit: CMP_OP
+- from: d1
+  to: d0
+  'on':
+    has: ANGLE_R
+  emissions:
+  - emit: TPL_CLOSE
+- from: d1
+  to: d0
+  'on':
+    has: ANGLE2
+  emissions:
+  - emit: TPLSPLIT_CG
+- from: d1
+  to: d1
+  'on':
+    not:
+      or:
+      - has: TEMPLATE
+      - has: ANGLE_L
+      - has: ANGLE_R
+      - has: ANGLE2
+- from: d1T
+  to: d1T
+  'on':
+    has: TEMPLATE
+- from: d1T
+  to: d2
+  'on':
+    has: ANGLE_L
+  emissions:
+  - emit: TPL_OPEN
+- from: d1T
+  to: d0
+  'on':
+    has: ANGLE_R
+  emissions:
+  - emit: TPL_CLOSE
+- from: d1T
+  to: d0
+  'on':
+    has: ANGLE2
+  emissions:
+  - emit: TPLSPLIT_CG
+- from: d1T
+  to: d1
+  'on':
+    not:
+      or:
+      - has: TEMPLATE
+      - has: ANGLE_L
+      - has: ANGLE_R
+      - has: ANGLE2
+- from: d2
+  to: d2T
+  'on':
+    has: TEMPLATE
+- from: d2
+  to: d2
+  'on':
+    has: ANGLE_L
+  emissions:
+  - emit: LT_OP
+  - emit: CMP_OP
+- from: d2
+  to: d1
+  'on':
+    has: ANGLE_R
+  emissions:
+  - emit: TPL_CLOSE
+- from: d2
+  to: d0
+  'on':
+    has: ANGLE2
+  emissions:
+  - emit: TPLSPLIT_CC
+- from: d2
+  to: d2
+  'on':
+    not:
+      or:
+      - has: TEMPLATE
+      - has: ANGLE_L
+      - has: ANGLE_R
+      - has: ANGLE2
+- from: d2T
+  to: d2T
+  'on':
+    has: TEMPLATE
+- from: d2T
+  to: d3
+  'on':
+    has: ANGLE_L
+  emissions:
+  - emit: TPL_OPEN
+- from: d2T
+  to: d1
+  'on':
+    has: ANGLE_R
+  emissions:
+  - emit: TPL_CLOSE
+- from: d2T
+  to: d0
+  'on':
+    has: ANGLE2
+  emissions:
+  - emit: TPLSPLIT_CC
+- from: d2T
+  to: d2
+  'on':
+    not:
+      or:
+      - has: TEMPLATE
+      - has: ANGLE_L
+      - has: ANGLE_R
+      - has: ANGLE2
+- from: d3
+  to: d3T
+  'on':
+    has: TEMPLATE
+- from: d3
+  to: d3
+  'on':
+    has: ANGLE_L
+  emissions:
+  - emit: LT_OP
+  - emit: CMP_OP
+- from: d3
+  to: d2
+  'on':
+    has: ANGLE_R
+  emissions:
+  - emit: TPL_CLOSE
+- from: d3
+  to: d1
+  'on':
+    has: ANGLE2
+  emissions:
+  - emit: TPLSPLIT_CC
+- from: d3
+  to: d3
+  'on':
+    not:
+      or:
+      - has: TEMPLATE
+      - has: ANGLE_L
+      - has: ANGLE_R
+      - has: ANGLE2
+- from: d3T
+  to: d3T
+  'on':
+    has: TEMPLATE
+- from: d3T
+  to: d3
+  'on':
+    has: ANGLE_L
+  emissions:
+  - emit: ERROR:TPL_DEPTH_EXCEEDED
+- from: d3T
+  to: d2
+  'on':
+    has: ANGLE_R
+  emissions:
+  - emit: TPL_CLOSE
+- from: d3T
+  to: d1
+  'on':
+    has: ANGLE2
+  emissions:
+  - emit: TPLSPLIT_CC
+- from: d3T
+  to: d3
+  'on':
+    not:
+      or:
+      - has: TEMPLATE
+      - has: ANGLE_L
+      - has: ANGLE_R
+      - has: ANGLE2

@@ -12,7 +12,30 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
+import yaml  # noqa: E402
+
 from fsm_parser import codex  # noqa: E402
+from fsm_parser.serialize import fsm_to_data  # noqa: E402
+
+HEADER = ("# GENERATED machine dump — do not edit.\n"
+          "# Regenerate: python codex/build_catalog.py\n")
+
+
+def dump_machines() -> int:
+    n = 0
+    for m in codex.manifests().values():
+        if m["kind"] not in ("tracker", "story", "checker", "emitter_set"):
+            continue
+        built = codex.load(m["id"])
+        machines = built if isinstance(built, list) else [built]
+        data = [fsm_to_data(fsm, generated_by=m["factory"],
+                            params=m.get("params", {})) for fsm in machines]
+        payload = data[0] if len(data) == 1 else {"machines": data}
+        out = codex.CODEX_ROOT / m["_path"] / "machine.yaml"
+        out.write_text(HEADER + yaml.safe_dump(payload, sort_keys=False,
+                                               width=100))
+        n += 1
+    return n
 
 
 def main() -> None:
@@ -53,6 +76,8 @@ def main() -> None:
             lines.append(f"- search: {', '.join(map(str, e.get('search_terms', [])))}")
             lines.append("")
     (codex.CODEX_ROOT / "CATALOG.md").write_text("\n".join(lines))
+    n_dumped = dump_machines()
+    print(f"dumped {n_dumped} machine.yaml files")
     print(f"catalogued {len(entries)} components "
           f"({', '.join(f'{len(v)} {k}' for k, v in sorted(by_kind.items()))})")
 

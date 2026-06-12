@@ -52,3 +52,28 @@ def test_catalog_is_fresh_and_measured():
     entry = next(json.loads(line) for line in on_disk.split("\n")
                  if line and json.loads(line)["id"] == "story.minus")
     assert set(entry["inputs"]) == set(signature(codex.load("story.minus")).inputs)
+
+
+def test_machine_dumps_fresh_and_legible():
+    """Every machine component has a generated machine.yaml beside its
+    manifest, loadable, provenance-tagged, and structurally consistent
+    with the freshly built machine (stale dumps fail: regenerate with
+    python codex/build_catalog.py)."""
+    import yaml as _yaml
+
+    from fsm_parser.serialize import fsm_to_data
+
+    for m in codex.manifests().values():
+        if m["kind"] not in ("tracker", "story", "checker", "emitter_set"):
+            continue
+        path = codex.CODEX_ROOT / m["_path"] / "machine.yaml"
+        assert path.exists(), m["id"]
+        on_disk = _yaml.safe_load(path.read_text())
+        built = codex.load(m["id"])
+        machines = built if isinstance(built, list) else [built]
+        fresh = [fsm_to_data(f, generated_by=m["factory"],
+                             params=m.get("params", {})) for f in machines]
+        expected = fresh[0] if len(fresh) == 1 else {"machines": fresh}
+        assert on_disk == expected, f"stale machine.yaml for {m['id']}"
+        first = fresh[0]
+        assert first["generated"] and first["generated_by"] == m["factory"]

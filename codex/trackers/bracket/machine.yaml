@@ -1,0 +1,2283 @@
+# GENERATED machine dump — do not edit.
+# Regenerate: python codex/build_catalog.py
+machine: bracket_tracker
+generated: true
+generated_by: fsm_parser.imp_lang:build_bracket_tracker
+params:
+  max_depth: 5
+states:
+- top
+- P
+- B
+- PP
+- PB
+- BP
+- BB
+- PPP
+- PPB
+- PBP
+- PBB
+- BPP
+- BPB
+- BBP
+- BBB
+- PPPP
+- PPPB
+- PPBP
+- PPBB
+- PBPP
+- PBPB
+- PBBP
+- PBBB
+- BPPP
+- BPPB
+- BPBP
+- BPBB
+- BBPP
+- BBPB
+- BBBP
+- BBBB
+- PPPPP
+- PPPPB
+- PPPBP
+- PPPBB
+- PPBPP
+- PPBPB
+- PPBBP
+- PPBBB
+- PBPPP
+- PBPPB
+- PBPBP
+- PBPBB
+- PBBPP
+- PBBPB
+- PBBBP
+- PBBBB
+- BPPPP
+- BPPPB
+- BPPBP
+- BPPBB
+- BPBPP
+- BPBPB
+- BPBBP
+- BPBBB
+- BBPPP
+- BBPPB
+- BBPBP
+- BBPBB
+- BBBPP
+- BBBPB
+- BBBBP
+- BBBBB
+- overflow
+start: top
+accept:
+- top
+transitions:
+- from: top
+  to: P
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:1
+  - emit: GROUP_START:1
+- from: top
+  to: B
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:1
+  - emit: GROUP_START:1
+- from: top
+  to: top
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: ERROR:UNBALANCED_CLOSE
+- from: top
+  to: top
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: ERROR:UNBALANCED_CLOSE
+- from: top
+  to: top
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:0
+- from: P
+  to: PP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_START:2
+- from: P
+  to: PB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_START:2
+- from: P
+  to: top
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:1
+  - emit: GROUP_END:1
+- from: P
+  to: top
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:1
+  - emit: GROUP_END:1
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: P
+  to: P
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:1
+- from: B
+  to: BP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_START:2
+- from: B
+  to: BB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_START:2
+- from: B
+  to: top
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:1
+  - emit: GROUP_END:1
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: B
+  to: top
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:1
+  - emit: GROUP_END:1
+- from: B
+  to: B
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:1
+- from: PP
+  to: PPP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+- from: PP
+  to: PPB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+- from: PP
+  to: P
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+- from: PP
+  to: P
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PP
+  to: PP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:2
+- from: PB
+  to: PBP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+- from: PB
+  to: PBB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+- from: PB
+  to: P
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PB
+  to: P
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+- from: PB
+  to: PB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:2
+- from: BP
+  to: BPP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+- from: BP
+  to: BPB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+- from: BP
+  to: B
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+- from: BP
+  to: B
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BP
+  to: BP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:2
+- from: BB
+  to: BBP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+- from: BB
+  to: BBB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+- from: BB
+  to: B
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BB
+  to: B
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+- from: BB
+  to: BB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:2
+- from: PPP
+  to: PPPP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_START:4
+- from: PPP
+  to: PPPB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_START:4
+- from: PPP
+  to: PP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+- from: PPP
+  to: PP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PPP
+  to: PPP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:3
+- from: PPB
+  to: PPBP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_START:4
+- from: PPB
+  to: PPBB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_START:4
+- from: PPB
+  to: PP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PPB
+  to: PP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+- from: PPB
+  to: PPB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:3
+- from: PBP
+  to: PBPP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_START:4
+- from: PBP
+  to: PBPB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_START:4
+- from: PBP
+  to: PB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+- from: PBP
+  to: PB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PBP
+  to: PBP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:3
+- from: PBB
+  to: PBBP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_START:4
+- from: PBB
+  to: PBBB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_START:4
+- from: PBB
+  to: PB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PBB
+  to: PB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+- from: PBB
+  to: PBB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:3
+- from: BPP
+  to: BPPP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_START:4
+- from: BPP
+  to: BPPB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_START:4
+- from: BPP
+  to: BP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+- from: BPP
+  to: BP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BPP
+  to: BPP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:3
+- from: BPB
+  to: BPBP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_START:4
+- from: BPB
+  to: BPBB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_START:4
+- from: BPB
+  to: BP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BPB
+  to: BP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+- from: BPB
+  to: BPB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:3
+- from: BBP
+  to: BBPP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_START:4
+- from: BBP
+  to: BBPB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_START:4
+- from: BBP
+  to: BB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+- from: BBP
+  to: BB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BBP
+  to: BBP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:3
+- from: BBB
+  to: BBBP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_START:4
+- from: BBB
+  to: BBBB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_START:4
+- from: BBB
+  to: BB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BBB
+  to: BB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+- from: BBB
+  to: BBB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:3
+- from: PPPP
+  to: PPPPP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: PPPP
+  to: PPPPB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: PPPP
+  to: PPP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+- from: PPPP
+  to: PPP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PPPP
+  to: PPPP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:4
+- from: PPPB
+  to: PPPBP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: PPPB
+  to: PPPBB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: PPPB
+  to: PPP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PPPB
+  to: PPP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+- from: PPPB
+  to: PPPB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:4
+- from: PPBP
+  to: PPBPP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: PPBP
+  to: PPBPB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: PPBP
+  to: PPB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+- from: PPBP
+  to: PPB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PPBP
+  to: PPBP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:4
+- from: PPBB
+  to: PPBBP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: PPBB
+  to: PPBBB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: PPBB
+  to: PPB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PPBB
+  to: PPB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+- from: PPBB
+  to: PPBB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:4
+- from: PBPP
+  to: PBPPP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: PBPP
+  to: PBPPB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: PBPP
+  to: PBP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+- from: PBPP
+  to: PBP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PBPP
+  to: PBPP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:4
+- from: PBPB
+  to: PBPBP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: PBPB
+  to: PBPBB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: PBPB
+  to: PBP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PBPB
+  to: PBP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+- from: PBPB
+  to: PBPB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:4
+- from: PBBP
+  to: PBBPP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: PBBP
+  to: PBBPB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: PBBP
+  to: PBB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+- from: PBBP
+  to: PBB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PBBP
+  to: PBBP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:4
+- from: PBBB
+  to: PBBBP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: PBBB
+  to: PBBBB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: PBBB
+  to: PBB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PBBB
+  to: PBB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+- from: PBBB
+  to: PBBB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:4
+- from: BPPP
+  to: BPPPP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: BPPP
+  to: BPPPB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: BPPP
+  to: BPP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+- from: BPPP
+  to: BPP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BPPP
+  to: BPPP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:4
+- from: BPPB
+  to: BPPBP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: BPPB
+  to: BPPBB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: BPPB
+  to: BPP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BPPB
+  to: BPP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+- from: BPPB
+  to: BPPB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:4
+- from: BPBP
+  to: BPBPP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: BPBP
+  to: BPBPB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: BPBP
+  to: BPB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+- from: BPBP
+  to: BPB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BPBP
+  to: BPBP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:4
+- from: BPBB
+  to: BPBBP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: BPBB
+  to: BPBBB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: BPBB
+  to: BPB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BPBB
+  to: BPB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+- from: BPBB
+  to: BPBB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:4
+- from: BBPP
+  to: BBPPP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: BBPP
+  to: BBPPB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: BBPP
+  to: BBP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+- from: BBPP
+  to: BBP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BBPP
+  to: BBPP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:4
+- from: BBPB
+  to: BBPBP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: BBPB
+  to: BBPBB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: BBPB
+  to: BBP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BBPB
+  to: BBP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+- from: BBPB
+  to: BBPB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:4
+- from: BBBP
+  to: BBBPP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: BBBP
+  to: BBBPB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: BBBP
+  to: BBB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+- from: BBBP
+  to: BBB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BBBP
+  to: BBBP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:4
+- from: BBBB
+  to: BBBBP
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: BBBB
+  to: BBBBB
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_START:5
+- from: BBBB
+  to: BBB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BBBB
+  to: BBB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:4
+  - emit: GROUP_END:4
+- from: BBBB
+  to: BBBB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:4
+- from: PPPPP
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PPPPP
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PPPPP
+  to: PPPP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: PPPPP
+  to: PPPP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PPPPP
+  to: PPPPP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: PPPPB
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PPPPB
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PPPPB
+  to: PPPP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PPPPB
+  to: PPPP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: PPPPB
+  to: PPPPB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: PPPBP
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PPPBP
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PPPBP
+  to: PPPB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: PPPBP
+  to: PPPB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PPPBP
+  to: PPPBP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: PPPBB
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PPPBB
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PPPBB
+  to: PPPB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PPPBB
+  to: PPPB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: PPPBB
+  to: PPPBB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: PPBPP
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PPBPP
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PPBPP
+  to: PPBP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: PPBPP
+  to: PPBP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PPBPP
+  to: PPBPP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: PPBPB
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PPBPB
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PPBPB
+  to: PPBP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PPBPB
+  to: PPBP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: PPBPB
+  to: PPBPB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: PPBBP
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PPBBP
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PPBBP
+  to: PPBB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: PPBBP
+  to: PPBB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PPBBP
+  to: PPBBP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: PPBBB
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PPBBB
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PPBBB
+  to: PPBB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PPBBB
+  to: PPBB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: PPBBB
+  to: PPBBB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: PBPPP
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PBPPP
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PBPPP
+  to: PBPP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: PBPPP
+  to: PBPP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PBPPP
+  to: PBPPP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: PBPPB
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PBPPB
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PBPPB
+  to: PBPP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PBPPB
+  to: PBPP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: PBPPB
+  to: PBPPB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: PBPBP
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PBPBP
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PBPBP
+  to: PBPB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: PBPBP
+  to: PBPB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PBPBP
+  to: PBPBP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: PBPBB
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PBPBB
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PBPBB
+  to: PBPB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PBPBB
+  to: PBPB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: PBPBB
+  to: PBPBB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: PBBPP
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PBBPP
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PBBPP
+  to: PBBP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: PBBPP
+  to: PBBP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PBBPP
+  to: PBBPP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: PBBPB
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PBBPB
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PBBPB
+  to: PBBP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PBBPB
+  to: PBBP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: PBBPB
+  to: PBBPB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: PBBBP
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PBBBP
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PBBBP
+  to: PBBB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: PBBBP
+  to: PBBB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PBBBP
+  to: PBBBP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: PBBBB
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PBBBB
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: PBBBB
+  to: PBBB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: PBBBB
+  to: PBBB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: PBBBB
+  to: PBBBB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: BPPPP
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BPPPP
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BPPPP
+  to: BPPP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: BPPPP
+  to: BPPP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BPPPP
+  to: BPPPP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: BPPPB
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BPPPB
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BPPPB
+  to: BPPP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BPPPB
+  to: BPPP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: BPPPB
+  to: BPPPB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: BPPBP
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BPPBP
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BPPBP
+  to: BPPB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: BPPBP
+  to: BPPB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BPPBP
+  to: BPPBP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: BPPBB
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BPPBB
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BPPBB
+  to: BPPB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BPPBB
+  to: BPPB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: BPPBB
+  to: BPPBB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: BPBPP
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BPBPP
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BPBPP
+  to: BPBP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: BPBPP
+  to: BPBP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BPBPP
+  to: BPBPP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: BPBPB
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BPBPB
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BPBPB
+  to: BPBP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BPBPB
+  to: BPBP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: BPBPB
+  to: BPBPB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: BPBBP
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BPBBP
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BPBBP
+  to: BPBB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: BPBBP
+  to: BPBB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BPBBP
+  to: BPBBP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: BPBBB
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BPBBB
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BPBBB
+  to: BPBB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BPBBB
+  to: BPBB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: BPBBB
+  to: BPBBB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: BBPPP
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BBPPP
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BBPPP
+  to: BBPP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: BBPPP
+  to: BBPP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BBPPP
+  to: BBPPP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: BBPPB
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BBPPB
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BBPPB
+  to: BBPP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BBPPB
+  to: BBPP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: BBPPB
+  to: BBPPB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: BBPBP
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BBPBP
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BBPBP
+  to: BBPB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: BBPBP
+  to: BBPB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BBPBP
+  to: BBPBP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: BBPBB
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BBPBB
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BBPBB
+  to: BBPB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BBPBB
+  to: BBPB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: BBPBB
+  to: BBPBB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: BBBPP
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BBBPP
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BBBPP
+  to: BBBP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: BBBPP
+  to: BBBP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BBBPP
+  to: BBBPP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: BBBPB
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BBBPB
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BBBPB
+  to: BBBP
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BBBPB
+  to: BBBP
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: BBBPB
+  to: BBBPB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: BBBBP
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BBBBP
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BBBBP
+  to: BBBB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: BBBBP
+  to: BBBB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BBBBP
+  to: BBBBP
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: BBBBB
+  to: overflow
+  'on':
+    has: LPAREN
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BBBBB
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: BBBBB
+  to: BBBB
+  'on':
+    has: RPAREN
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: BBBBB
+  to: BBBB
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:5
+  - emit: GROUP_END:5
+- from: BBBBB
+  to: BBBBB
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:5
+- from: overflow
+  to: overflow
+  'on':
+    any: true
+  emissions:
+  - emit: DEPTH:OVERFLOW

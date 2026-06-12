@@ -1,0 +1,593 @@
+# GENERATED machine dump — do not edit.
+# Regenerate: python codex/build_catalog.py
+machine: shape_tracker
+generated: true
+generated_by: fsm_parser.json_lang:build_shape_tracker
+params:
+  max_depth: 3
+states:
+- top
+- O
+- A
+- OO
+- OA
+- AO
+- AA
+- OOO
+- OOA
+- OAO
+- OAA
+- AOO
+- AOA
+- AAO
+- AAA
+- overflow
+start: top
+accept:
+- top
+transitions:
+- from: top
+  to: O
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:1
+  - emit: GROUP_START:1
+- from: top
+  to: A
+  'on':
+    has: LBRACKET
+  emissions:
+  - emit: DEPTH:1
+  - emit: GROUP_START:1
+- from: top
+  to: top
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: ERROR:UNBALANCED_CLOSE
+- from: top
+  to: top
+  'on':
+    has: RBRACKET
+  emissions:
+  - emit: ERROR:UNBALANCED_CLOSE
+- from: top
+  to: top
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:0
+- from: O
+  to: OO
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_START:2
+- from: O
+  to: OA
+  'on':
+    has: LBRACKET
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_START:2
+- from: O
+  to: top
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:1
+  - emit: GROUP_END:1
+- from: O
+  to: top
+  'on':
+    has: RBRACKET
+  emissions:
+  - emit: DEPTH:1
+  - emit: GROUP_END:1
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: O
+  to: O
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:1
+  - emit: CTX:OBJ:1
+- from: A
+  to: AO
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_START:2
+- from: A
+  to: AA
+  'on':
+    has: LBRACKET
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_START:2
+- from: A
+  to: top
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:1
+  - emit: GROUP_END:1
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: A
+  to: top
+  'on':
+    has: RBRACKET
+  emissions:
+  - emit: DEPTH:1
+  - emit: GROUP_END:1
+- from: A
+  to: A
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:1
+  - emit: CTX:ARR:1
+- from: OO
+  to: OOO
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+- from: OO
+  to: OOA
+  'on':
+    has: LBRACKET
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+- from: OO
+  to: O
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+  - emit: ENCL:OBJ:1
+- from: OO
+  to: O
+  'on':
+    has: RBRACKET
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+  - emit: ENCL:OBJ:1
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: OO
+  to: OO
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:2
+  - emit: CTX:OBJ:2
+- from: OA
+  to: OAO
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+- from: OA
+  to: OAA
+  'on':
+    has: LBRACKET
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+- from: OA
+  to: O
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+  - emit: ENCL:OBJ:1
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: OA
+  to: O
+  'on':
+    has: RBRACKET
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+  - emit: ENCL:OBJ:1
+- from: OA
+  to: OA
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:2
+  - emit: CTX:ARR:2
+- from: AO
+  to: AOO
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+- from: AO
+  to: AOA
+  'on':
+    has: LBRACKET
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+- from: AO
+  to: A
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+  - emit: ENCL:ARR:1
+- from: AO
+  to: A
+  'on':
+    has: RBRACKET
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+  - emit: ENCL:ARR:1
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: AO
+  to: AO
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:2
+  - emit: CTX:OBJ:2
+- from: AA
+  to: AAO
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+- from: AA
+  to: AAA
+  'on':
+    has: LBRACKET
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_START:3
+- from: AA
+  to: A
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+  - emit: ENCL:ARR:1
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: AA
+  to: A
+  'on':
+    has: RBRACKET
+  emissions:
+  - emit: DEPTH:2
+  - emit: GROUP_END:2
+  - emit: ENCL:ARR:1
+- from: AA
+  to: AA
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:2
+  - emit: CTX:ARR:2
+- from: OOO
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: OOO
+  to: overflow
+  'on':
+    has: LBRACKET
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: OOO
+  to: OO
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:OBJ:2
+- from: OOO
+  to: OO
+  'on':
+    has: RBRACKET
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:OBJ:2
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: OOO
+  to: OOO
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:3
+  - emit: CTX:OBJ:3
+- from: OOA
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: OOA
+  to: overflow
+  'on':
+    has: LBRACKET
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: OOA
+  to: OO
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:OBJ:2
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: OOA
+  to: OO
+  'on':
+    has: RBRACKET
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:OBJ:2
+- from: OOA
+  to: OOA
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:3
+  - emit: CTX:ARR:3
+- from: OAO
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: OAO
+  to: overflow
+  'on':
+    has: LBRACKET
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: OAO
+  to: OA
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:ARR:2
+- from: OAO
+  to: OA
+  'on':
+    has: RBRACKET
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:ARR:2
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: OAO
+  to: OAO
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:3
+  - emit: CTX:OBJ:3
+- from: OAA
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: OAA
+  to: overflow
+  'on':
+    has: LBRACKET
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: OAA
+  to: OA
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:ARR:2
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: OAA
+  to: OA
+  'on':
+    has: RBRACKET
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:ARR:2
+- from: OAA
+  to: OAA
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:3
+  - emit: CTX:ARR:3
+- from: AOO
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: AOO
+  to: overflow
+  'on':
+    has: LBRACKET
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: AOO
+  to: AO
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:OBJ:2
+- from: AOO
+  to: AO
+  'on':
+    has: RBRACKET
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:OBJ:2
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: AOO
+  to: AOO
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:3
+  - emit: CTX:OBJ:3
+- from: AOA
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: AOA
+  to: overflow
+  'on':
+    has: LBRACKET
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: AOA
+  to: AO
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:OBJ:2
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: AOA
+  to: AO
+  'on':
+    has: RBRACKET
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:OBJ:2
+- from: AOA
+  to: AOA
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:3
+  - emit: CTX:ARR:3
+- from: AAO
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: AAO
+  to: overflow
+  'on':
+    has: LBRACKET
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: AAO
+  to: AA
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:ARR:2
+- from: AAO
+  to: AA
+  'on':
+    has: RBRACKET
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:ARR:2
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: AAO
+  to: AAO
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:3
+  - emit: CTX:OBJ:3
+- from: AAA
+  to: overflow
+  'on':
+    has: LBRACE
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: AAA
+  to: overflow
+  'on':
+    has: LBRACKET
+  emissions:
+  - emit: ERROR:DEPTH_EXCEEDED
+- from: AAA
+  to: AA
+  'on':
+    has: RBRACE
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:ARR:2
+  - emit: ERROR:MISMATCHED_CLOSE
+- from: AAA
+  to: AA
+  'on':
+    has: RBRACKET
+  emissions:
+  - emit: DEPTH:3
+  - emit: GROUP_END:3
+  - emit: ENCL:ARR:2
+- from: AAA
+  to: AAA
+  'on':
+    not:
+      has: BRACKET
+  emissions:
+  - emit: DEPTH:3
+  - emit: CTX:ARR:3
+- from: overflow
+  to: overflow
+  'on':
+    any: true
+  emissions:
+  - emit: DEPTH:OVERFLOW
