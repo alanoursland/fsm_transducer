@@ -1,0 +1,82 @@
+# Machine specifications. Indent stack K_layout=4; paren depth K=5.
+
+# ---------------------------------------------------------------------------
+# Layer 0b: layout synthesis (code, not an FSM — it ADDS slots, which
+# emitters cannot do; the indent stack is a story machine in code form,
+# narrating "how deep are we, did a block just open or close")
+# ---------------------------------------------------------------------------
+- layer: layout
+  notes: >
+    The classic indent-stack algorithm, synthesizing NEWLINE / INDENT /
+    DEDENT slots. One slot per DEDENT pop — separate slots mean the
+    EXIT markers they will carry can never collide in a label bag (the
+    imp bag-not-multiset limitation, routed around by representation).
+
+# ---------------------------------------------------------------------------
+# Layer 1: paren tracker — IMPORTED from imp (build_bracket_tracker).
+# pysub has no braces, so the tracker's B-transitions are simply dead.
+# ---------------------------------------------------------------------------
+- layer: shape
+  machines: [imp.bracket_tracker]
+
+# ---------------------------------------------------------------------------
+# Layer 2: target marking + per-identifier scope checkers
+# ---------------------------------------------------------------------------
+- layer: scopes
+  machines:
+    - name: target_marker
+      # binding is announced AFTER the name in Python (x =), so a
+      # reflex marks targets before the anchored checkers run
+      pattern: "<IDENT> <ASSIGN>"
+      emit: [{ label: "TARGET", anchor: the IDENT token }]
+  schema: forall ident x occurring in the input
+  machines_per_ident:
+    - name: assign_check@{x}
+      anchored: true
+      # Two states (Python has no block scope): unassigned / assigned.
+      transitions_schema: |
+        on x & TARGET: -> assigned
+        on x & not TARGET, while unassigned: emit ERROR:UNDECLARED
+        on anything else: stay
+      notes: >
+        May-analysis: `x = x + 1` with x unbound is not flagged (the
+        target token precedes the use in token order). Runtime check
+        and real Python agree; the static label is approximate.
+        Documented and test-pinned.
+
+# ---------------------------------------------------------------------------
+# Layer 2b + 3: minus story machine and expression emitters —
+# IMPORTED from imp unchanged (the interlingua claim's first test:
+# same machines, different syntax adapter).
+# ---------------------------------------------------------------------------
+- layer: story
+  machines: [imp.minus_story]
+- layer: expressions
+  machines: [imp.expression_emitters]   # NEG/MUL/DIV/ADD/SUB/cmp, ranks 1-4
+
+# ---------------------------------------------------------------------------
+# Layer 4: statement and control emitters (NEWLINE-terminated)
+# ---------------------------------------------------------------------------
+- layer: statements
+  machines:
+    - name: push_num
+      pattern: "<NUM>"
+      emit: [{ label: "EXEC.0:PUSH(!{VAL})" }]
+    - name: load
+      pattern: "<IDENT> <not ASSIGN>"
+      emit: [{ label: "EXEC.0:LOAD(!{VAL})", anchor: the IDENT token }]
+    - name: assign
+      pattern: "<IDENT>{cap var: slot_id} <ASSIGN> <not NEWLINE>* <NEWLINE>"
+      emit: [{ label: "EXEC.5:STORE(!{VAL@{var}})", anchor: the NEWLINE }]
+    - name: print_stmt
+      pattern: "<PRINT_KW> <not NEWLINE>* <NEWLINE>"
+      emit: [{ label: "EXEC.5:PRINT", anchor: the NEWLINE }]
+    - name: if_branch     # ':' only follows if-conditions in this subset
+      pattern: "<COLON>"
+      emit: [{ label: "EXEC.0:BRF" }]
+    - name: block_enter
+      pattern: "<INDENT>"
+      emit: [{ label: "EXEC.1:ENTER" }]
+    - name: block_exit
+      pattern: "<DEDENT>"
+      emit: [{ label: "EXEC.0:EXIT" }]
