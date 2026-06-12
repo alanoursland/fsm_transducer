@@ -346,3 +346,70 @@ __all__ = [
     "is_plain",
     "minimize",
 ]
+
+
+# --- Machine signatures (declared I/O alphabets) -------------------------------
+
+
+@dataclass(frozen=True)
+class Signature:
+    """A machine's input/output label alphabets, extracted.
+
+    Machines have always had implicit signatures (conditions imply the
+    input alphabet; emissions imply the output alphabet); this makes
+    them inspectable. Label FAMILIES are reported for parameterized
+    labels (DEPTH:* rather than every instance); emission templates
+    (containing {...} or !{...}) are reported with their placeholders.
+
+    The closed-alphabet discipline this enables: a machine is defined
+    over a finite, declared input set; everything outside it must be
+    mapped to an OOV label by the adapter at the boundary (the same
+    move as byte-fallback tokenizers). Open alphabets — full Unicode —
+    are never the machine's problem. This is also what keeps
+    determinization (minterm counts) and one-hot transformer
+    compilation (d_model >= |alphabet|) meaningful.
+    """
+
+    inputs: frozenset[str]
+    outputs: frozenset[str]
+
+    def composes_after(self, upstream_outputs: set[str]) -> set[str]:
+        """Input labels NOT produced upstream (must come from the lexicon
+        or adapter — or indicate a layer-composition bug)."""
+        return set(self.inputs) - upstream_outputs
+
+
+def _condition_labels(cond) -> set[str]:
+    labels: set[str] = set()
+    if hasattr(cond, "label"):
+        labels.add(cond.label)
+    if hasattr(cond, "labels"):
+        labels.update(cond.labels)
+    if hasattr(cond, "inner"):
+        labels |= _condition_labels(cond.inner)
+    if hasattr(cond, "parts"):
+        for p in cond.parts:
+            labels |= _condition_labels(p)
+    return labels
+
+
+def _family(label: str) -> str:
+    if "{" in label:
+        return label  # template: report verbatim, placeholders visible
+    head, sep, tail = label.partition(":")
+    return f"{head}:*" if sep and tail else label
+
+
+def signature(fsm: FSM) -> Signature:
+    """Extract a machine's input/output label alphabets."""
+    ins: set[str] = set()
+    outs: set[str] = set()
+    for trs in fsm.transitions.values():
+        for tr in trs:
+            ins |= {_family(label) for label in _condition_labels(tr.condition)}
+            for em in tr.emissions:
+                outs.add(_family(em.label))
+    for info in fsm.state_info.values():
+        for em in list(info.on_enter) + list(info.on_accept):
+            outs.add(_family(em.label))
+    return Signature(inputs=frozenset(ins), outputs=frozenset(outs))

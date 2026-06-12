@@ -17,6 +17,7 @@ readiness, not importance.
 | 03 | Glass-box mirror for transformer interpretability | BlackboxNLP -> NeurIPS/ICLR | training + probing + interventions |
 | 09 | Recognizing the moral of the story | CMN / arXiv | grammar scale-up + arc machines |
 | 10 | Compiling FSM cascades into attention (delta->QKV) | BlackboxNLP -> main | compiler + capacity + attractor-distance |
+| 11 | Entity-tracking curricula from the glass-box generator | BlackboxNLP -> main | reference machinery + factory + training runs |
 
 Sensible sequencing: 02 and 06 are mostly written already (the repo's
 language definitions and PERSPECTIVE documents contain the content);

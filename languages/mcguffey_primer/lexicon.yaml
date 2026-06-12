@@ -1,0 +1,332 @@
+# Tier-1 lexicon: all 288 words of the McGuffey Primer sentences, plus
+# the primer seed vocabulary (growth never removes words).
+#
+# PROVENANCE: tagged by the LLM collaborator (LLM-as-annotator, first
+# use — see notes on the oracle cliff). Treat as silver: spot-check.
+# Ambiguous words carry weighted tags; the clause machine's forks and
+# the NFA frontier handle the rest.
+#
+# Tag inventory:
+#   N noun (NP head)        NAME proper noun (also N)
+#   PRON pronoun (also N)   POSS possessive form (NP-internal)
+#   V verb                  COP copula     MOD modal    AUX do-support
+#   DET determiner          NUM number (NP-internal)
+#   ADJ adjective           ADV adverb     NEG not
+#   PREP preposition        TO infinitival to (also PREP)
+#   CONJ conjunction        WH wh-word     INTERJ oh/yes/no
+
+entries:
+  # --- determiners, numbers ---
+  the: {DET: 1.0}
+  a: {DET: 1.0}
+  an: {DET: 1.0}
+  this: {DET: 0.6, PRON: 0.4, N: 0.4}
+  that: {DET: 0.4, PRON: 0.4, N: 0.4, CONJ: 0.2}
+  their: {DET: 1.0}
+  his: {DET: 1.0}
+  her: {DET: 0.6, PRON: 0.4, N: 0.4}
+  my: {DET: 1.0}
+  our: {DET: 1.0}
+  its: {DET: 1.0}
+  some: {DET: 1.0}
+  "no": {DET: 0.5, INTERJ: 0.5}
+  all: {DET: 0.7, PRON: 0.3, N: 0.3}
+  one: {NUM: 0.7, PRON: 0.3, N: 0.3}
+  two: {NUM: 1.0}
+  five: {NUM: 1.0}
+  more: {DET: 0.5, ADV: 0.5}
+  # --- pronouns (headable) ---
+  it: {PRON: 1.0, N: 1.0}
+  they: {PRON: 1.0, N: 1.0}
+  i: {PRON: 1.0, N: 1.0}
+  you: {PRON: 1.0, N: 1.0}
+  he: {PRON: 1.0, N: 1.0}
+  she: {PRON: 1.0, N: 1.0}
+  we: {PRON: 1.0, N: 1.0}
+  him: {PRON: 1.0, N: 1.0}
+  them: {PRON: 1.0, N: 1.0}
+  us: {PRON: 1.0, N: 1.0}
+  me: {PRON: 1.0, N: 1.0}
+  who: {WH: 0.7, PRON: 0.3, N: 0.3}
+  # --- copulas, modals, aux ---
+  is: {COP: 1.0}
+  are: {COP: 1.0}
+  was: {COP: 1.0}
+  were: {COP: 1.0}
+  be: {COP: 1.0}
+  been: {COP: 1.0}
+  can: {MOD: 1.0}
+  will: {MOD: 1.0}
+  may: {MOD: 1.0}
+  should: {MOD: 1.0}
+  would: {MOD: 1.0}
+  could: {MOD: 1.0}
+  shall: {MOD: 1.0}
+  do: {AUX: 0.7, V: 0.3}
+  did: {AUX: 0.7, V: 0.3}
+  # --- negation, infinitival to ---
+  not: {NEG: 1.0}
+  to: {TO: 0.5, PREP: 0.5}
+  # --- prepositions ---
+  "on": {PREP: 1.0}
+  in: {PREP: 1.0}
+  at: {PREP: 1.0}
+  of: {PREP: 1.0}
+  with: {PREP: 1.0}
+  by: {PREP: 1.0}
+  for: {PREP: 1.0}
+  from: {PREP: 1.0}
+  near: {PREP: 0.7, ADV: 0.3}
+  "off": {PREP: 0.5, ADV: 0.5}
+  out: {ADV: 0.6, PREP: 0.4}
+  up: {ADV: 0.6, PREP: 0.4}
+  # --- conjunctions, wh, interjections ---
+  and: {CONJ: 1.0}
+  but: {CONJ: 1.0}
+  or: {CONJ: 1.0}
+  if: {CONJ: 1.0}
+  as: {CONJ: 0.6, PREP: 0.4}
+  when: {WH: 0.6, CONJ: 0.4}
+  what: {WH: 1.0}
+  how: {WH: 1.0}
+  oh: {INTERJ: 1.0}
+  "yes": {INTERJ: 1.0}
+  please: {ADV: 0.6, V: 0.4}
+  dear: {ADJ: 0.7, INTERJ: 0.3}
+  # --- adverbs ---
+  so: {ADV: 1.0}
+  too: {ADV: 1.0}
+  fast: {ADV: 0.6, ADJ: 0.4}
+  here: {ADV: 1.0}
+  there: {ADV: 1.0}
+  now: {ADV: 1.0}
+  soon: {ADV: 1.0}
+  well: {ADV: 0.7, ADJ: 0.3}
+  then: {ADV: 1.0}
+  once: {ADV: 1.0}
+  far: {ADV: 0.6, ADJ: 0.4}
+  ago: {ADV: 1.0}
+  first: {ADJ: 0.6, ADV: 0.4}
+  quick: {ADJ: 0.7, ADV: 0.3}
+  hard: {ADJ: 0.5, ADV: 0.5}
+  long: {ADJ: 0.6, ADV: 0.4}
+  round: {ADJ: 0.6, PREP: 0.4}
+  gone: {ADJ: 1.0}
+  # --- adjectives ---
+  big: {ADJ: 1.0}
+  old: {ADJ: 1.0}
+  kind: {ADJ: 0.7, N: 0.3}
+  new: {ADJ: 1.0}
+  fat: {ADJ: 1.0}
+  good: {ADJ: 1.0}
+  blind: {ADJ: 1.0}
+  best: {ADJ: 1.0}
+  brave: {ADJ: 1.0}
+  black: {ADJ: 1.0}
+  cool: {ADJ: 0.8, V: 0.2}
+  hot: {ADJ: 1.0}
+  blue: {ADJ: 1.0}
+  mean: {ADJ: 0.6, V: 0.4}
+  tall: {ADJ: 1.0}
+  small: {ADJ: 1.0}
+  # --- names ---
+  ann: {N: 1.0, NAME: 1.0}
+  nat: {N: 1.0, NAME: 1.0}
+  tom: {N: 1.0, NAME: 1.0}
+  rab: {N: 1.0, NAME: 1.0}
+  sue: {N: 1.0, NAME: 1.0}
+  john: {N: 1.0, NAME: 1.0}
+  ned: {N: 1.0, NAME: 1.0}
+  nell: {N: 1.0, NAME: 1.0}
+  mary: {N: 1.0, NAME: 1.0}
+  bess: {N: 1.0, NAME: 1.0}
+  henry: {N: 1.0, NAME: 1.0}
+  rob: {N: 0.6, NAME: 0.6, V: 0.4}
+  kate: {N: 1.0, NAME: 1.0}
+  jane: {N: 1.0, NAME: 1.0}
+  james: {N: 1.0, NAME: 1.0}
+  god: {N: 1.0, NAME: 1.0}
+  # --- possessives ---
+  "nat's": {POSS: 1.0}
+  "tom's": {POSS: 1.0}
+  "ann's": {POSS: 1.0}
+  "sue's": {POSS: 1.0}
+  "bird's": {POSS: 1.0}
+  # --- noun/verb ambiguous ---
+  play: {V: 0.55, N: 0.45}
+  run: {V: 0.7, N: 0.3}
+  look: {V: 0.8, N: 0.2}
+  fan: {V: 0.4, N: 0.6}
+  pet: {N: 0.7, V: 0.3}
+  work: {V: 0.5, N: 0.5}
+  watch: {V: 0.7, N: 0.3}
+  ride: {V: 0.7, N: 0.3}
+  ring: {V: 0.5, N: 0.5}
+  rings: {V: 0.5, N: 0.5}
+  cry: {V: 0.7, N: 0.3}
+  call: {V: 0.7, N: 0.3}
+  roll: {V: 0.7, N: 0.3}
+  show: {V: 0.7, N: 0.3}
+  set: {V: 0.7, N: 0.3}
+  saw: {V: 0.7, N: 0.3}
+  love: {V: 0.6, N: 0.4}
+  laugh: {V: 0.7, N: 0.3}
+  live: {V: 0.8, N: 0.2}
+  lives: {V: 0.6, N: 0.4}
+  fish: {N: 0.6, V: 0.4}
+  name: {N: 0.7, V: 0.3}
+  hand: {N: 0.8, V: 0.2}
+  cut: {V: 0.7, N: 0.3}
+  catch: {V: 0.8, N: 0.2}
+  stand: {V: 0.8, N: 0.2}
+  walk: {V: 0.7, N: 0.3}
+  walks: {V: 0.7, N: 0.3}
+  fall: {V: 0.7, N: 0.3}
+  pull: {V: 0.8, N: 0.2}
+  hold: {V: 0.8, N: 0.2}
+  holds: {V: 0.8, N: 0.2}
+  fun: {N: 0.8, ADJ: 0.2}
+  snow: {N: 0.8, V: 0.2}
+  fire: {N: 0.8, V: 0.2}
+  shade: {N: 0.9, V: 0.1}
+  drown: {V: 1.0}
+  # --- verbs ---
+  see: {V: 1.0}
+  sees: {V: 1.0}
+  seen: {V: 1.0}
+  ran: {V: 1.0}
+  runs: {V: 1.0}
+  plays: {V: 1.0}
+  looks: {V: 0.7, N: 0.3}
+  likes: {V: 1.0}
+  like: {V: 0.7, PREP: 0.3}
+  loves: {V: 1.0}
+  has: {V: 0.7, AUX: 0.3}
+  have: {V: 0.7, AUX: 0.3}
+  had: {V: 0.7, AUX: 0.3}
+  go: {V: 1.0}
+  went: {V: 1.0}
+  feed: {V: 0.8, N: 0.2}
+  let: {V: 1.0}
+  get: {V: 1.0}
+  got: {V: 1.0}
+  made: {V: 1.0}
+  come: {V: 1.0}
+  sat: {V: 1.0}
+  eat: {V: 1.0}
+  sing: {V: 1.0}
+  think: {V: 1.0}
+  hear: {V: 1.0}
+  tell: {V: 1.0}
+  tells: {V: 1.0}
+  know: {V: 1.0}
+  kill: {V: 1.0}
+  sprang: {V: 1.0}
+  put: {V: 1.0}
+  shut: {V: 1.0}
+  try: {V: 0.8, N: 0.2}
+  took: {V: 1.0}
+  fell: {V: 1.0}
+  asks: {V: 1.0}
+  drives: {V: 1.0}
+  save: {V: 1.0}
+  jump: {V: 0.7, N: 0.3}
+  jumps: {V: 0.7, N: 0.3}
+  # --- nouns ---
+  cat: {N: 1.0}
+  man: {N: 1.0}
+  lad: {N: 1.0}
+  dog: {N: 1.0}
+  rat: {N: 1.0}
+  nest: {N: 1.0}
+  bird: {N: 1.0}
+  birds: {N: 1.0}
+  boys: {N: 1.0}
+  boy: {N: 1.0}
+  frog: {N: 1.0}
+  nag: {N: 1.0}
+  pond: {N: 1.0}
+  owl: {N: 1.0}
+  night: {N: 1.0}
+  bell: {N: 1.0}
+  men: {N: 1.0}
+  eggs: {N: 1.0}
+  day: {N: 1.0}
+  hat: {N: 1.0}
+  cap: {N: 1.0}
+  log: {N: 1.0}
+  logs: {N: 1.0}
+  mat: {N: 1.0}
+  hen: {N: 1.0}
+  doll: {N: 1.0}
+  dolls: {N: 1.0}
+  tree: {N: 1.0}
+  eyes: {N: 1.0}
+  cows: {N: 1.0}
+  cow: {N: 1.0}
+  house: {N: 1.0}
+  ducks: {N: 1.0}
+  dress: {N: 0.8, V: 0.2}
+  grass: {N: 1.0}
+  barn: {N: 1.0}
+  way: {N: 1.0}
+  ship: {N: 1.0}
+  ships: {N: 1.0}
+  boat: {N: 1.0}
+  ice: {N: 1.0}
+  skates: {N: 0.7, V: 0.3}
+  girl: {N: 1.0}
+  girls: {N: 1.0}
+  cars: {N: 1.0}
+  mill: {N: 1.0}
+  goats: {N: 1.0}
+  lambs: {N: 1.0}
+  box: {N: 1.0}
+  fox: {N: 1.0}
+  cage: {N: 1.0}
+  sun: {N: 1.0}
+  neck: {N: 1.0}
+  rock: {N: 0.8, V: 0.2}
+  rocks: {N: 0.8, V: 0.2}
+  stone: {N: 1.0}
+  horse: {N: 1.0}
+  ax: {N: 1.0}
+  air: {N: 1.0}
+  cart: {N: 1.0}
+  hill: {N: 1.0}
+  hills: {N: 1.0}
+  schoolhouse: {N: 1.0}
+  church: {N: 1.0}
+  child: {N: 1.0}
+  school: {N: 1.0}
+  quail: {N: 1.0}
+  sheep: {N: 1.0}
+  wheel: {N: 1.0}
+  floor: {N: 1.0}
+  noise: {N: 1.0}
+  books: {N: 1.0}
+  slates: {N: 1.0}
+  baby: {N: 1.0}
+  crib: {N: 1.0}
+  wolf: {N: 1.0}
+  sea: {N: 1.0}
+  pipe: {N: 1.0}
+  mouth: {N: 1.0}
+  town: {N: 1.0}
+  wreaths: {N: 1.0}
+  hands: {N: 1.0}
+  crown: {N: 1.0}
+  queen: {N: 1.0}
+  nut: {N: 1.0}
+  world: {N: 1.0}
+  things: {N: 1.0}
+  lighthouse: {N: 1.0}
+  lamp: {N: 1.0}
+  # --- primer seed vocabulary (growth never removes) ---
+  spot: {N: 1.0, NAME: 1.0}
+  dick: {N: 1.0, NAME: 1.0}
+  sally: {N: 1.0, NAME: 1.0}
+  puff: {N: 1.0, NAME: 1.0}
+  ball: {N: 1.0}
+  red: {ADJ: 1.0}
+  little: {ADJ: 1.0}
