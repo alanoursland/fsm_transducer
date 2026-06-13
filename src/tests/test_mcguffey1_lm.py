@@ -31,6 +31,32 @@ def test_dead_prefix_predicts_nothing():
     assert next_token_distribution(["the", "the", "the"])  # alive, honestly
 
 
+def test_incremental_cache_equals_batch_scan():
+    """The KV cache: advancing a FrontierCache one token at a time must
+    reproduce, exactly, the frontier a full rescan would build — same
+    states, weights, and capture positions — so generation is unchanged
+    while the per-token cost drops from O(prefix) to O(1)."""
+    from fsm_parser.fsm import FrontierCache
+    from fsm_parser.mcguffey1_lang import _machine, token_slot
+    from fsm_parser.mcguffey1_lm import _frontier, distribution_from_frontier
+
+    def key(frontier):
+        return sorted(
+            (str(p.state), round(p.weight, 9),
+             tuple(sorted((k, v.pos) for k, v in p.captures.items())))
+            for p in frontier)
+
+    for prefix in ([], ["the", "cat"], ["can", "ann"], ["see", "spot"],
+                   ["the", "good", "child"], ["i", "like", "to", "see"],
+                   ["do", "not", "rob"], ["the", "the", "the"]):
+        cache = FrontierCache(_machine())
+        for i, w in enumerate(prefix):
+            cache.push(token_slot(w, i))
+        assert key(cache.frontier) == key(_frontier(prefix)), prefix
+        assert (distribution_from_frontier(cache.frontier, len(prefix))
+                == next_token_distribution(prefix)), prefix
+
+
 def test_support_is_soft_matches():
     from fsm_parser.fsm import And, HasLabel, Not, Or
     labels = {"N": 0.9, "V": 0.3}
