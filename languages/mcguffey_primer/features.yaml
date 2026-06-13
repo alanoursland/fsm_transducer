@@ -29,6 +29,12 @@ entities:
   # pronouns that take BASE (not 3SG) finite verbs despite being
   # singular-ish: person features, not number (I run / you run)
   no_3sg: [i, you, we, they, us, them, who]
+  # morphological case (classical nominative/accusative). Subject/agent
+  # slots take nominative, theme/object/prep-object slots take
+  # accusative; "you, it, that, this, one, all" are case-neutral and
+  # appear in neither list.
+  nominative: [i, he, she, we, they, who]
+  accusative: [me, him, her, us, them]
   # singular count nouns need a determiner ("Come like neck." dies);
   # these words may stand bare: mass nouns, institutions ("to school"),
   # times, and activities (Quirk et al.'s bare-NP licensing classes)
@@ -57,7 +63,13 @@ verbs:
      hold, holds, shut, put]
   intransitive:
     [come, fall, fell, go, went, laugh, live, lives, ran, run, runs,
-     sat, sing, sprang, cry, stand, walk, walks, work, jump, jumps]
+     sat, sing, sprang, cry, stand, walk, walks, work, jump, jumps,
+     fish]
+  # verbs whose THEME/patient must be +animate — Levin's verbs of
+  # killing and caring take a living patient ("drown eyes" is ill-formed
+  # the way "*frighten the rock" is). A narrow, per-verb restriction,
+  # not a global animate-theme rule (most verbs take inanimate themes).
+  theme_animate: [drown, kill, feed, pet, save]
   # bare-infinitive embedded clause licensors (perception/causative:
   # "See Spot run", "Let the bird sing", "Made the baby cry")
   embedding: [see, sees, saw, seen, hear, watch, let, made]

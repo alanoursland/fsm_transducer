@@ -78,6 +78,9 @@ def features() -> dict:
         "agent_any": set(vb["agent_any"]),
         "control": set(vb["control"]),
         "bare_ok": set(ent["bare_ok"]),
+        "nominative": set(ent["nominative"]),
+        "accusative": set(ent["accusative"]),
+        "theme_animate": set(vb["theme_animate"]),
     }
 
 
@@ -199,7 +202,34 @@ def violations(frame: dict, *, finite: bool = True) -> list[str]:  # noqa: PLR09
     if (agent is not None and pred not in f["agent_any"]
             and not _animate(agent, f)):
         out.append("SEL:ANIMATE_AGENT")
+
+    # patient selection: Levin verbs of killing/caring want a living
+    # theme ("drown eyes" is ill-formed). Narrow, per-verb.
+    if (pred in f["theme_animate"] and theme is not None
+            and not isinstance(theme, dict) and not _animate(theme, f)):
+        out.append("SEL:ANIMATE_THEME")
+
+    # case (nominative/accusative): theme and prepositional objects are
+    # accusative ("Ran at he?" -> "him"). The matrix subject is
+    # nominative, but the embedded subject of an ECM complement
+    # ("let them drown", "made her cry") is accusative — case assigned
+    # by the higher verb — so the agent rule flips with finiteness.
+    if isinstance(agent, str):
+        if finite and agent in f["accusative"]:
+            out.append("CASE:NOM_SUBJECT")
+        if not finite and agent in f["nominative"]:
+            out.append("CASE:ACC_ECM_SUBJECT")
+    if isinstance(theme, str) and theme in f["nominative"]:
+        out.append("CASE:ACC_THEME")
+    for key, val in frame.items():
+        if key in _KNOWN_KEYS or not isinstance(val, str):
+            continue
+        if val in f["nominative"]:    # prepositional object
+            out.append(f"CASE:ACC_POBJ:{key}")
     return out
+
+
+_KNOWN_KEYS = {"pred", "agent", "theme", "attr", "mod", "neg", "mood", "wh"}
 
 
 def critique(frames: list[dict]) -> list[str]:
@@ -254,14 +284,63 @@ def bare_np_violations(text: str, frames: list[dict]) -> list[str]:
     return out
 
 
+def have_closure_violations(text: str, frames: list[dict]) -> list[str]:
+    """Frame closure for HAVE (Tesnière valency, perfect-auxiliary
+    aware). A main-verb have/has/had needs a complement; the perfect
+    auxiliary ("have gone") is licensed instead by a following
+    participle. The two collapse at frame level (both lose the theme),
+    so this is decided on the surface: a have-token must be followed by
+    a verb (the participle) or the start of an NP (its object). "Made
+    Dick have?" — have at the clause end — is neither, so it fails."""
+    from fsm_parser.mcguffey1_lang import _TOKEN, lexicon
+
+    preds = set()
+
+    def walk(v):
+        if isinstance(v, dict):
+            if isinstance(v.get("pred"), str):
+                preds.add(v["pred"])
+            for x in v.values():
+                walk(x)
+        elif isinstance(v, list):
+            for x in v:
+                walk(x)
+    walk(frames)
+    if not ({"have", "has", "had"} & preds):
+        return []
+
+    lex = lexicon()
+    toks = [t.lower() for t in _TOKEN.findall(text)]
+    np_start = {"DET", "POSS", "NUM", "NAME", "PRON", "N", "ADJ"}
+    out = []
+    for i, w in enumerate(toks):
+        if w not in ("have", "has", "had"):
+            continue
+        nxt = set(lex.get(toks[i + 1], {})) if i + 1 < len(toks) else set()
+        if not ("V" in nxt or (nxt & np_start)):
+            out.append(f"VAL:HAVE_NEEDS_COMPLEMENT:{w}")
+    return out
+
+
+def text_violations(text: str, frames: list[dict]) -> list[str]:
+    """Every check that needs the surface text, plus the frame critic —
+    the one gate shared by parse(), the LM accept hook, and the
+    generator's punctuation brake."""
+    return (critique(frames)
+            + bare_np_violations(text, frames)
+            + have_closure_violations(text, frames))
+
+
 def accept(text: str, frames: list[dict]) -> bool:
-    """The LM gate: a sampled sentence passes only if its frames clear
-    the critic and its NPs are properly determined."""
-    return not (critique(frames) or bare_np_violations(text, frames))
+    """The LM gate: a sampled sentence passes only if it clears every
+    grammatical/semantic check."""
+    return not text_violations(text, frames)
 
 
 _ENTITY_REGS = {"subj", "subj2", "obj", "obj2", "pobj1", "pobj2", "voc",
                 "b_subj", "b_obj"}
+_NOM_REGS = {"subj", "subj2", "b_subj"}                       # nominative
+_ACC_REGS = {"obj", "obj2", "pobj1", "pobj2", "b_obj"}        # accusative
 _VERB_REGS = {"verb", "verb2", "b_verb"}
 
 
@@ -333,6 +412,10 @@ def reweight(prefix: list[str], dist: dict[str, float],
                                   and w not in f["bare_ok"])
                     if count_noun and not np_open:
                         ok = False     # bare singular count noun
+                    if ok and roles & _NOM_REGS and w in f["accusative"]:
+                        ok = False     # "me ran" — subject wants nominative
+                    if ok and roles & _ACC_REGS and w in f["nominative"]:
+                        ok = False     # "at he" — object wants accusative
                 ok_any[w] = ok_any.get(w, False) or ok
 
     # the punctuation step is the strongest brake: only allow ending the
@@ -343,8 +426,7 @@ def reweight(prefix: list[str], dist: dict[str, float],
         if p in dist and prefix:
             text = " ".join(prefix) + p
             fr = _parse_m1(text)
-            ok_any[p] = bool(fr) and not (
-                critique(fr) or bare_np_violations(text, fr))
+            ok_any[p] = bool(fr) and not text_violations(text, fr)
 
     out = {w: x for w, x in dist.items() if ok_any.get(w, True)}
     if out:
@@ -377,6 +459,6 @@ def parse(text: str) -> list[dict] | None:
     frames = _parse_m1(text)
     if frames is None:
         return None
-    if critique(frames) or bare_np_violations(text, frames):
+    if text_violations(text, frames):
         return None
     return frames

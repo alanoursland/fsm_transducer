@@ -15,6 +15,7 @@ from fsm_parser.mcguffey1b_lang import (
     critique,
     generate_lm,
     parse,
+    text_violations,
     violations,
 )
 
@@ -54,9 +55,41 @@ def test_specific_violation_codes():
 def test_good_sentences_survive():
     for s in ["The cat has the rat.", "See Spot run.", "Ann can fan the lad.",
               "Spot is fast.", "Do not rob the nest.", "Dick and Jane play.",
-              "The owl can see best at night.", "I like to see boys play."]:
+              "The owl can see best at night.", "I like to see boys play.",
+              "He ran at him.", "I see her.",          # case: correct pronouns
+              "They will not let them drown.",          # ECM: accusative subject
+              "Two girls have gone out for a walk.",    # perfect-aux have
+              "It has a new dress."]:                   # main-verb have + object
         assert parse(s) is not None, s
         assert parse(s) == parse_m1(s)  # same frames, just gated
+
+
+def test_linguistic_audit_corrections():
+    """The five corrections from the linguistic audit — each observed
+    string must now be rejected, with the grounded violation."""
+    # 1. case: nominative pronoun in an accusative (prep-object) slot
+    assert parse("Ran at he?") is None
+    assert "CASE:ACC_POBJ:at" in text_violations("Ran at he?",
+                                                 parse_m1("Ran at he?"))
+    # 2/4. selection: fish is intransitive; drown wants an animate patient
+    assert parse("Fish noise from me.") is None
+    assert "SEL:ANIMATE_THEME" in violations(
+        {"pred": "drown", "agent": "you", "theme": "eyes"})
+    # 3. valency: frame closure for main-verb have
+    assert parse("Made Dick have?") is None
+    assert "VAL:HAVE_NEEDS_COMPLEMENT:have" in text_violations(
+        "Made Dick have?", parse_m1("Made Dick have?"))
+    # 5. animacy: inanimate self-mover (already covered, kept as a guard)
+    assert parse("Runs lighthouse shut.") is None
+
+
+def test_case_is_finiteness_sensitive_ecm():
+    # matrix subject is nominative; ECM embedded subject is accusative
+    assert "CASE:NOM_SUBJECT" in violations({"pred": "ran", "agent": "me"})
+    assert violations({"pred": "ran", "agent": "me"}, finite=False) == \
+        []  # accusative subject is fine when case is assigned from above
+    assert "CASE:ACC_ECM_SUBJECT" in violations(
+        {"pred": "drown", "agent": "they"}, finite=False)
 
 
 def test_coverage_floor_holds():

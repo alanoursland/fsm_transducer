@@ -133,3 +133,32 @@ These are recorded rather than patched away: they mark exactly where the
 syntactic block under this one still needs work (the to-infinitive /
 preposition ambiguity, a classical chestnut), and the round-trip oracle
 will keep them visible.
+
+## Linguistic-audit pass: case, patient selection, frame closure
+
+A second round of corrections (the `CORRECTIONS_REQUESTED.md` audit of
+generated text) added four checks, each a textbook construct, each
+verified to reject the observed string while leaving corpus coverage at
+140/144:
+
+| Observed leak | New check | Grounding |
+|---|---|---|
+| `Ran at he?` | **Case** — agent nominative, theme/prep-object accusative (`CASE:ACC_POBJ` etc.) | morphological case; nom/acc pronoun sets in `features.yaml` |
+| `Drown eyes for hands.` | **Patient selection** — `theme_animate` verbs (drown/kill/feed/pet/save) need a living theme (`SEL:ANIMATE_THEME`) | Levin verbs of killing/caring; narrow per-verb, not a global animate-theme rule |
+| `Fish noise from me.` | `fish` reclassified **intransitive** → `VAL:NO_THEME` | lexical valency (tier-1 `fish` is "to fish") |
+| `Made Dick have?` | **Frame closure for have** — a main-verb have/has/had needs a following participle (perfect aux) or NP (object); `VAL:HAVE_NEEDS_COMPLEMENT` | Tesnière valency, surface-checked because perfect-`have` and possessive-`have` collapse at frame level |
+
+The interesting one is **case, and why it had to become finiteness-
+sensitive.** The first cut required every agent to be nominative — and
+the corpus immediately broke it with *"They will not let them drown."*
+"let **them** drown" is **ECM** (exceptional case marking): the subject
+of a perception/causative complement takes accusative case, assigned by
+the higher verb (`let`, `made`, `see`), not nominative. So the agent
+rule flips with finiteness: a matrix subject is nominative
+(`CASE:NOM_SUBJECT`), an embedded ECM subject is accusative
+(`CASE:ACC_ECM_SUBJECT` fires on "Let *they* drown"). The round-trip
+against the real corpus is what surfaced the ECM case — the same way it
+keeps surfacing parser mixtures. The brake is also wired into the
+generator (subject registers reject accusative pronouns, object/prep
+registers reject nominative ones), so "Dress **him**" is sampled and
+"at **he**" is not.
