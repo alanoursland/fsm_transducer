@@ -65,6 +65,37 @@ def lexicon() -> dict[str, dict[str, float]]:
 # --- Layer 0: tokenization + lexicon ------------------------------------------
 
 
+def _label_token(slot: Slot, raw: str, lex: dict) -> None:
+    """Attach tier-1 lexical labels to a token slot. Shared by the batch
+    tokenizer and the incremental generator so a token labels
+    identically however it arrives."""
+    word = raw.lower()
+    slot.labels.add(f"TEXT:{raw}", 1.0)
+    if word in lex:
+        for lab, w in lex[word].items():
+            slot.labels.add(lab, float(w))
+        slot.labels.add(f"VAL:{word}", 1.0)
+    elif raw == ",":
+        slot.labels.add("COMMA", 1.0)
+    elif raw == ";":
+        slot.labels.add("CONJ", 1.0)   # semicolon coordinates clauses
+        slot.labels.add(f"VAL:{raw}", 1.0)
+    elif raw in ".!?":
+        slot.labels.add("PUNCT", 1.0)
+        if raw == "?":
+            slot.labels.add("QMARK", 1.0)
+    else:
+        slot.labels.add("ERROR:UNKNOWN_WORD", 1.0)
+
+
+def token_slot(raw: str, i: int) -> Slot:
+    """A single labelled token slot, for incremental generation."""
+    slot = Slot(id=f"token:{i}", kind="token", stream="token",
+                order=float(i), text=raw)
+    _label_token(slot, raw, lexicon())
+    return slot
+
+
 def initialize(text: str) -> ParserState:
     state = ParserState()
     lex = lexicon()
@@ -76,23 +107,7 @@ def initialize(text: str) -> ParserState:
             id=f"token:{i}", kind="token", stream="token", order=float(i),
             text=raw, source_span=SourceSpan(idx, idx + len(raw)),
         )
-        word = raw.lower()
-        slot.labels.add(f"TEXT:{raw}", 1.0)
-        if word in lex:
-            for lab, w in lex[word].items():
-                slot.labels.add(lab, float(w))
-            slot.labels.add(f"VAL:{word}", 1.0)
-        elif raw == ",":
-            slot.labels.add("COMMA", 1.0)
-        elif raw == ";":
-            slot.labels.add("CONJ", 1.0)   # semicolon coordinates clauses
-            slot.labels.add(f"VAL:{raw}", 1.0)
-        elif raw in ".!?":
-            slot.labels.add("PUNCT", 1.0)
-            if raw == "?":
-                slot.labels.add("QMARK", 1.0)
-        else:
-            slot.labels.add("ERROR:UNKNOWN_WORD", 1.0)
+        _label_token(slot, raw, lex)
         state.add_slot("token", slot)
     return state
 
@@ -482,6 +497,15 @@ def compile_text(text: str) -> CompileResult:
             apply_deltas(state, deltas)
             sentence = []
 
+    program = _build_program(slots, state)
+    errors = sorted({lab for s in slots for lab in s.labels.weights
+                     if lab.startswith("ERROR:")})
+    return CompileResult(state=state, program=program, errors=errors)
+
+
+def _build_program(slots, state: ParserState) -> list["Instruction"]:
+    """Per-(slot, rank) max-weight projection of EXEC labels to VM ops.
+    Shared by compile_text and the cache-based frames_from_deltas."""
     program: list[Instruction] = []
     for slot in slots:
         per_rank: dict[int, tuple[float, str, str | None]] = {}
@@ -499,10 +523,32 @@ def compile_text(text: str) -> CompileResult:
                 continue  # cross-slot ref into an unwritten register
             program.append(Instruction(op=op, operand=operand,
                                        slot_id=slot.id, rank=rank, weight=w))
+    return program
 
-    errors = sorted({lab for s in slots for lab in s.labels.weights
-                     if lab.startswith("ERROR:")})
-    return CompileResult(state=state, program=program, errors=errors)
+
+def frames_from_deltas(slots, deltas) -> list[dict] | None:
+    """Parse straight from a FrontierCache's accumulated emissions —
+    the same EXEC deltas a full transduce produces, but without the
+    scan. Used by the generator's punctuation brake so checking "would
+    ending here be well-formed?" reuses the cached frontier instead of
+    re-parsing the prefix. Slots are copied so the cache's own slot
+    objects are never mutated.
+
+    Equivalent to ``parse()`` on the same tokens (test-pinned)."""
+    state = ParserState()
+    copies = []
+    for s in slots:
+        c = Slot(id=s.id, kind=s.kind, stream=s.stream, order=s.order,
+                 text=s.text, source_span=s.source_span)
+        for lab, w in s.labels.items():
+            c.labels.add(lab, w)
+        state.add_slot("token", c)
+        copies.append(c)
+    apply_deltas(state, deltas)
+    if any(lab.startswith("ERROR:") for c in copies for lab in c.labels.weights):
+        return None
+    res = run_program(_build_program(copies, state))
+    return res.frames if res.valid else None
 
 
 # --- Frame-builder VM (primer's, grown) ---------------------------------------------

@@ -1,0 +1,1 @@
+I don't want to automate builds or anything. This is research code. I am the only one working on it.

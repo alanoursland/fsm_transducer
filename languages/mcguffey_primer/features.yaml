@@ -1,0 +1,89 @@
+# Feature annotations for mcguffey1b — the semantic/grammatical brakes.
+# Overlay on lexicon.yaml (which is untouched; mcguffey1 must keep
+# parsing exactly as before). LLM-as-annotator, silver status.
+#
+# Grounding (see MCGUFFEY1B.md): selectional restrictions are
+# Katz & Fodor 1963 semantic markers checked Wilks-1975-preference
+# style; valency classes are Tesniere/Fillmore subcategorization;
+# agreement and verb form are GPSG/HPSG-style feature checks done at
+# frame level.
+
+entities:
+  # animate referents (semantic marker +ANIMATE)
+  animate:
+    [ann, baby, bess, bird, birds, boy, boys, cat, child, cow, cows,
+     dick, dog, ducks, fox, frog, girl, girls, goats, god, he, hen,
+     henry, her, him, horse, i, james, jane, john, kate, lad, lambs,
+     man, mary, me, men, nag, nat, ned, nell, owl, pet, puff, quail,
+     queen, rab, rat, rob, sally, she, sheep, spot, sue, them, they,
+     tom, us, we, who, wolf, you,
+     # underspecified pronouns: animacy unmarked, so compatible
+     it, this, that, one, all]
+  # number: plural (default singular; "both" may agree either way)
+  plural:
+    [birds, books, boys, cars, cows, dolls, ducks, eggs, eyes, girls,
+     goats, hands, hills, holds, jumps, lambs, logs, looks, lives,
+     men, rings, rocks, ships, skates, slates, things, walks, wreaths,
+     them, they, us, we]
+  both_number: [sheep, fish, you, who, all, that, this]
+  # pronouns that take BASE (not 3SG) finite verbs despite being
+  # singular-ish: person features, not number (I run / you run)
+  no_3sg: [i, you, we, they, us, them, who]
+  # morphological case (classical nominative/accusative). Subject/agent
+  # slots take nominative, theme/object/prep-object slots take
+  # accusative; "you, it, that, this, one, all" are case-neutral and
+  # appear in neither list.
+  nominative: [i, he, she, we, they, who]
+  accusative: [me, him, her, us, them]
+  # singular count nouns need a determiner ("Come like neck." dies);
+  # these words may stand bare: mass nouns, institutions ("to school"),
+  # times, and activities (Quirk et al.'s bare-NP licensing classes)
+  bare_ok:
+    [school, church, town, home, bed, night, day, snow, ice, grass,
+     work, play, fun, god, sea, air, sun, fire, noise, love, catch,
+     more, all, one, two, five]
+
+verbs:
+  # morphological form (default: base)
+  form_3sg:
+    [asks, drives, holds, jumps, likes, lives, looks, loves, plays,
+     rings, rocks, runs, sees, skates, tells, walks, has]
+  form_past:
+    [did, fell, got, had, made, ran, sat, saw, sprang, took, went]
+  form_participle: [seen, been]
+  # valency (default: b = theme optional)
+  # t: obligatory theme (transitive); i: no theme (intransitive)
+  # (perception verbs see/hear/watch and 'feed' are object-droppable
+  #  — "The owl can see best at night" — so they stay valency-b)
+  # (have/has/had stay out: they double as perfect auxiliaries —
+  #  "Two girls have gone out for a walk")
+  transitive:
+    [like, likes, love, loves, get, got, kill, fan,
+     pet, rob, save, tell, tells, let, made, took, catch,
+     hold, holds, shut, put]
+  intransitive:
+    [come, fall, fell, go, went, laugh, live, lives, ran, run, runs,
+     sat, sing, sprang, cry, stand, walk, walks, work, jump, jumps,
+     fish, snow]
+  # weather/meteorological verbs are avalent (Tesniere): no thematic
+  # agent or object — "it snows", never "snow sheep"
+  weather: [snow]
+  # put-class verbs (Levin 9.1) obligatorily subcategorize a
+  # directional/locative PP: "*put God" vs "put God on the mat"
+  needs_location: [put]
+  # verbs whose THEME/patient must be +animate — Levin's verbs of
+  # killing and caring take a living patient ("drown eyes" is ill-formed
+  # the way "*frighten the rock" is). A narrow, per-verb restriction,
+  # not a global animate-theme rule (most verbs take inanimate themes).
+  theme_animate: [drown, kill, feed, pet, save]
+  # bare-infinitive embedded clause licensors (perception/causative:
+  # "See Spot run", "Let the bird sing", "Made the baby cry")
+  embedding: [see, sees, saw, seen, hear, watch, let, made]
+  # subject-control verbs take a subjectless nonfinite complement
+  # ("I like to see ..."): equi/control in the classical sense
+  control: [like, likes, love, loves, try, go, went, come, run, ran]
+  # verbs whose AGENT need not be animate (default: animate required)
+  # have/has/had: possession is stative, not agentive
+  agent_any:
+    [fall, fell, go, went, come, rock, rocks, ring, rings, roll,
+     snow, cool, set, shade, hang, fire, have, has, had]

@@ -42,6 +42,7 @@ from fsm_parser.fsm import (
     Always,
     AtSentenceEnd,
     AtSentenceStart,
+    FrontierCache,
     FSMScanner,
     HasAllLabels,
     HasAnyLabel,
@@ -53,7 +54,13 @@ from fsm_parser.fsm import (
     WeightAbove,
     WeightBelow,
 )
-from fsm_parser.mcguffey1_lang import _machine, initialize, lexicon, parse
+from fsm_parser.mcguffey1_lang import (
+    _machine,
+    initialize,
+    lexicon,
+    parse,
+    token_slot,
+)
 
 PUNCT_WORDS = {".": {"PUNCT": 1.0},
                "?": {"PUNCT": 1.0, "QMARK": 1.0},
@@ -113,29 +120,49 @@ def _frontier(tokens: list[str]):
     return frontier
 
 
-def next_token_distribution(tokens: list[str]) -> dict[str, float]:
-    """P(next token | prefix), straight off the machine. Empty when the
-    prefix has killed every path (the parser would reject anyway)."""
-    pos = len(tokens)
+@lru_cache(maxsize=None)
+def cond_support(cond) -> dict[str, float]:
+    """The candidate set of a transition condition: every vocabulary
+    word with nonzero support, with its support weight. Conditions and
+    the vocabulary are both fixed, so this is memoized once per distinct
+    condition — collapsing the per-token, per-path, per-word support
+    sweep (which dominated generation) into a dict lookup."""
+    return {w: s for w, labels in _vocab().items()
+            if (s := support(cond, labels)) > 0.0}
+
+
+def distribution_from_frontier(frontier, pos: int) -> dict[str, float]:
+    """P(next token | prefix) scored directly off a frontier — the
+    cached belief state. Separated from ``next_token_distribution`` so
+    the incremental generator can reuse a frontier it already advanced,
+    never rescanning the prefix."""
     dist: dict[str, float] = {}
-    for path in _frontier(tokens):
+    m = _machine()
+    for path in frontier:
         ctx = ScanContext(scan_start=path.scan_start, n=pos + 1, pos=pos,
                           last_consumed=path.last_consumed,
                           captures=path.captures)
-        for tr in _machine().transitions_from(path.state):
+        for tr in m.transitions_from(path.state):
             if tr.epsilon:
                 continue
-            # positional conditions (AtSentenceStart) use the real ctx;
-            # label conditions are graded softly per candidate word
-            for word, labels in _vocab().items():
-                s = support(tr.condition, labels)
-                if s <= 0.0:
-                    continue
-                if isinstance(tr.condition, (AtSentenceStart, AtSentenceEnd)) \
-                        and not tr.condition.matches(None, ctx):
-                    continue
-                dist[word] = dist.get(word, 0.0) + path.weight * tr.weight * s
+            # positional conditions (AtSentenceStart) gate the whole
+            # transition by position; the per-word candidate set is the
+            # memoized cond_support
+            if isinstance(tr.condition, (AtSentenceStart, AtSentenceEnd)) \
+                    and not tr.condition.matches(None, ctx):
+                continue
+            pw = path.weight * tr.weight
+            for word, s in cond_support(tr.condition).items():
+                dist[word] = dist.get(word, 0.0) + pw * s
     return dist
+
+
+def next_token_distribution(tokens: list[str]) -> dict[str, float]:
+    """P(next token | prefix), straight off the machine. Empty when the
+    prefix has killed every path (the parser would reject anyway). This
+    rescans the prefix; the generator uses the cached
+    ``distribution_from_frontier`` instead."""
+    return distribution_from_frontier(_frontier(tokens), len(tokens))
 
 
 def sample_token(dist: dict[str, float], rng: random.Random,
@@ -146,10 +173,17 @@ def sample_token(dist: dict[str, float], rng: random.Random,
 
 
 def _sample_sentence(rng: random.Random, temperature: float,
-                     max_tokens: int, prompt: list[str]) -> str | None:
-    tokens = list(prompt)
+                     max_tokens: int, prompt: list[str],
+                     reweight=None) -> str | None:
+    cache = FrontierCache(_machine())
+    tokens: list[str] = []
+    for w in prompt:  # seed the prompt incrementally
+        cache.push(token_slot(w, len(tokens)))
+        tokens.append(w)
     while len(tokens) < max_tokens:
-        dist = next_token_distribution(tokens)
+        dist = distribution_from_frontier(cache.frontier, len(tokens))
+        if reweight is not None and dist:
+            dist = reweight(tokens, dist, cache)
         if not dist:
             return None
         tok = sample_token(dist, rng, temperature)
@@ -157,6 +191,7 @@ def _sample_sentence(rng: random.Random, temperature: float,
             return _render(tokens, tok) if tokens else None
         if not tokens and tok == ",":
             return None
+        cache.push(token_slot(tok, len(tokens)))
         tokens.append(tok)
     return None  # runaway: reject
 
@@ -164,7 +199,9 @@ def _sample_sentence(rng: random.Random, temperature: float,
 def generate_lm(n_sentences: int = 5, *, temperature: float = 1.0,
                 seed: int | None = None, max_tokens: int = 10,
                 prompt: list[str] | None = None,
-                max_tries: int = 200) -> str:
+                max_tries: int = 200,
+                accept=None, reweight=None,
+                require_roundtrip: bool = True) -> str:
     """The autoregressive loop: predict, sample, feed back; PUNCT ends a
     sentence and resets the frontier.
 
@@ -173,7 +210,14 @@ def generate_lm(n_sentences: int = 5, *, temperature: float = 1.0,
     rejection-checked against the ROUND-TRIP ORACLE: a sentence is kept
     only if it parses to frames that regenerate and parse back to the
     same frames. The LM proposes; the certified core of the language
-    accepts. No scoring outside the machines."""
+    accepts. No scoring outside the machines.
+
+    ``accept(text, frames) -> bool``, if given, is an extra gate —
+    mcguffey1b runs its frame critic here. ``reweight(tokens, dist)``,
+    if given, steers each step's field before sampling (the brake).
+    ``require_roundtrip`` gates on the frame generator reproducing the
+    sentence; mcguffey1b turns it off, leaning on its critic instead of
+    the least-FSM ``plan()`` component."""
     from fsm_parser.mcguffey1_gen import generate as gen_from_frame
 
     rng = random.Random(seed)
@@ -181,16 +225,20 @@ def generate_lm(n_sentences: int = 5, *, temperature: float = 1.0,
     while len(sentences) < n_sentences:
         for _ in range(max_tries):
             cand = _sample_sentence(rng, temperature, max_tokens,
-                                    prompt or [])
+                                    prompt or [], reweight=reweight)
             frames = parse(cand) if cand is not None else None
             if not frames or not _covered(cand, frames):
                 continue
-            regen = [gen_from_frame(f) for f in frames]
-            if all(regen) and parse(" ".join(regen)) == frames:
-                sentences.append(cand)
-                break
+            if accept is not None and not accept(cand, frames):
+                continue
+            if require_roundtrip:
+                regen = [gen_from_frame(f) for f in frames]
+                if not (all(regen) and parse(" ".join(regen)) == frames):
+                    continue
+            sentences.append(cand)
+            break
         else:
-            raise RuntimeError("no round-trippable sentence in max_tries")
+            raise RuntimeError("no acceptable sentence in max_tries")
     return " ".join(sentences)
 
 
