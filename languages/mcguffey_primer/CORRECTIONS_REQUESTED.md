@@ -1,61 +1,25 @@
-### Guide: Extending the Symbolic Transformer Language
+# CORRECTIONS_REQUESTED.md
 
-This document serves as the formal guide for extending the language architecture. It defines the constraints and patterns required to ensure that new components remain compatible with the `codex/` and the overarching "glass-box" cognitive architecture.
+## Linguistic & Grammatical Audit: Generated Text
 
----
+This document tracks identified linguistic anomalies, grammatical inconsistencies, and semantic failures observed in the current generation pass of the Small Language Model (SLM) parser. These corrections are mandatory for the next iteration of the generator FSMs.
 
-### 1. The Core Constraint: Determinism
+### 1. Case-Matching / Nominative-Accusative Errors
+* **Observed:** `Ran at he?`
+* **Correction:** The grammar must distinguish between subject pronouns (Nominative: *he, she, they*) and object pronouns (Accusative: *him, her, them*). The parser/generator FSM state for `AGENT` must enforce nominative case, while `PATIENT`/`THEME` slots must enforce accusative.
 
-Every machine must be a **deterministic transducer**.
+### 2. Semantic Selectional Preference Failures
+* **Observed:** `Fish noise from me.` / `Drown eyes for hands.`
+* **Correction:** Predicates (`Fish`, `Drown`) must be tagged with Levin-class-derived selectional restrictions (e.g., `+animate`, `+physical`). The generator's emission logic must abort any path where the candidate referent (e.g., `noise`, `eyes`) fails the semantic type check.
 
-* **Input:** A sequence of tokens/labels.
-* **Output:** A deterministic sequence of state transitions and emissions.
-* **Prohibition:** Do not implement probabilistic logic (e.g., `random.choice`) inside an FSM. All "choice" must be represented as a **weighted fork** where paths persist in superposition until projection.
+### 3. Argument-Structure Incompleteness (Valency)
+* **Observed:** `Made Dick have?`
+* **Correction:** The generator must enforce "Frame Closure." If an `EVT` (event/predicate) is pushed onto the stack, the FSM state must be blocked from transitioning to `PUNCT` (sentence end) until the required thematic roles (`AGENT`/`THEME`/`ATTR`) are filled according to the verb's subcategorization frame.
 
-### 2. Lexical Rules (The `lexicon.yaml` Protocol)
+### 4. Semantic Coherence & "Syntactic Soup"
+* **Observed:** `Kill noise walks.` / `Sat cut got.`
+* **Correction:** The generator is current treating POS tags as a "bag of words." It must be constrained to only select verbs that form semantically valid chains within the current `STORY` context. Future iterations must implement the `Selectional Filter` as defined in the `codex/` extension guide.
 
-When adding new entries, follow the weighted paradigm:
-
-* **Weighted Labels:** Every entry must map to a label-weight dictionary (e.g., `play: {V: 0.55, N: 0.45}`).
-* **Ambiguity Class:** If a word has multiple parts of speech, it MUST be defined with weighted priors mirroring the ambiguity class.
-* **Fallback:** All unknown words must map to the `ERROR:UNKNOWN_WORD` fallback to ensure graceful degradation.
-
-### 3. FSM Component Rules
-
-New machines added to the `codex/` must adhere to the **Clause Story Machine** signature:
-
-* **Anchored:** Machines should be anchored to sentence-final punctuation (`.`, `!`, `?`).
-* **Eager vs. Confirmed:** * Use **Eager Emissions** for the "label bag" (superposition record). These fire on every consuming transition.
-* Use **Confirmed Emissions** (CaptureAnchors) only on the final punctuation transition. These record the "survivor" frame.
-
-
-* **No Side-Effects:** FSMs must not modify global state outside of the designated label field and stack operations.
-
-### 4. Semantic Frame Standards
-
-To maintain round-trip verification (the 90% identity goal), all semantic frame extensions must use the established **Stack Instruction Set**:
-
-* **ENT / IMPYOU:** Push referents.
-* **EVT:** Push a new frame `{pred: v}`.
-* **AGENT / THEME / ATTR:** Pop/Push operators to link values to frames.
-* **END:** Finalize the frame and pop to output.
-* **Constraint:** Any extension must allow SVO-order serialization via dual-direction completion (Agent from below, Theme from above).
-
-### 5. Semantic "Brakes" (Levin Class Integration)
-
-To solve the "Syntactic Soup" problem (the Semantic Gap), all new `EVT` machines must define:
-
-* **Thematic Roles:** Define the required `AGENT` and `THEME` types (e.g., `+animate`, `+physical`).
-* **Selectional Check:** Before emitting an `AGENT` or `THEME` label, the machine must query the `ENTITY` referent's metadata. If the check fails, the transition must be aborted, forcing the FSM to backtrack.
-
-### 6. Integration Protocol
-
-To add a machine to the `codex/`:
-
-1. **Manifest:** Create a `.yaml` manifest containing the description, alphabet, K-depth, and dependencies.
-2. **Registration:** Register the machine in the `codex/catalog.md`.
-3. **Ratchet Test:** A new golden test case MUST be added to `src/tests/` that proves the new component maintains the 90% identity round-trip threshold.
-
----
-
-**Rule of Thumb:** If an extension requires you to add a new `Instruction` to the builder, it is likely too specific. Try to compose the logic using existing `EVT/AGENT/THEME` instructions first. If the current set is insufficient, submit a proposal to expand the `instruction_set` globally.
+### 5. Animacy/Referent Mismatch
+* **Observed:** `Runs lighthouse shut.`
+* **Correction:** The Agent-Referent binding must ensure that `+animate` agents are only linked to `+animate` predicates. `Lighthouse` ([-animate]) cannot be bound to self-motion predicates (Walks/Runs) unless the narrative FSM explicitly allows for personification.
