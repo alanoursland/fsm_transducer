@@ -57,6 +57,28 @@ def test_incremental_cache_equals_batch_scan():
                 == next_token_distribution(prefix)), prefix
 
 
+def test_cache_parse_equals_full_parse():
+    """frames_from_deltas reads frames off the cache's accumulated
+    emissions; it must equal a full parse() of the same tokens, so the
+    generator's punctuation brake can reuse the cache instead of
+    re-transducing the prefix."""
+    from fsm_parser.fsm import FrontierCache
+    from fsm_parser.mcguffey1_lang import (
+        _machine, frames_from_deltas, parse, token_slot)
+
+    cases = ["The cat has the rat .", "Can Ann fan the lad ?",
+             "See Spot run .", "Do not rob the nest .",
+             "They will not let them drown .", "Is this a nest ?",
+             "Two girls have gone out for a walk .", "Ran ?"]
+    for c in cases:
+        words = c.split()
+        cache = FrontierCache(_machine())
+        for i, w in enumerate(words):
+            cache.push(token_slot(w, i))
+        cached = frames_from_deltas(cache.slots, cache.deltas)
+        assert cached == parse(" ".join(words[:-1]) + words[-1]), c
+
+
 def test_support_is_soft_matches():
     from fsm_parser.fsm import And, HasLabel, Not, Or
     labels = {"N": 0.9, "V": 0.3}

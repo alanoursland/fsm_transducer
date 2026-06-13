@@ -165,3 +165,31 @@ Two honest caveats specific to this system:
   does not remove; it is inherent to deciding "is the sentence-so-far a
   complete, well-formed meaning?" and is cheap next to the vocabulary
   sweep the cache does eliminate.
+
+### Caching the punctuation brake too (mcguffey1b)
+
+The first cache pass made frontier scoring O(1)/token, but mcguffey1b's
+punctuation brake re-introduced the cost it was meant to remove: to
+decide "would ending here be well-formed?" it called the full parser
+(`_parse_m1`) once per token step — re-tokenizing and **re-transducing
+the whole prefix** ~30k times over a 30-sentence run.
+
+Now the brake reuses the cache. `FrontierCache` accumulates its emission
+deltas (the same multiset a full transduce produces), so the brake
+clones the cache, pushes a punctuation slot (one `_consume_position`,
+which fires the confirmed frame-building emissions off the path
+captures), and reads frames straight from the accumulated deltas via
+`frames_from_deltas` — no rescan. Instrumented over 30 sentences:
+`_parse_m1` and `_frontier` calls both drop to **zero**. Per-call the
+cache brake is 1.7× faster on short prefixes and ~6× on a 12-token
+prefix — the gap widens with length because the eliminated work
+(re-transducing the prefix) is the part that grew. Output is
+byte-identical (the cache parse equals `parse()` exactly, test-pinned).
+
+The remaining per-check cost is the VM frame-build (`apply_deltas` +
+`run_program`), which is still O(prefix): producing frames means
+processing the prefix's emissions, and the brake runs every step, so
+mcguffey1b generation stays O(L²) per sentence. Removing that last
+factor needs an *incremental VM* (push one instruction onto a running
+stack and check validity in place) — recorded as the next optimization,
+not yet built.

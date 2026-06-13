@@ -885,17 +885,18 @@ class FrontierCache:
     Slots are appended by the caller (one per generated token). The
     cache is anchored: the start path is injected once, at construction,
     exactly as the batch path injects it at position 0. Emission deltas
-    are discarded — a generator scores continuations from the frontier
-    (states, weights, captures), not from the label field.
+    are accumulated in ``deltas`` — the same multiset a full
+    ``transduce`` of the consumed slots would produce — so a consumer can
+    reconstruct the parse (frames) from the cache without rescanning.
     """
 
     def __init__(self, fsm: FSM, scanner: "FSMScanner | None" = None) -> None:
         self.fsm = fsm
         self.scanner = scanner or FSMScanner()
         self.slots: list[Slot] = []
-        self._sink: list[LabelDelta] = []  # discarded emissions
+        self.deltas: list[LabelDelta] = []  # accumulated emissions
         self.frontier: list[_Path] = self.scanner._inject_start(
-            fsm, self.slots, self._sink, scan_start=0)
+            fsm, self.slots, self.deltas, scan_start=0)
 
     def push(self, slot: Slot) -> list[_Path]:
         """Append a token's slot and advance the frontier one step.
@@ -903,17 +904,18 @@ class FrontierCache:
         pos = len(self.slots)
         self.slots.append(slot)
         self.frontier = self.scanner._consume_position(
-            self.fsm, self.frontier, self.slots, pos, pos + 1, self._sink)
+            self.fsm, self.frontier, self.slots, pos, pos + 1, self.deltas)
         return self.frontier
 
     def clone(self) -> "FrontierCache":
-        """A cheap branch point: share consumed slots, copy the frontier.
-        (_Path is treated as immutable by the scanner — successors are
-        always freshly built — so the path objects can be shared.)"""
+        """A cheap branch point: share consumed slots, copy the frontier
+        and accumulated deltas. (_Path is treated as immutable by the
+        scanner — successors are always freshly built — so the path
+        objects can be shared.)"""
         c = FrontierCache.__new__(FrontierCache)
         c.fsm = self.fsm
         c.scanner = self.scanner
         c.slots = list(self.slots)
-        c._sink = []
+        c.deltas = list(self.deltas)
         c.frontier = list(self.frontier)
         return c

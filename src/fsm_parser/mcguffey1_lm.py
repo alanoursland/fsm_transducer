@@ -174,7 +174,7 @@ def _sample_sentence(rng: random.Random, temperature: float,
     while len(tokens) < max_tokens:
         dist = distribution_from_frontier(cache.frontier, len(tokens))
         if reweight is not None and dist:
-            dist = reweight(tokens, dist, cache.frontier)
+            dist = reweight(tokens, dist, cache)
         if not dist:
             return None
         tok = sample_token(dist, rng, temperature)

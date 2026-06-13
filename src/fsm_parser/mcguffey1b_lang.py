@@ -389,7 +389,7 @@ def _verb_subject_ok(verb: str, subj: str, *, has_mod: bool, f) -> bool:
 
 
 def reweight(prefix: list[str], dist: dict[str, float],
-             frontier=None) -> dict[str, float]:
+             cache=None) -> dict[str, float]:
     """ENCL in the generator: the critic steers the next-token field
     rather than only judging finished sentences. For each candidate we
     recover the register it would fill (from the transition's captures)
@@ -398,16 +398,19 @@ def reweight(prefix: list[str], dist: dict[str, float],
     on ANY frontier analysis survives — superposition is respected; only
     the provably-bad readings are pruned.
 
-    ``frontier`` is the generator's cached belief state; when omitted it
-    is recomputed from the prefix (the slow path, for direct callers)."""
+    ``cache`` is the generator's FrontierCache (its belief state plus
+    accumulated emissions): the frontier drives candidate scoring and a
+    clone of it parses the would-be-completed sentence for the
+    punctuation brake — both reuse the cache, never rescanning. When
+    omitted (direct callers / tests) the frontier is recomputed and the
+    punctuation brake falls back to a full parse."""
     from fsm_parser.mcguffey1_lang import lexicon
     from fsm_parser.mcguffey1_lm import _frontier, _machine, _vocab, support
 
     f = features()
     lex = lexicon()
     m = _machine()
-    if frontier is None:
-        frontier = _frontier(prefix)
+    frontier = cache.frontier if cache is not None else _frontier(prefix)
     has_mod = any("MOD" in lex.get(t, {}) for t in prefix)
     prev = prefix[-1] if prefix else None
     prev_tags = set(lex.get(prev, {})) if prev else set()
@@ -449,11 +452,20 @@ def reweight(prefix: list[str], dist: dict[str, float],
     # the punctuation step is the strongest brake: only allow ending the
     # sentence when the completed frame passes the full critic. This
     # turns end-of-sentence valency/PP checks into a generation
-    # constraint, so a sampled PUNCT is (almost) always accepted.
+    # constraint, so a sampled PUNCT is (almost) always accepted. The
+    # would-be-completed parse reuses the cache (clone, push the punct
+    # slot, read frames off the accumulated emissions) instead of
+    # re-transducing the whole prefix.
+    from fsm_parser.mcguffey1_lang import frames_from_deltas, token_slot
     for p in (".", "?"):
         if p in dist and prefix:
             text = " ".join(prefix) + p
-            fr = _parse_m1(text)
+            if cache is not None:
+                probe = cache.clone()
+                probe.push(token_slot(p, len(prefix)))
+                fr = frames_from_deltas(probe.slots, probe.deltas)
+            else:
+                fr = _parse_m1(text)
             ok_any[p] = bool(fr) and not text_violations(text, fr)
 
     out = {w: x for w, x in dist.items() if ok_any.get(w, True)}
