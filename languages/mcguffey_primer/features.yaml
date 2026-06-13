@@ -64,7 +64,13 @@ verbs:
   intransitive:
     [come, fall, fell, go, went, laugh, live, lives, ran, run, runs,
      sat, sing, sprang, cry, stand, walk, walks, work, jump, jumps,
-     fish]
+     fish, snow]
+  # weather/meteorological verbs are avalent (Tesniere): no thematic
+  # agent or object — "it snows", never "snow sheep"
+  weather: [snow]
+  # put-class verbs (Levin 9.1) obligatorily subcategorize a
+  # directional/locative PP: "*put God" vs "put God on the mat"
+  needs_location: [put]
   # verbs whose THEME/patient must be +animate — Levin's verbs of
   # killing and caring take a living patient ("drown eyes" is ill-formed
   # the way "*frighten the rock" is). A narrow, per-verb restriction,

@@ -81,7 +81,12 @@ def features() -> dict:
         "nominative": set(ent["nominative"]),
         "accusative": set(ent["accusative"]),
         "theme_animate": set(vb["theme_animate"]),
+        "needs_location": set(vb["needs_location"]),
     }
+
+
+DO_SUPPORT = {"do", "does", "did"}
+VOWELS = set("aeiou")
 
 
 def _num(value, f) -> str:
@@ -108,6 +113,10 @@ def _takes_3sg(value, f) -> bool:
     if w in f["no_3sg"]:
         return False
     return _num(value, f) in ("sg", "b")
+
+
+def _has_prep_object(frame: dict) -> bool:
+    return any(k not in _KNOWN_KEYS for k in frame)
 
 
 def _is_verbal(value) -> bool:
@@ -149,6 +158,16 @@ def violations(frame: dict, *, finite: bool = True) -> list[str]:  # noqa: PLR09
                     isinstance(subj, str) and subj in f["no_3sg"]):
                 out.append("AGR:COP_PL")
         return out
+
+    # do-support stranded: do/does/did surfaces as the predicate only
+    # when the auxiliary failed to attach to a lexical verb ("Did of Nat
+    # on slates?"). Main-verb 'do' ("do the work") keeps a theme.
+    if finite and pred in DO_SUPPORT and theme is None:
+        out.append("VAL:DO_STRANDED")
+
+    # put-class verbs need a directional/locative complement (Levin 9.1)
+    if pred in f["needs_location"] and not _has_prep_object(frame):
+        out.append("VAL:PUT_NEEDS_LOCATION")
 
     form = _vform(pred, f)
     has_mod = bool(frame.get("mod"))
@@ -349,6 +368,62 @@ def q_inversion_violations(text: str, frames: list[dict]) -> list[str]:
     return ["MOOD:Q_NEEDS_INVERSION"]
 
 
+def determiner_violations(text: str) -> list[str]:
+    """Two surface (token-level) checks on determiners:
+
+    * a/an allomorphy — the indefinite article's morphophonemic
+      alternation, conditioned by the onset of the following word
+      ("a cow" / "an owl", never "an cow"). Tier-1 has no silent-h or
+      glide exceptions, so the orthographic onset suffices.
+    * NP-head saturation — a determiner is the specifier of a nominal
+      (Abney's DP: D selects an N' complement), so it must reach a noun
+      over any intervening adjectives/numerals before a non-NP token
+      ("Please the for goats" strands 'the')."""
+    from fsm_parser.mcguffey1_lang import _TOKEN, lexicon
+
+    lex = lexicon()
+    toks = [t.lower() for t in _TOKEN.findall(text)]
+    out = []
+    npmod = {"ADJ", "NUM", "POSS"}
+    head = {"N", "NAME", "PRON"}
+    for i, w in enumerate(toks):
+        nxt = toks[i + 1] if i + 1 < len(toks) else None
+        if w == "a" and nxt and nxt[0] in VOWELS:
+            out.append(f"DET:A_BEFORE_VOWEL:{nxt}")
+        if w == "an" and nxt and nxt[0] not in VOWELS:
+            out.append(f"DET:AN_BEFORE_CONSONANT:{nxt}")
+        # head-saturation only for the true articles: demonstratives and
+        # quantifiers (this/that/all/more/her...) double as pronouns and
+        # stand alone, so they are not stranded when headless
+        if w in ("the", "a", "an"):
+            j = i + 1
+            while j < len(toks) and (npmod & set(lex.get(toks[j], {}))) \
+                    and not (head & set(lex.get(toks[j], {}))):
+                j += 1
+            if j >= len(toks) or not (head & set(lex.get(toks[j], {}))):
+                out.append(f"DET:NO_NOMINAL_HEAD:{w}")
+    return out
+
+
+def copula_predication_violations(text: str, frames: list[dict]) -> list[str]:
+    """Predication: BE is a two-place predicate (subject + predicative
+    complement). A copula clause with neither a subject nor a predicate
+    nominal/adjective is ill-formed ("Is in you to birds?") — except the
+    existential, where "there" is the surface subject and the pivot may
+    not project into the frame ("there are five of them in a nest")."""
+    from fsm_parser.mcguffey1_lang import _TOKEN
+
+    if "there" in {t.lower() for t in _TOKEN.findall(text)}:
+        return []
+    out = []
+    for fr in frames:
+        if (isinstance(fr, dict) and fr.get("pred") in COPULAS
+                and fr.get("agent") is None and fr.get("theme") is None
+                and fr.get("attr") is None):
+            out.append("PRED:COPULA_NO_ARGUMENTS")
+    return out
+
+
 def text_violations(text: str, frames: list[dict]) -> list[str]:
     """Every check that needs the surface text, plus the frame critic —
     the one gate shared by parse(), the LM accept hook, and the
@@ -356,7 +431,9 @@ def text_violations(text: str, frames: list[dict]) -> list[str]:
     return (critique(frames)
             + bare_np_violations(text, frames)
             + have_closure_violations(text, frames)
-            + q_inversion_violations(text, frames))
+            + q_inversion_violations(text, frames)
+            + determiner_violations(text)
+            + copula_predication_violations(text, frames))
 
 
 def accept(text: str, frames: list[dict]) -> bool:
@@ -405,7 +482,7 @@ def reweight(prefix: list[str], dist: dict[str, float],
     omitted (direct callers / tests) the frontier is recomputed and the
     punctuation brake falls back to a full parse."""
     from fsm_parser.mcguffey1_lang import lexicon
-    from fsm_parser.mcguffey1_lm import _frontier, _machine, _vocab, support
+    from fsm_parser.mcguffey1_lm import _frontier, _machine, cond_support
 
     f = features()
     lex = lexicon()
@@ -428,8 +505,9 @@ def reweight(prefix: list[str], dist: dict[str, float],
             if tr.epsilon:
                 continue
             roles = {c.name for c in tr.captures}
+            cs = cond_support(tr.condition)
             for w in dist:
-                if support(tr.condition, _vocab()[w]) <= 0.0:
+                if w not in cs:
                     continue
                 ok = True
                 if roles & _VERB_REGS and subj is not None:

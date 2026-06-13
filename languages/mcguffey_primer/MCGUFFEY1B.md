@@ -193,3 +193,31 @@ rate fell to ~8% and corpus coverage held at 140/144. The episode is a
 clean instance of the project's thesis in miniature: a generation
 statistic (too many questions) was a precise, debuggable symptom of a
 missing grammatical constraint, found because the model is a glass box.
+
+## Second generated-corpus audit: morphology, the DP, predication, weather verbs
+
+A later generation pass surfaced six more issues, each a named construct
+from classical linguistics. All reject the observed string with corpus
+coverage held at 140/144.
+
+| Observed | Check | Classical account |
+|---|---|---|
+| `An cow.` | a/an allomorphy (`DET:AN_BEFORE_CONSONANT`) | **morphophonemic allomorphy**: the indefinite article's realization is conditioned by the phonological onset of the following word (the textbook allomorphy example; finite-state two-level morphology, Koskenniemi 1983). |
+| `Please the for goats.` | unsaturated determiner (`DET:NO_NOMINAL_HEAD`) | **DP / X-bar**: a determiner is the head/specifier that selects a nominal complement (Abney 1987); a headless article is an incomplete projection. Restricted to the true articles the/a/an, since demonstratives and quantifiers (this/that/all/more) double as pronouns and stand alone. |
+| `Is in you to birds?` | copula predication (`PRED:COPULA_NO_ARGUMENTS`) | **predication / copula subcategorization**: BE links a subject to a predicative complement (Fillmore case frame); a clause with neither is not a predication. Existential *there* (where the pivot may not project into the frame) is exempted on the surface. |
+| `Did of Nat on slates?` | stranded do-support (`VAL:DO_STRANDED`) | **do-support** (Chomsky 1957, affix-hopping): *do* is inserted to carry tense only when there is a verb to support; an interrogative *did* with no lexical verb is a stranded auxiliary. |
+| `Snow sheep in eggs.` | avalent weather verb (`VAL:NO_THEME`) | **weather/impersonal verbs**: meteorological predicates are avalent (Tesnière) — no thematic agent or object, only an expletive subject. *snow* reclassified intransitive. |
+| `Put God.` | obligatory locative (`VAL:PUT_NEEDS_LOCATION`) | **put-class subcategorization** (Levin 9.1): put-verbs obligatorily take a directional/locative PP (*put God / put God on the mat). |
+
+## Generation performance
+
+Generation was `support()`-bound: scoring each token swept every
+frontier path × every transition × the whole vocabulary, re-evaluating
+the condition tree — ~100M `support` calls for 10 sentences (99 of 130
+profiled seconds). Conditions and the vocabulary are both fixed, so
+`cond_support(condition)` (the candidate set of a condition: words with
+nonzero support) is memoized once per distinct condition, collapsing the
+sweep to a dict lookup. **30 sentences went from ~66s to ~12s (~6×)**,
+output byte-identical. The frame-build in the punctuation brake (O(L) per
+step, still run every step) is now the next ceiling — an incremental VM
+would lift it.

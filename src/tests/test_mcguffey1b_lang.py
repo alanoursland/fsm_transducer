@@ -83,6 +83,26 @@ def test_linguistic_audit_corrections():
     assert parse("Runs lighthouse shut.") is None
 
 
+def test_second_audit_corrections():
+    """The latest generated-corpus issues, each a textbook construct."""
+    cases = {
+        "An cow.": "DET:AN_BEFORE_CONSONANT:cow",     # a/an allomorphy
+        "Please the for goats.": "DET:NO_NOMINAL_HEAD:the",  # unsaturated DP
+        "Is in you to birds?": "PRED:COPULA_NO_ARGUMENTS",   # predication
+        "Did of Nat on slates?": "VAL:DO_STRANDED",   # stranded do-support
+        "Snow sheep in eggs.": "VAL:NO_THEME",        # avalent weather verb
+        "Put God.": "VAL:PUT_NEEDS_LOCATION",         # put-class locative
+    }
+    for sent, code in cases.items():
+        assert parse(sent) is None, sent
+        assert code in text_violations(sent, parse_m1(sent)), sent
+    # the controls these checks must NOT touch
+    for ok in ["A cow.", "Put God on the mat.", "He did it.",
+               "Yes; there are five of them in a nest.", "What bird is this?",
+               "The boys are all out on the ice with their skates."]:
+        assert parse(ok) is not None, ok
+
+
 def test_questions_need_inversion():
     """Interrogative mood must be licensed by inversion (modal / aux /
     copula / wh). A bare clause with '?' is not a tier-1 question — this

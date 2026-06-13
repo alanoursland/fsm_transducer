@@ -120,6 +120,17 @@ def _frontier(tokens: list[str]):
     return frontier
 
 
+@lru_cache(maxsize=None)
+def cond_support(cond) -> dict[str, float]:
+    """The candidate set of a transition condition: every vocabulary
+    word with nonzero support, with its support weight. Conditions and
+    the vocabulary are both fixed, so this is memoized once per distinct
+    condition — collapsing the per-token, per-path, per-word support
+    sweep (which dominated generation) into a dict lookup."""
+    return {w: s for w, labels in _vocab().items()
+            if (s := support(cond, labels)) > 0.0}
+
+
 def distribution_from_frontier(frontier, pos: int) -> dict[str, float]:
     """P(next token | prefix) scored directly off a frontier — the
     cached belief state. Separated from ``next_token_distribution`` so
@@ -127,7 +138,6 @@ def distribution_from_frontier(frontier, pos: int) -> dict[str, float]:
     never rescanning the prefix."""
     dist: dict[str, float] = {}
     m = _machine()
-    vocab = _vocab()
     for path in frontier:
         ctx = ScanContext(scan_start=path.scan_start, n=pos + 1, pos=pos,
                           last_consumed=path.last_consumed,
@@ -135,16 +145,15 @@ def distribution_from_frontier(frontier, pos: int) -> dict[str, float]:
         for tr in m.transitions_from(path.state):
             if tr.epsilon:
                 continue
-            # positional conditions (AtSentenceStart) use the real ctx;
-            # label conditions are graded softly per candidate word
-            for word, labels in vocab.items():
-                s = support(tr.condition, labels)
-                if s <= 0.0:
-                    continue
-                if isinstance(tr.condition, (AtSentenceStart, AtSentenceEnd)) \
-                        and not tr.condition.matches(None, ctx):
-                    continue
-                dist[word] = dist.get(word, 0.0) + path.weight * tr.weight * s
+            # positional conditions (AtSentenceStart) gate the whole
+            # transition by position; the per-word candidate set is the
+            # memoized cond_support
+            if isinstance(tr.condition, (AtSentenceStart, AtSentenceEnd)) \
+                    and not tr.condition.matches(None, ctx):
+                continue
+            pw = path.weight * tr.weight
+            for word, s in cond_support(tr.condition).items():
+                dist[word] = dist.get(word, 0.0) + pw * s
     return dist
 
 

@@ -79,6 +79,20 @@ def test_cache_parse_equals_full_parse():
         assert cached == parse(" ".join(words[:-1]) + words[-1]), c
 
 
+def test_cond_support_memoizes_the_word_sweep():
+    """cond_support must equal the brute-force per-word support sweep it
+    replaces (the optimization that cut generation ~6x)."""
+    from fsm_parser.fsm import And, HasLabel, Not, Or
+    from fsm_parser.mcguffey1_lm import _vocab, cond_support, support
+
+    for cond in (HasLabel("N"), HasLabel("V"),
+                 And((HasLabel("N"), Not(HasLabel("DET")))),
+                 Or((HasLabel("MOD"), HasLabel("AUX")))):
+        brute = {w: s for w, labels in _vocab().items()
+                 if (s := support(cond, labels)) > 0.0}
+        assert cond_support(cond) == brute
+
+
 def test_support_is_soft_matches():
     from fsm_parser.fsm import And, HasLabel, Not, Or
     labels = {"N": 0.9, "V": 0.3}
