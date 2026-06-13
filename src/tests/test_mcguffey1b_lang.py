@@ -83,6 +83,18 @@ def test_linguistic_audit_corrections():
     assert parse("Runs lighthouse shut.") is None
 
 
+def test_questions_need_inversion():
+    """Interrogative mood must be licensed by inversion (modal / aux /
+    copula / wh). A bare clause with '?' is not a tier-1 question — this
+    was the '?'-escape-hatch that made generation 57% questions."""
+    for ok in ["Can Ann fan the lad?", "What bird is this?",
+               "Is this a nest?", "Do you see the cat?"]:
+        assert parse(ok) is not None, ok
+    for bad in ["Ran?", "Sprang like ships?", "Dress him like Kate?"]:
+        assert parse(bad) is None, bad
+        assert "MOOD:Q_NEEDS_INVERSION" in text_violations(bad, parse_m1(bad))
+
+
 def test_case_is_finiteness_sensitive_ecm():
     # matrix subject is nominative; ECM embedded subject is accusative
     assert "CASE:NOM_SUBJECT" in violations({"pred": "ran", "agent": "me"})

@@ -322,13 +322,41 @@ def have_closure_violations(text: str, frames: list[dict]) -> list[str]:
     return out
 
 
+def q_inversion_violations(text: str, frames: list[dict]) -> list[str]:
+    """Interrogative mood must be licensed by inversion. Tier-1
+    questions are formed by fronting a modal, do-support auxiliary,
+    copula, or wh-word ("Can Ann fan the lad?", "Do you see the cat?",
+    "Is this a nest?", "What bird is this?") — not by intonation alone.
+    A bare clause with a '?' ("Ran?", "Sprang like ships?") is not a
+    well-formed question.
+
+    Surface-checked because do-support is absorbed: "Do you see the
+    cat?" projects the same frame as a bare clause, so only the token
+    stream tells them apart. Without this, '?' becomes an escape hatch —
+    the critic is otherwise stricter on statements (a subjectless
+    past-tense clause is a bad imperative) than on questions (mood=q
+    exempts it), so the generator is driven to end clauses with '?'."""
+    if not any(isinstance(fr, dict) and fr.get("mood") == "q"
+               for fr in frames):
+        return []
+    from fsm_parser.mcguffey1_lang import _TOKEN, lexicon
+
+    lex = lexicon()
+    licensers = {"MOD", "AUX", "WH", "COP"}
+    toks = [t.lower() for t in _TOKEN.findall(text)]
+    if any(licensers & set(lex.get(t, {})) for t in toks):
+        return []
+    return ["MOOD:Q_NEEDS_INVERSION"]
+
+
 def text_violations(text: str, frames: list[dict]) -> list[str]:
     """Every check that needs the surface text, plus the frame critic —
     the one gate shared by parse(), the LM accept hook, and the
     generator's punctuation brake."""
     return (critique(frames)
             + bare_np_violations(text, frames)
-            + have_closure_violations(text, frames))
+            + have_closure_violations(text, frames)
+            + q_inversion_violations(text, frames))
 
 
 def accept(text: str, frames: list[dict]) -> bool:

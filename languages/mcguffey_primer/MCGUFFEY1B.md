@@ -162,3 +162,34 @@ keeps surfacing parser mixtures. The brake is also wired into the
 generator (subject registers reject accusative pronouns, object/prep
 registers reject nominative ones), so "Dress **him**" is sampled and
 "at **he**" is not.
+
+## The question-heaviness bug (and what it revealed)
+
+Early `mcguffey1b` generation came out ~57% questions, against ~1% for
+brakes-off `mcguffey1` — so the brakes were the cause, not the grammar.
+The mechanism was an **asymmetry the critic created and the punctuation
+gate amplified**:
+
+- The generator constantly produces subjectless clauses; the parser
+  reads the dropped subject as `agent: "you"` — an imperative.
+- The critic treats `imperative = (agent == "you" and mood != "q")` and
+  requires imperatives to be base-form. So a past-tense subjectless
+  clause ("Ran") is vetoed as a statement ("Ran." = bad imperative).
+- Flip the punctuation to "?" and `mood == "q"`: it is no longer an
+  imperative, the base-form and agreement checks switch off, and "Ran?"
+  comes out clean.
+- The punctuation gate checks "." and "?" independently, so when the
+  statement ending is vetoed and the question ending passes, the sampler
+  is *forced* to emit a question. "?" became the escape hatch for clauses
+  that can't be well-formed statements.
+
+The root cause was that interrogative mood was too lenient — treated as
+a free pass. Tier-1 questions are formed by **inversion** (fronting a
+modal, do-support auxiliary, copula, or wh-word), not by intonation, so
+`q_inversion_violations` now requires one of those licensers (surface-
+checked, because do-support is absorbed: "Do you see the cat?" projects
+the same frame as a bare clause). With the loophole closed the question
+rate fell to ~8% and corpus coverage held at 140/144. The episode is a
+clean instance of the project's thesis in miniature: a generation
+statistic (too many questions) was a precise, debuggable symptom of a
+missing grammatical constraint, found because the model is a glass box.
