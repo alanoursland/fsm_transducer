@@ -4,6 +4,11 @@
 plus one new layer in the stack. It does not touch the clause story
 machine, the lexicon, or the frame VM. It adds a block on top.
 
+> For the full catalog of grammatical/semantic checks — every
+> phenomenon, its classical-NLP account, and the violation code — see
+> [`LINGUISTIC_PHENOMENA.md`](LINGUISTIC_PHENOMENA.md). This document is
+> the narrative of *how* they were found and built.
+
 ## Why a letter, not `mcguffey2`
 
 The mcguffey numbers track the **reader / grade tier** of the dataset
