@@ -37,6 +37,31 @@ top open problem — surfaced not by theory but by McGuffey lesson 40.
   different roles depending on later structure (obj as matrix theme vs
   embedded agent) forces the accept sets to split.
 
+## mcguffey1b — a second block in the stack (same tier)
+
+Not a tier (mcguffey2 stays reserved for the First Reader); a model
+revision on the *same* Primer dataset that adds one layer: a
+selectional/agreement block reading the projected frame. mcguffey1
+ratcheted recall (65.5% coverage); 1b ratchets precision — it rejects
+29/30 of the author's salad corpus while keeping ~97% of mcguffey1's
+real-corpus parses. Rules are the classical inventory (valency
+Tesnière/Fillmore, selection Katz-Fodor/Wilks, agreement GPSG/HPSG,
+bare-NP Quirk). See MCGUFFEY1B.md. The same block runs forward as a
+generation brake (`reweight`), so violations are never sampled.
+
+### Error-ledger entries from 1b
+
+* **Cold fields starve constrained decoding.** With the brakes engaged
+  the acceptable region is small; at low temperature the next-token
+  field collapses onto a few high-weight dead-end words and generation
+  yield drops to ~0 (400 samples, t=0.7), recovering at t≈1.0. The
+  symbolic mirror of the LLM fact that tight constraints need decoding
+  entropy. Mitigation: temperature ≥ ~0.8, max_tries=1500.
+* **`run`-as-its-own-agent** surfaced again here: do-support/perfect
+  frames (`{'pred':'run','agent':'run'}`) make the new animacy check
+  fire on a malformed frame. Logged in MCGUFFEY1B.md; fix belongs
+  upstream in the syntactic block.
+
 ## Next
 
 Tier 2 (`mcguffey_first_reader`, 381 sentences, 513 words) grows on

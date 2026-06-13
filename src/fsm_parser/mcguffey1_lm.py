@@ -146,10 +146,13 @@ def sample_token(dist: dict[str, float], rng: random.Random,
 
 
 def _sample_sentence(rng: random.Random, temperature: float,
-                     max_tokens: int, prompt: list[str]) -> str | None:
+                     max_tokens: int, prompt: list[str],
+                     reweight=None) -> str | None:
     tokens = list(prompt)
     while len(tokens) < max_tokens:
         dist = next_token_distribution(tokens)
+        if reweight is not None and dist:
+            dist = reweight(tokens, dist)
         if not dist:
             return None
         tok = sample_token(dist, rng, temperature)
@@ -164,7 +167,9 @@ def _sample_sentence(rng: random.Random, temperature: float,
 def generate_lm(n_sentences: int = 5, *, temperature: float = 1.0,
                 seed: int | None = None, max_tokens: int = 10,
                 prompt: list[str] | None = None,
-                max_tries: int = 200) -> str:
+                max_tries: int = 200,
+                accept=None, reweight=None,
+                require_roundtrip: bool = True) -> str:
     """The autoregressive loop: predict, sample, feed back; PUNCT ends a
     sentence and resets the frontier.
 
@@ -173,7 +178,14 @@ def generate_lm(n_sentences: int = 5, *, temperature: float = 1.0,
     rejection-checked against the ROUND-TRIP ORACLE: a sentence is kept
     only if it parses to frames that regenerate and parse back to the
     same frames. The LM proposes; the certified core of the language
-    accepts. No scoring outside the machines."""
+    accepts. No scoring outside the machines.
+
+    ``accept(text, frames) -> bool``, if given, is an extra gate —
+    mcguffey1b runs its frame critic here. ``reweight(tokens, dist)``,
+    if given, steers each step's field before sampling (the brake).
+    ``require_roundtrip`` gates on the frame generator reproducing the
+    sentence; mcguffey1b turns it off, leaning on its critic instead of
+    the least-FSM ``plan()`` component."""
     from fsm_parser.mcguffey1_gen import generate as gen_from_frame
 
     rng = random.Random(seed)
@@ -181,16 +193,20 @@ def generate_lm(n_sentences: int = 5, *, temperature: float = 1.0,
     while len(sentences) < n_sentences:
         for _ in range(max_tries):
             cand = _sample_sentence(rng, temperature, max_tokens,
-                                    prompt or [])
+                                    prompt or [], reweight=reweight)
             frames = parse(cand) if cand is not None else None
             if not frames or not _covered(cand, frames):
                 continue
-            regen = [gen_from_frame(f) for f in frames]
-            if all(regen) and parse(" ".join(regen)) == frames:
-                sentences.append(cand)
-                break
+            if accept is not None and not accept(cand, frames):
+                continue
+            if require_roundtrip:
+                regen = [gen_from_frame(f) for f in frames]
+                if not (all(regen) and parse(" ".join(regen)) == frames):
+                    continue
+            sentences.append(cand)
+            break
         else:
-            raise RuntimeError("no round-trippable sentence in max_tries")
+            raise RuntimeError("no acceptable sentence in max_tries")
     return " ".join(sentences)
 
 
