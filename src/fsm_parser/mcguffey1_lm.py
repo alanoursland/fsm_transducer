@@ -42,6 +42,7 @@ from fsm_parser.fsm import (
     Always,
     AtSentenceEnd,
     AtSentenceStart,
+    FrontierCache,
     FSMScanner,
     HasAllLabels,
     HasAnyLabel,
@@ -53,7 +54,13 @@ from fsm_parser.fsm import (
     WeightAbove,
     WeightBelow,
 )
-from fsm_parser.mcguffey1_lang import _machine, initialize, lexicon, parse
+from fsm_parser.mcguffey1_lang import (
+    _machine,
+    initialize,
+    lexicon,
+    parse,
+    token_slot,
+)
 
 PUNCT_WORDS = {".": {"PUNCT": 1.0},
                "?": {"PUNCT": 1.0, "QMARK": 1.0},
@@ -113,21 +120,24 @@ def _frontier(tokens: list[str]):
     return frontier
 
 
-def next_token_distribution(tokens: list[str]) -> dict[str, float]:
-    """P(next token | prefix), straight off the machine. Empty when the
-    prefix has killed every path (the parser would reject anyway)."""
-    pos = len(tokens)
+def distribution_from_frontier(frontier, pos: int) -> dict[str, float]:
+    """P(next token | prefix) scored directly off a frontier — the
+    cached belief state. Separated from ``next_token_distribution`` so
+    the incremental generator can reuse a frontier it already advanced,
+    never rescanning the prefix."""
     dist: dict[str, float] = {}
-    for path in _frontier(tokens):
+    m = _machine()
+    vocab = _vocab()
+    for path in frontier:
         ctx = ScanContext(scan_start=path.scan_start, n=pos + 1, pos=pos,
                           last_consumed=path.last_consumed,
                           captures=path.captures)
-        for tr in _machine().transitions_from(path.state):
+        for tr in m.transitions_from(path.state):
             if tr.epsilon:
                 continue
             # positional conditions (AtSentenceStart) use the real ctx;
             # label conditions are graded softly per candidate word
-            for word, labels in _vocab().items():
+            for word, labels in vocab.items():
                 s = support(tr.condition, labels)
                 if s <= 0.0:
                     continue
@@ -136,6 +146,14 @@ def next_token_distribution(tokens: list[str]) -> dict[str, float]:
                     continue
                 dist[word] = dist.get(word, 0.0) + path.weight * tr.weight * s
     return dist
+
+
+def next_token_distribution(tokens: list[str]) -> dict[str, float]:
+    """P(next token | prefix), straight off the machine. Empty when the
+    prefix has killed every path (the parser would reject anyway). This
+    rescans the prefix; the generator uses the cached
+    ``distribution_from_frontier`` instead."""
+    return distribution_from_frontier(_frontier(tokens), len(tokens))
 
 
 def sample_token(dist: dict[str, float], rng: random.Random,
@@ -148,11 +166,15 @@ def sample_token(dist: dict[str, float], rng: random.Random,
 def _sample_sentence(rng: random.Random, temperature: float,
                      max_tokens: int, prompt: list[str],
                      reweight=None) -> str | None:
-    tokens = list(prompt)
+    cache = FrontierCache(_machine())
+    tokens: list[str] = []
+    for w in prompt:  # seed the prompt incrementally
+        cache.push(token_slot(w, len(tokens)))
+        tokens.append(w)
     while len(tokens) < max_tokens:
-        dist = next_token_distribution(tokens)
+        dist = distribution_from_frontier(cache.frontier, len(tokens))
         if reweight is not None and dist:
-            dist = reweight(tokens, dist)
+            dist = reweight(tokens, dist, cache.frontier)
         if not dist:
             return None
         tok = sample_token(dist, rng, temperature)
@@ -160,6 +182,7 @@ def _sample_sentence(rng: random.Random, temperature: float,
             return _render(tokens, tok) if tokens else None
         if not tokens and tok == ",":
             return None
+        cache.push(token_slot(tok, len(tokens)))
         tokens.append(tok)
     return None  # runaway: reject
 

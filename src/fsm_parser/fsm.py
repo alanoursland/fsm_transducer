@@ -609,70 +609,95 @@ class FSMScanner:
         frontier: list[_Path] = []
         for pos in range(n):
             if pos == 0 or not anchored:
-                initial = _Path(
-                    state=fsm.start,
-                    weight=self.semiring.one,
-                    captures={},
-                    last_consumed=None,
-                    scan_start=pos,
-                )
-                frontier = frontier + self._epsilon_close(
-                    [initial], fsm, deltas, slots=slots
-                )
-            frame = slots[pos]
-            successors: list[_Path] = []
-            for path in frontier:
-                ctx = ScanContext(
-                    scan_start=path.scan_start,
-                    n=n,
-                    pos=pos,
-                    last_consumed=path.last_consumed,
-                    captures=path.captures,
-                )
-                for tr in fsm.transitions_from(path.state):
-                    if tr.epsilon:
-                        continue
-                    if not tr.matches(frame, ctx):
-                        continue
-                    new_captures = dict(path.captures)
-                    for cap in tr.captures:
-                        if cap.mode == "first" and cap.name in new_captures:
-                            continue
-                        new_captures[cap.name] = _capture_from_slot(cap, frame, pos)
-                    new_weight = self.semiring.times(path.weight, tr.weight)
-                    for em in tr.emissions:
-                        self._fire(
-                            em,
-                            new_captures,
-                            firing_pos=pos,
-                            path_weight=new_weight,
-                            scan_start=path.scan_start,
-                            slots=slots,
-                            source=fsm.name,
-                            deltas=deltas,
-                        )
-                    successors.append(
-                        _Path(
-                            state=tr.target,
-                            weight=new_weight,
-                            captures=new_captures,
-                            last_consumed=pos,
-                            scan_start=path.scan_start,
-                        )
-                    )
-            successors = self._merge(successors)
-            frontier = self._epsilon_close(successors, fsm, deltas, slots=slots)
+                frontier = frontier + self._inject_start(
+                    fsm, slots, deltas, scan_start=pos)
+            frontier = self._consume_position(
+                fsm, frontier, slots, pos, n, deltas)
         if frontier_out is not None:
             if n == 0:  # empty prefix: the frontier is the closed start state
-                frontier = self._epsilon_close(
-                    [_Path(state=fsm.start, weight=self.semiring.one,
-                           captures={}, last_consumed=None, scan_start=0)],
-                    fsm, deltas, slots=slots,
-                )
+                frontier = self._inject_start(fsm, slots, deltas, scan_start=0)
             frontier_out.extend(frontier)
         return deltas
 
     # -- internals -----------------------------------------------------------
+
+    def _inject_start(
+        self,
+        fsm: FSM,
+        slots: "Sequence[Slot]",
+        deltas: list[LabelDelta],
+        *,
+        scan_start: int,
+    ) -> list[_Path]:
+        """Epsilon-closed start path injected at ``scan_start``."""
+        initial = _Path(
+            state=fsm.start,
+            weight=self.semiring.one,
+            captures={},
+            last_consumed=None,
+            scan_start=scan_start,
+        )
+        return self._epsilon_close([initial], fsm, deltas, slots=slots)
+
+    def _consume_position(
+        self,
+        fsm: FSM,
+        frontier: list[_Path],
+        slots: "Sequence[Slot]",
+        pos: int,
+        n: int,
+        deltas: list[LabelDelta],
+    ) -> list[_Path]:
+        """Advance a frontier across one input position: consume
+        ``slots[pos]``, merge, epsilon-close. This is the single forward
+        step shared by the batch scan and the incremental cache — the
+        ''one block, one token'' operation. The result depends only on
+        the incoming frontier and ``slots[pos]`` (positional conditions
+        aside), which is exactly what makes the frontier a reusable KV
+        cache: earlier positions never need rescanning."""
+        frame = slots[pos]
+        successors: list[_Path] = []
+        for path in frontier:
+            ctx = ScanContext(
+                scan_start=path.scan_start,
+                n=n,
+                pos=pos,
+                last_consumed=path.last_consumed,
+                captures=path.captures,
+            )
+            for tr in fsm.transitions_from(path.state):
+                if tr.epsilon:
+                    continue
+                if not tr.matches(frame, ctx):
+                    continue
+                new_captures = dict(path.captures)
+                for cap in tr.captures:
+                    if cap.mode == "first" and cap.name in new_captures:
+                        continue
+                    new_captures[cap.name] = _capture_from_slot(cap, frame, pos)
+                new_weight = self.semiring.times(path.weight, tr.weight)
+                for em in tr.emissions:
+                    self._fire(
+                        em,
+                        new_captures,
+                        firing_pos=pos,
+                        path_weight=new_weight,
+                        scan_start=path.scan_start,
+                        slots=slots,
+                        source=fsm.name,
+                        deltas=deltas,
+                    )
+                successors.append(
+                    _Path(
+                        state=tr.target,
+                        weight=new_weight,
+                        captures=new_captures,
+                        last_consumed=pos,
+                        scan_start=path.scan_start,
+                    )
+                )
+        successors = self._merge(successors)
+        return self._epsilon_close(successors, fsm, deltas, slots=slots)
 
     def _fire(
         self,
@@ -845,3 +870,50 @@ class FSMScanner:
             else:
                 by_key[key] = p
         return list(by_key.values())
+
+
+class FrontierCache:
+    """Incremental, anchored frontier — the architecture's KV cache.
+
+    A batch ``transduce(anchored=True)`` rescans the whole prefix on
+    every call; autoregressive generation makes that quadratic (each new
+    token re-derives the belief state from scratch). This holds the live
+    frontier and advances it ONE position per appended token via the
+    same ``_consume_position`` step the batch scan uses, so the cost of
+    extending the context by a token is independent of context length.
+
+    Slots are appended by the caller (one per generated token). The
+    cache is anchored: the start path is injected once, at construction,
+    exactly as the batch path injects it at position 0. Emission deltas
+    are discarded — a generator scores continuations from the frontier
+    (states, weights, captures), not from the label field.
+    """
+
+    def __init__(self, fsm: FSM, scanner: "FSMScanner | None" = None) -> None:
+        self.fsm = fsm
+        self.scanner = scanner or FSMScanner()
+        self.slots: list[Slot] = []
+        self._sink: list[LabelDelta] = []  # discarded emissions
+        self.frontier: list[_Path] = self.scanner._inject_start(
+            fsm, self.slots, self._sink, scan_start=0)
+
+    def push(self, slot: Slot) -> list[_Path]:
+        """Append a token's slot and advance the frontier one step.
+        Returns the new live frontier."""
+        pos = len(self.slots)
+        self.slots.append(slot)
+        self.frontier = self.scanner._consume_position(
+            self.fsm, self.frontier, self.slots, pos, pos + 1, self._sink)
+        return self.frontier
+
+    def clone(self) -> "FrontierCache":
+        """A cheap branch point: share consumed slots, copy the frontier.
+        (_Path is treated as immutable by the scanner — successors are
+        always freshly built — so the path objects can be shared.)"""
+        c = FrontierCache.__new__(FrontierCache)
+        c.fsm = self.fsm
+        c.scanner = self.scanner
+        c.slots = list(self.slots)
+        c._sink = []
+        c.frontier = list(self.frontier)
+        return c

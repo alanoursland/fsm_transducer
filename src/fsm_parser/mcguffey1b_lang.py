@@ -281,27 +281,33 @@ def _verb_subject_ok(verb: str, subj: str, *, has_mod: bool, f) -> bool:
     return True
 
 
-def reweight(prefix: list[str], dist: dict[str, float]) -> dict[str, float]:
+def reweight(prefix: list[str], dist: dict[str, float],
+             frontier=None) -> dict[str, float]:
     """ENCL in the generator: the critic steers the next-token field
     rather than only judging finished sentences. For each candidate we
     recover the register it would fill (from the transition's captures)
     and the subject already on the path, then drop candidates that would
     commit an agreement/selection/determination violation. A word kept
     on ANY frontier analysis survives — superposition is respected; only
-    the provably-bad readings are pruned."""
+    the provably-bad readings are pruned.
+
+    ``frontier`` is the generator's cached belief state; when omitted it
+    is recomputed from the prefix (the slow path, for direct callers)."""
     from fsm_parser.mcguffey1_lang import lexicon
     from fsm_parser.mcguffey1_lm import _frontier, _machine, _vocab, support
 
     f = features()
     lex = lexicon()
     m = _machine()
+    if frontier is None:
+        frontier = _frontier(prefix)
     has_mod = any("MOD" in lex.get(t, {}) for t in prefix)
     prev = prefix[-1] if prefix else None
     prev_tags = set(lex.get(prev, {})) if prev else set()
     np_open = bool(prev_tags & {"DET", "POSS", "NUM", "ADJ"})
 
     ok_any: dict[str, bool] = {}
-    for path in _frontier(prefix):
+    for path in frontier:
         subj = None
         for reg in ("subj", "subj2", "b_subj"):
             cv = path.captures.get(reg)

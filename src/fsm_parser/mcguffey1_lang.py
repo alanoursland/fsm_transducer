@@ -65,6 +65,37 @@ def lexicon() -> dict[str, dict[str, float]]:
 # --- Layer 0: tokenization + lexicon ------------------------------------------
 
 
+def _label_token(slot: Slot, raw: str, lex: dict) -> None:
+    """Attach tier-1 lexical labels to a token slot. Shared by the batch
+    tokenizer and the incremental generator so a token labels
+    identically however it arrives."""
+    word = raw.lower()
+    slot.labels.add(f"TEXT:{raw}", 1.0)
+    if word in lex:
+        for lab, w in lex[word].items():
+            slot.labels.add(lab, float(w))
+        slot.labels.add(f"VAL:{word}", 1.0)
+    elif raw == ",":
+        slot.labels.add("COMMA", 1.0)
+    elif raw == ";":
+        slot.labels.add("CONJ", 1.0)   # semicolon coordinates clauses
+        slot.labels.add(f"VAL:{raw}", 1.0)
+    elif raw in ".!?":
+        slot.labels.add("PUNCT", 1.0)
+        if raw == "?":
+            slot.labels.add("QMARK", 1.0)
+    else:
+        slot.labels.add("ERROR:UNKNOWN_WORD", 1.0)
+
+
+def token_slot(raw: str, i: int) -> Slot:
+    """A single labelled token slot, for incremental generation."""
+    slot = Slot(id=f"token:{i}", kind="token", stream="token",
+                order=float(i), text=raw)
+    _label_token(slot, raw, lexicon())
+    return slot
+
+
 def initialize(text: str) -> ParserState:
     state = ParserState()
     lex = lexicon()
@@ -76,23 +107,7 @@ def initialize(text: str) -> ParserState:
             id=f"token:{i}", kind="token", stream="token", order=float(i),
             text=raw, source_span=SourceSpan(idx, idx + len(raw)),
         )
-        word = raw.lower()
-        slot.labels.add(f"TEXT:{raw}", 1.0)
-        if word in lex:
-            for lab, w in lex[word].items():
-                slot.labels.add(lab, float(w))
-            slot.labels.add(f"VAL:{word}", 1.0)
-        elif raw == ",":
-            slot.labels.add("COMMA", 1.0)
-        elif raw == ";":
-            slot.labels.add("CONJ", 1.0)   # semicolon coordinates clauses
-            slot.labels.add(f"VAL:{raw}", 1.0)
-        elif raw in ".!?":
-            slot.labels.add("PUNCT", 1.0)
-            if raw == "?":
-                slot.labels.add("QMARK", 1.0)
-        else:
-            slot.labels.add("ERROR:UNKNOWN_WORD", 1.0)
+        _label_token(slot, raw, lex)
         state.add_slot("token", slot)
     return state
 

@@ -134,3 +134,34 @@ Two findings, both honest properties of the system:
    again: upstream narrates, the reflex reads. That is the queued
    REF/centering machinery, which would multiply into this same
    distribution rather than replace it.
+
+## KV-cache addendum: the frontier is the cache
+
+Autoregressive generation originally rescanned the whole prefix on
+every token (`_frontier(tokens)`), making a sentence of length L cost
+O(L²·frontier·vocab). But the frontier — the set of live paths after a
+prefix — is precisely a reusable belief state: extending the context by
+one token only needs to advance it one step, never re-derive it. That
+is the transformer KV cache, mirrored.
+
+`fsm.FrontierCache` holds the live frontier and advances it via the same
+`_consume_position` step the batch scan uses (one method, no second code
+path — the equivalence is test-pinned: incremental frontier == batch
+frontier, exactly, for every prefix). Per-token cost drops from O(prefix
+length) to O(1), so a sentence is O(L) instead of O(L²). Measured: batch
+`_frontier` climbs ~50→180µs across a 12-token prefix while the cache
+step stays flat at a few µs; the gap widens with length.
+
+Two honest caveats specific to this system:
+
+* The cache is exact here only because the clause machine uses no
+  length-dependent conditions (`AtSentenceEnd`). A machine that gated on
+  the total length would need its last step recomputed — the symbolic
+  analog of a cache invalidated by a global feature. Checked, not
+  assumed.
+* mcguffey1b's punctuation gate still calls the full parser once per
+  step (`parse(prefix + ".")`) — a semantic check that is not the
+  frontier and so not cached. That is an O(L)-per-step cost the cache
+  does not remove; it is inherent to deciding "is the sentence-so-far a
+  complete, well-formed meaning?" and is cheap next to the vocabulary
+  sweep the cache does eliminate.
