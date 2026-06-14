@@ -447,6 +447,22 @@ _ENTITY_REGS = {"subj", "subj2", "obj", "obj2", "pobj1", "pobj2", "voc",
 _NOM_REGS = {"subj", "subj2", "b_subj"}                       # nominative
 _ACC_REGS = {"obj", "obj2", "pobj1", "pobj2", "b_obj"}        # accusative
 _VERB_REGS = {"verb", "verb2", "b_verb"}
+_CHECKED_REGS = _ENTITY_REGS | _VERB_REGS
+
+
+@lru_cache(maxsize=None)
+def _entity_flags(word: str) -> tuple[bool, bool, bool]:
+    """Cached word facts used by the generation brake."""
+    from fsm_parser.mcguffey1_lang import lexicon
+
+    f = features()
+    tags = lexicon().get(word, {})
+    count_noun = ("N" in tags and "NAME" not in tags
+                  and "PRON" not in tags
+                  and word not in f["plural"]
+                  and word not in f["both_number"]
+                  and word not in f["bare_ok"])
+    return count_noun, word in f["accusative"], word in f["nominative"]
 
 
 def _verb_subject_ok(verb: str, subj: str, *, has_mod: bool, f) -> bool:
@@ -463,6 +479,11 @@ def _verb_subject_ok(verb: str, subj: str, *, has_mod: bool, f) -> bool:
     if verb not in f["agent_any"] and not _animate(subj, f):
         return False           # selectional: agentive verb wants animacy
     return True
+
+
+@lru_cache(maxsize=None)
+def _verb_subject_ok_cached(verb: str, subj: str, has_mod: bool) -> bool:
+    return _verb_subject_ok(verb, subj, has_mod=has_mod, f=features())
 
 
 def reweight(prefix: list[str], dist: dict[str, float],
@@ -489,11 +510,14 @@ def reweight(prefix: list[str], dist: dict[str, float],
     m = _machine()
     frontier = cache.frontier if cache is not None else _frontier(prefix)
     has_mod = any("MOD" in lex.get(t, {}) for t in prefix)
+    q_licensed = any({"MOD", "AUX", "WH", "COP"} & set(lex.get(t, {}))
+                     for t in prefix)
     prev = prefix[-1] if prefix else None
     prev_tags = set(lex.get(prev, {})) if prev else set()
     np_open = bool(prev_tags & {"DET", "POSS", "NUM", "ADJ"})
 
     ok_any: dict[str, bool] = {}
+    dist_size = len(dist)
     for path in frontier:
         subj = None
         for reg in ("subj", "subj2", "b_subj"):
@@ -506,26 +530,28 @@ def reweight(prefix: list[str], dist: dict[str, float],
                 continue
             roles = {c.name for c in tr.captures}
             cs = cond_support(tr.condition)
-            for w in dist:
-                if w not in cs:
+            checked_roles = roles & _CHECKED_REGS
+            words = cs if len(cs) < dist_size else dist
+            for w in words:
+                if w not in dist or w not in cs:
+                    continue
+                if ok_any.get(w) is True:
                     continue
                 ok = True
-                if roles & _VERB_REGS and subj is not None:
-                    ok = _verb_subject_ok(w, subj, has_mod=has_mod, f=f)
-                if ok and (roles & _ENTITY_REGS):
-                    tags = lex.get(w, {})
-                    count_noun = ("N" in tags and "NAME" not in tags
-                                  and "PRON" not in tags
-                                  and w not in f["plural"]
-                                  and w not in f["both_number"]
-                                  and w not in f["bare_ok"])
+                if checked_roles and roles & _VERB_REGS and subj is not None:
+                    ok = _verb_subject_ok_cached(w, subj, has_mod)
+                if ok and checked_roles and (roles & _ENTITY_REGS):
+                    count_noun, is_acc, is_nom = _entity_flags(w)
                     if count_noun and not np_open:
                         ok = False     # bare singular count noun
-                    if ok and roles & _NOM_REGS and w in f["accusative"]:
+                    if ok and roles & _NOM_REGS and is_acc:
                         ok = False     # "me ran" — subject wants nominative
-                    if ok and roles & _ACC_REGS and w in f["nominative"]:
+                    if ok and roles & _ACC_REGS and is_nom:
                         ok = False     # "at he" — object wants accusative
-                ok_any[w] = ok_any.get(w, False) or ok
+                if ok:
+                    ok_any[w] = True
+                else:
+                    ok_any.setdefault(w, False)
 
     # the punctuation step is the strongest brake: only allow ending the
     # sentence when the completed frame passes the full critic. This
@@ -537,6 +563,9 @@ def reweight(prefix: list[str], dist: dict[str, float],
     from fsm_parser.mcguffey1_lang import frames_from_deltas, token_slot
     for p in (".", "?"):
         if p in dist and prefix:
+            if p == "?" and not q_licensed:
+                ok_any[p] = False
+                continue
             text = " ".join(prefix) + p
             if cache is not None:
                 probe = cache.clone()
