@@ -42,6 +42,30 @@ entities:
     [school, church, town, home, bed, night, day, snow, ice, grass,
      work, play, fun, god, sea, air, sun, fire, noise, love, catch,
      more, all, one, two, five]
+  # coarse semantic markers for old-school selectional restrictions.
+  # These are intentionally shallow Katz-Fodor style features, not a
+  # full ontology.
+  person:
+    [ann, baby, bess, boy, boys, child, dick, girl, girls, god, he,
+     henry, her, him, i, james, jane, john, kate, lad, man, mary, me,
+     men, nat, ned, nell, queen, rob, sally, she, sue, them, they, tom,
+     us, we, who, you]
+  animal:
+    [bird, birds, cat, cow, cows, dog, ducks, fox, frog, goats, hen,
+     horse, lambs, nag, owl, pet, puff, quail, rab, rat, sheep, spot,
+     wolf]
+  place:
+    [air, bed, church, day, home, night, school, sea, town]
+  body_part:
+    [eyes, hands, neck]
+  artifact:
+    [bell, books, cap, cars, crown, dolls, dress, eggs, hat, ice, logs,
+     mat, rings, rocks, skates, slates, ships, wreaths]
+  substance:
+    [fire, grass, ice, snow]
+  vehicle: [cars, ships]
+  sound: [noise]
+  abstract: [catch, fun, love, more, one, play, things, two, work]
 
 verbs:
   # morphological form (default: base)
@@ -58,13 +82,13 @@ verbs:
   # (have/has/had stay out: they double as perfect auxiliaries —
   #  "Two girls have gone out for a walk")
   transitive:
-    [like, likes, love, loves, get, got, kill, fan,
+    [like, likes, love, loves, get, got, kill, drown, cut, fan,
      pet, rob, save, tell, tells, let, made, took, catch,
-     hold, holds, shut, put]
+     hold, holds, shut, put, know, mean, show, hand, fire, set, pull]
   intransitive:
     [come, fall, fell, go, went, laugh, live, lives, ran, run, runs,
      sat, sing, sprang, cry, stand, walk, walks, work, jump, jumps,
-     fish, snow]
+     fish, snow, ring, rings]
   # weather/meteorological verbs are avalent (Tesniere): no thematic
   # agent or object — "it snows", never "snow sheep"
   weather: [snow]
@@ -75,7 +99,56 @@ verbs:
   # killing and caring take a living patient ("drown eyes" is ill-formed
   # the way "*frighten the rock" is). A narrow, per-verb restriction,
   # not a global animate-theme rule (most verbs take inanimate themes).
-  theme_animate: [drown, kill, feed, pet, save]
+  theme_animate: [drown, kill, feed, pet, save, tell, tells]
+  # Verbs whose patient should be non-animate in this tier/register.
+  # "eat" appears in the corpus intransitively or with grass, not with
+  # named/animal patients.
+  theme_inanimate: [eat]
+  # Transfer verbs need a manipulable thing as theme, not a person/animal
+  # accidentally read as the transferred object ("Hand cows.").
+  transfer: [hand]
+  # Verbs of showing need a visible/showable object; sounds are heard,
+  # not shown, in this register.
+  theme_not_sound: [show]
+  # Verb-specific prepositional subcategorization. If a verb is listed,
+  # only these surface preposition keys are licensed as its adjuncts.
+  prep_licenses:
+    come: [from, in, on, to]
+    fall: [from, in, on]
+    fell: [from, in, on]
+    hand: [to]
+    hear: [from]
+    eat: []
+    know: []
+    like: []
+    let: []
+    live: [at, in, on]
+    lives: [at, in, on]
+    mean: []
+    name: []
+    pet: []
+    play: [at, in, on, with]
+    pull: [from, to]
+    ride: [from, in, on, to]
+    ring: []
+    rings: []
+    roll: [from, in, on]
+    save: [from]
+    see: [at, from, in, on, to]
+    sees: [at, from, in, on, to]
+    saw: [at, from, in, on, to]
+    seen: [at, from, in, on, to]
+    set: [in, on]
+    show: [for, to]
+    sing: [for, to, with]
+    tells: [to]
+    tell: [to]
+    think: [of]
+    try: []
+    watch: [at, for, from, in, on]
+    work: [at, for, with]
+  locative_prep_verbs: [come, live, lives, ride, walk, walks, work]
+  benefactive_prep_verbs: [sing]
   # bare-infinitive embedded clause licensors (perception/causative:
   # "See Spot run", "Let the bird sing", "Made the baby cry")
   embedding: [see, sees, saw, seen, hear, watch, let, made]
@@ -87,3 +160,7 @@ verbs:
   agent_any:
     [fall, fell, go, went, come, rock, rocks, ring, rings, roll,
      snow, cool, set, shade, hang, fire, have, has, had]
+  # Narrative event tags are style/register features, not grammar.
+  # The generator can softly downweight threat events unless an
+  # upstream story machine later licenses danger.
+  narrative_threat: [kill, drown, rob, cut]

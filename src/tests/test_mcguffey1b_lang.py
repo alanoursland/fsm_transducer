@@ -83,6 +83,13 @@ def test_linguistic_audit_corrections():
     assert parse("Runs lighthouse shut.") is None
 
 
+def test_eat_requires_inanimate_patient():
+    assert parse("John should eat Rab.") is None
+    assert "SEL:INANIMATE_THEME" in text_violations(
+        "John should eat Rab.", parse_m1("John should eat Rab."))
+    assert parse("Eat grass.") is not None
+
+
 def test_second_audit_corrections():
     """The latest generated-corpus issues, each a textbook construct."""
     cases = {
@@ -113,6 +120,65 @@ def test_questions_need_inversion():
     for bad in ["Ran?", "Sprang like ships?", "Dress him like Kate?"]:
         assert parse(bad) is None, bad
         assert "MOOD:Q_NEEDS_INVERSION" in text_violations(bad, parse_m1(bad))
+
+
+def test_generated_weirdnesses_are_linguistic_failures():
+    cases = {
+        "Roll by the Spot.": "PP:BAD_PREP:roll:by",
+        "Mean from sea.": "VAL:THEME_REQUIRED",
+        "Hand on hands.": "VAL:THEME_REQUIRED",
+        "Jane did things?": "MOOD:Q_BAD_INVERSION",
+        "James and ice.": "COORD:TYPE_MISMATCH",
+        "How a they show noise.": "MOOD:WH_NEEDS_QUESTION",
+        "Hand cows.": "SEL:TRANSFER_THEME_OBJECT",
+        "Show on air.": "VAL:THEME_REQUIRED",
+        "Ride ships by books.": "PP:BAD_PREP:ride:by",
+        "Know by dolls.": "VAL:THEME_REQUIRED",
+        "Like Sally with wreaths.": "PP:BAD_PREP:like:with",
+        "Save Puff at Rab.": "PP:BAD_PREP:save:at",
+    }
+    for sent, code in cases.items():
+        frames = parse_m1(sent)
+        assert frames, sent
+        assert parse(sent) is None, sent
+        assert code in text_violations(sent, frames), sent
+
+
+def test_followup_generated_weirdnesses_are_linguistic_failures():
+    cases = {
+        "Think with Mary.": "PP:BAD_PREP:think:with",
+        "Think at things.": "PP:BAD_PREP:think:at",
+        "Sing on him.": "PP:BAD_PREP:sing:on",
+        "Were new.": "PRED:COPULA_NO_SUBJECT",
+        "Pull by ice.": "VAL:THEME_REQUIRED",
+        "Ring sun sun with books.": "VAL:NO_THEME",
+        "Eat of me.": "PP:BAD_PREP:eat:of",
+        "Work from Jane.": "PP:BAD_PREP:work:from",
+        "Work of Dick.": "PP:BAD_PREP:work:of",
+        "See by skates.": "PP:BAD_PREP:see:by",
+    }
+    for sent, code in cases.items():
+        frames = parse_m1(sent)
+        assert frames, sent
+        assert parse(sent) is None, sent
+        assert code in text_violations(sent, frames), sent
+
+
+def test_pp_object_selection_and_recipient_frames():
+    cases = {
+        "Let Bess from Spot.": "PP:BAD_PREP:let:from",
+        "Ride in birds.": "SEL:LOCATIVE_POBJ:in",
+        "Pet Nell in Ned.": "PP:BAD_PREP:pet:in",
+        "Come in men.": "SEL:LOCATIVE_POBJ:in",
+        "Tell slates for noise.": "PP:BAD_PREP:tell:for",
+        "Sing for noise.": "SEL:BENEFICIARY_POBJ",
+    }
+    for sent, code in cases.items():
+        frames = parse_m1(sent)
+        assert frames, sent
+        assert parse(sent) is None, sent
+        assert code in text_violations(sent, frames), sent
+    assert parse("He ran at him.") is not None
 
 
 def test_case_is_finiteness_sensitive_ecm():

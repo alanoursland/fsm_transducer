@@ -170,18 +170,109 @@ out ~57% questions. With the licenser it is ~8% — see `MCGUFFEY1B.md`.
 
 ---
 
+## 9. Verb-specific PP subcategorization
+
+**Classical account.** Subcategorization frames apply to oblique
+arguments too: a verb does not simply take "any PP". Case grammar and
+early lexicalist grammars treat prepositions as selected complements or
+licensed adjunct classes.
+
+| Construction rejected | Code | Rule |
+|---|---|---|
+| `Roll by the Spot.` | `PP:BAD_PREP:roll:by` | *roll* licenses locative/source PPs (`on/in/from`), not agentive *by* |
+| `Know by dolls.` / `Mean from sea.` | `PP:BAD_PREP:<verb>:<prep>` plus valency | cognitive/content verbs do not license arbitrary PPs as argument substitutes |
+| `Like Sally with wreaths.` | `PP:BAD_PREP:like:with` | *like* takes a theme, not a stray instrumental/comitative PP |
+| `Save Puff at Rab.` | `PP:BAD_PREP:save:at` | *save* licenses source *from*, not locative *at/on* |
+| `Let Bess from Spot.` / `Pet Nell in Ned.` | `PP:BAD_PREP:<verb>:<prep>` | causative/perception-like and caring verbs do not accept random locative PPs in this tier |
+
+Implementation: `features.yaml` now has `prep_licenses`, a per-verb
+map. The critic checks surface preposition keys in the projected frame.
+Generation also applies the same table at the `prep1/prep2` transition,
+before the bad PP is sampled.
+
+## 10. Semantic class selection beyond animacy
+
+**Classical account.** Katz-Fodor semantic markers are not limited to
+`+ANIMATE`; old-school selectional restrictions routinely use classes
+such as `PERSON`, `ANIMAL`, `PLACE`, `ARTIFACT`, `SOUND`, and
+`ABSTRACT`.
+
+| Construction rejected | Code | Rule |
+|---|---|---|
+| `John should eat Rab.` | `SEL:INANIMATE_THEME` | *eat* takes food/substance themes in this register, not named/animal patients |
+| `Hand cows.` | `SEL:TRANSFER_THEME_OBJECT` | transfer verbs require a manipulable object as theme, not an animate recipient misread as the thing transferred |
+| `How a they show noise.` | `SEL:SHOWABLE_THEME` | *show* requires a visible/showable theme; sounds are heard, not shown |
+| `Ride in birds.` / `Come in men.` | `SEL:LOCATIVE_POBJ:<prep>` | locative PPs under motion/location verbs require a place-like object, not an animate object |
+| `Sing for noise.` | `SEL:BENEFICIARY_POBJ` | benefactive *for* under *sing* wants an animate beneficiary |
+
+Implementation: `features.yaml` now has shallow semantic classes
+(`person`, `animal`, `place`, `artifact`, `substance`, `vehicle`,
+`sound`, `abstract`). These are deliberately silver markers: broad
+enough to block the observed category errors, narrow enough not to turn
+the primer into a world-knowledge database.
+
+## 11. Transfer and recipient frames
+
+**Classical account.** Fillmore case frames distinguish THEME from
+GOAL/RECIPIENT. A transfer verb such as *hand* needs a transferred
+object and optionally a recipient; an animate NP by itself should not be
+silently reinterpreted as the transferred thing.
+
+| Construction rejected | Code | Rule |
+|---|---|---|
+| `Hand on hands.` | `VAL:THEME_REQUIRED` | *hand* is transitive and cannot be satisfied by a PP alone |
+| `Hand cows.` | `SEL:TRANSFER_THEME_OBJECT` | animate theme is rejected for the transfer-object slot |
+| `Tell slates for noise.` | `SEL:ANIMATE_THEME` or `PP:BAD_PREP:tell:for` | primer *tell* frames are recipient-like (`tell me`, `tells her`) and do not license *for noise* |
+
+This is not a general theory of ditransitives yet. It is the tier-1
+repair: prevent recipient nouns, transferred objects, and stray PPs from
+collapsing into one undifferentiated `theme`.
+
+## 12. Coordination type compatibility
+
+**Classical account.** Conjunction imposes a parallelism constraint:
+coordinated NPs normally share a semantic type when they fill one
+argument slot. This is the selectional analogue of syntactic category
+matching.
+
+| Construction rejected | Code | Rule |
+|---|---|---|
+| `James and ice.` | `COORD:TYPE_MISMATCH` | coordinated intro subjects must share at least one coarse semantic marker |
+
+`Dick and Jane` survives because both are `person`; the rule is
+intentionally conservative.
+
+## 13. Stronger question templates
+
+**Classical account.** Subject-aux inversion is a left-edge phenomenon:
+the auxiliary/modal/copula/wh licenser must appear at the front of the
+question template, not merely somewhere in the clause.
+
+| Construction rejected | Code | Rule |
+|---|---|---|
+| `Jane did things?` | `MOOD:Q_BAD_INVERSION` | an auxiliary inside an otherwise declarative clause does not license question mood |
+| `How a they show noise.` | `MOOD:WH_NEEDS_QUESTION` | a wh-marked frame must be a question in this tier |
+
+The older `MOOD:Q_NEEDS_INVERSION` rule caught bare `?` endings; this
+new rule catches pseudo-inversion where a licenser is present but not
+fronted.
+
+---
+
 ## Summary table
 
 | Family | Codes | Level | Key classical source |
 |---|---|---|---|
 | Valency | `VAL:THEME_REQUIRED` `VAL:NO_THEME` `VAL:HAVE_NEEDS_COMPLEMENT` `VAL:DO_STRANDED` `VAL:PUT_NEEDS_LOCATION` | frame + surface | Tesnière, Fillmore, Levin, Chomsky 1957 |
-| Selection | `SEL:ANIMATE_AGENT` `SEL:ANIMATE_THEME` | frame | Katz & Fodor, Wilks |
+| Selection | `SEL:ANIMATE_AGENT` `SEL:ANIMATE_THEME` `SEL:INANIMATE_THEME` `SEL:TRANSFER_THEME_OBJECT` `SEL:SHOWABLE_THEME` `SEL:LOCATIVE_POBJ` `SEL:BENEFICIARY_POBJ` | frame | Katz & Fodor, Wilks |
+| PP subcategorization | `PP:BAD_PREP` | frame + generation reweight | Fillmore, lexicalist subcategorization |
+| Coordination | `COORD:TYPE_MISMATCH` | frame | semantic parallelism |
 | Agreement / form | `AGR:3SG_NEEDS_SG_SUBJ` `AGR:SG_SUBJ_NEEDS_3SG` `AGR:COP_SG` `AGR:COP_PL` `VFORM:BASE_REQUIRED` `VFORM:PARTICIPLE_MATRIX` | frame | GPSG / HPSG |
 | Case | `CASE:NOM_SUBJECT` `CASE:ACC_ECM_SUBJECT` `CASE:ACC_THEME` `CASE:ACC_POBJ` | frame | case theory, ECM |
 | Complementation | `EMB:NOT_LICENSED` `EMB:BARE_INF_REQUIRED` `EMB>…` | frame | control / raising |
 | Determination | `NP:BARE_COUNT_NOUN` `DET:A_BEFORE_VOWEL` `DET:AN_BEFORE_CONSONANT` `DET:NO_NOMINAL_HEAD` | surface | Quirk, Abney (DP), Koskenniemi |
-| Predication | `PRED:COPULA_NO_ARGUMENTS` | surface | Fillmore (copula) |
-| Mood | `MOOD:Q_NEEDS_INVERSION` | surface | Chomsky 1957 (do-support / inversion) |
+| Predication | `PRED:COPULA_NO_ARGUMENTS` `PRED:COPULA_NO_SUBJECT` | surface | Fillmore (copula) |
+| Mood | `MOOD:Q_NEEDS_INVERSION` `MOOD:Q_BAD_INVERSION` `MOOD:WH_NEEDS_QUESTION` | surface + frame | Chomsky 1957 (do-support / inversion) |
 
 ## Known limitations (recorded, not yet solved)
 

@@ -64,6 +64,8 @@ PL_COPULAS = {"are", "were"}
 def features() -> dict:
     raw = yaml.safe_load(_FEAT_PATH.read_text())
     ent, vb = raw["entities"], raw["verbs"]
+    sem_classes = ("person", "animal", "place", "body_part", "artifact",
+                   "substance", "vehicle", "sound", "abstract")
     return {
         "animate": set(ent["animate"]),
         "plural": set(ent["plural"]),
@@ -81,7 +83,18 @@ def features() -> dict:
         "nominative": set(ent["nominative"]),
         "accusative": set(ent["accusative"]),
         "theme_animate": set(vb["theme_animate"]),
+        "theme_inanimate": set(vb.get("theme_inanimate", ())),
+        "transfer": set(vb.get("transfer", ())),
+        "theme_not_sound": set(vb.get("theme_not_sound", ())),
         "needs_location": set(vb["needs_location"]),
+        "narrative_threat": set(vb.get("narrative_threat", ())),
+        "locative_prep_verbs": set(vb.get("locative_prep_verbs", ())),
+        "benefactive_prep_verbs": set(vb.get("benefactive_prep_verbs", ())),
+        "sem_classes": {name: set(ent.get(name, ())) for name in sem_classes},
+        "prep_licenses": {
+            str(pred): set(preps or ())
+            for pred, preps in vb.get("prep_licenses", {}).items()
+        },
     }
 
 
@@ -105,6 +118,31 @@ def _animate(value, f) -> bool:
     return str(value) in f["animate"]
 
 
+def _sem(value, f) -> set[str]:
+    """Coarse semantic markers for an entity or coordinated entity."""
+    if isinstance(value, list):
+        out: set[str] = set()
+        for v in value:
+            out.update(_sem(v, f))
+        return out
+    w = str(value)
+    return {name for name, words in f["sem_classes"].items() if w in words}
+
+
+def _has_sem(value, f, name: str) -> bool:
+    return name in _sem(value, f)
+
+
+def _coord_type_mismatch(items: list, f) -> bool:
+    """Reject conjunctions that cannot share a coarse ontological type."""
+    if len(items) < 2:
+        return False
+    typed = [_sem(item, f) for item in items]
+    if not all(typed):
+        return False
+    return not set.intersection(*typed)
+
+
 def _takes_3sg(value, f) -> bool:
     """Can this subject head a 3SG verb? (number sg AND person 3rd)"""
     if isinstance(value, list):
@@ -117,6 +155,10 @@ def _takes_3sg(value, f) -> bool:
 
 def _has_prep_object(frame: dict) -> bool:
     return any(k not in _KNOWN_KEYS for k in frame)
+
+
+def _prep_keys(frame: dict) -> list[str]:
+    return [k for k in frame if k not in _KNOWN_KEYS]
 
 
 def _is_verbal(value) -> bool:
@@ -145,7 +187,11 @@ def violations(frame: dict, *, finite: bool = True) -> list[str]:  # noqa: PLR09
     agent = frame.get("agent")
     theme = frame.get("theme")
     out: list[str] = []
-    if pred is None or pred == "intro":
+    if pred is None:
+        return out
+    if pred == "intro":
+        if isinstance(agent, list) and _coord_type_mismatch(agent, f):
+            out.append("COORD:TYPE_MISMATCH")
         return out
 
     if pred in COPULAS:  # copula agreement: is/was sg, are/were pl
@@ -169,9 +215,18 @@ def violations(frame: dict, *, finite: bool = True) -> list[str]:  # noqa: PLR09
     if pred in f["needs_location"] and not _has_prep_object(frame):
         out.append("VAL:PUT_NEEDS_LOCATION")
 
+    licenses = f["prep_licenses"].get(pred)
+    if licenses is not None:
+        for prep in _prep_keys(frame):
+            if prep not in licenses:
+                out.append(f"PP:BAD_PREP:{pred}:{prep}")
+
     form = _vform(pred, f)
     has_mod = bool(frame.get("mod"))
     imperative = agent == "you" and frame.get("mood") != "q" and not has_mod
+
+    if frame.get("wh") and frame.get("mood") != "q":
+        out.append("MOOD:WH_NEEDS_QUESTION")
 
     # verb form: modals/do-support and imperatives govern BASE;
     # a participle cannot stand as the finite matrix verb
@@ -227,6 +282,15 @@ def violations(frame: dict, *, finite: bool = True) -> list[str]:  # noqa: PLR09
     if (pred in f["theme_animate"] and theme is not None
             and not isinstance(theme, dict) and not _animate(theme, f)):
         out.append("SEL:ANIMATE_THEME")
+    if (pred in f["theme_inanimate"] and theme is not None
+            and not isinstance(theme, dict) and _animate(theme, f)):
+        out.append("SEL:INANIMATE_THEME")
+    if (pred in f["transfer"] and theme is not None
+            and not isinstance(theme, dict) and _animate(theme, f)):
+        out.append("SEL:TRANSFER_THEME_OBJECT")
+    if (pred in f["theme_not_sound"] and theme is not None
+            and not isinstance(theme, dict) and _has_sem(theme, f, "sound")):
+        out.append("SEL:SHOWABLE_THEME")
 
     # case (nominative/accusative): theme and prepositional objects are
     # accusative ("Ran at he?" -> "him"). The matrix subject is
@@ -245,6 +309,12 @@ def violations(frame: dict, *, finite: bool = True) -> list[str]:  # noqa: PLR09
             continue
         if val in f["nominative"]:    # prepositional object
             out.append(f"CASE:ACC_POBJ:{key}")
+        if (pred in f["locative_prep_verbs"] and key in {"at", "in", "on"}
+                and _animate(val, f)):
+            out.append(f"SEL:LOCATIVE_POBJ:{key}")
+        if (pred in f["benefactive_prep_verbs"] and key == "for"
+                and not _animate(val, f)):
+            out.append("SEL:BENEFICIARY_POBJ")
     return out
 
 
@@ -363,9 +433,12 @@ def q_inversion_violations(text: str, frames: list[dict]) -> list[str]:
     lex = lexicon()
     licensers = {"MOD", "AUX", "WH", "COP"}
     toks = [t.lower() for t in _TOKEN.findall(text)]
-    if any(licensers & set(lex.get(t, {})) for t in toks):
-        return []
-    return ["MOOD:Q_NEEDS_INVERSION"]
+    words = [t for t in toks if t not in {".", "?", ",", "!"}]
+    if not any(licensers & set(lex.get(t, {})) for t in words):
+        return ["MOOD:Q_NEEDS_INVERSION"]
+    if words and not (licensers & set(lex.get(words[0], {}))):
+        return ["MOOD:Q_BAD_INVERSION"]
+    return []
 
 
 def determiner_violations(text: str) -> list[str]:
@@ -418,9 +491,11 @@ def copula_predication_violations(text: str, frames: list[dict]) -> list[str]:
     out = []
     for fr in frames:
         if (isinstance(fr, dict) and fr.get("pred") in COPULAS
-                and fr.get("agent") is None and fr.get("theme") is None
-                and fr.get("attr") is None):
-            out.append("PRED:COPULA_NO_ARGUMENTS")
+                and fr.get("agent") is None and fr.get("theme") is None):
+            if fr.get("attr") is None:
+                out.append("PRED:COPULA_NO_ARGUMENTS")
+            else:
+                out.append("PRED:COPULA_NO_SUBJECT")
     return out
 
 
@@ -447,7 +522,20 @@ _ENTITY_REGS = {"subj", "subj2", "obj", "obj2", "pobj1", "pobj2", "voc",
 _NOM_REGS = {"subj", "subj2", "b_subj"}                       # nominative
 _ACC_REGS = {"obj", "obj2", "pobj1", "pobj2", "b_obj"}        # accusative
 _VERB_REGS = {"verb", "verb2", "b_verb"}
+_PREP_REGS = {"prep1", "prep2"}
 _CHECKED_REGS = _ENTITY_REGS | _VERB_REGS
+_THREAT_PRIOR = 0.03
+
+
+def _apply_register_prior(dist: dict[str, float], f: dict) -> dict[str, float]:
+    """Soft style prior for generation; never a grammar veto."""
+    threat = f["narrative_threat"]
+    if not threat:
+        return dist
+    out = dict(dist)
+    for word in threat & out.keys():
+        out[word] *= _THREAT_PRIOR
+    return out
 
 
 @lru_cache(maxsize=None)
@@ -484,6 +572,22 @@ def _verb_subject_ok(verb: str, subj: str, *, has_mod: bool, f) -> bool:
 @lru_cache(maxsize=None)
 def _verb_subject_ok_cached(verb: str, subj: str, has_mod: bool) -> bool:
     return _verb_subject_ok(verb, subj, has_mod=has_mod, f=features())
+
+
+def _captured_pred(path, prefix: list[str]) -> str | None:
+    for reg in ("verb", "verb2", "b_verb"):
+        cv = path.captures.get(reg)
+        if cv is not None and cv.pos is not None and cv.pos < len(prefix):
+            return prefix[cv.pos]
+    return None
+
+
+def _captured_prep(path, prefix: list[str]) -> str | None:
+    for reg in ("prep2", "prep1"):
+        cv = path.captures.get(reg)
+        if cv is not None and cv.pos is not None and cv.pos < len(prefix):
+            return prefix[cv.pos]
+    return None
 
 
 def reweight(prefix: list[str], dist: dict[str, float],
@@ -538,6 +642,11 @@ def reweight(prefix: list[str], dist: dict[str, float],
                 if ok_any.get(w) is True:
                     continue
                 ok = True
+                if roles & _PREP_REGS:
+                    pred = _captured_pred(path, prefix)
+                    licenses = f["prep_licenses"].get(pred)
+                    if licenses is not None and w not in licenses:
+                        ok = False
                 if checked_roles and roles & _VERB_REGS and subj is not None:
                     ok = _verb_subject_ok_cached(w, subj, has_mod)
                 if ok and checked_roles and (roles & _ENTITY_REGS):
@@ -548,6 +657,16 @@ def reweight(prefix: list[str], dist: dict[str, float],
                         ok = False     # "me ran" — subject wants nominative
                     if ok and roles & _ACC_REGS and is_nom:
                         ok = False     # "at he" — object wants accusative
+                if ok and checked_roles and (roles & _ACC_REGS):
+                    pred = _captured_pred(path, prefix)
+                    prep = _captured_prep(path, prefix)
+                    if (pred in f["locative_prep_verbs"]
+                            and prep in {"at", "in", "on"}
+                            and _animate(w, f)):
+                        ok = False
+                    if (pred in f["benefactive_prep_verbs"]
+                            and prep == "for" and not _animate(w, f)):
+                        ok = False
                 if ok:
                     ok_any[w] = True
                 else:
@@ -575,14 +694,16 @@ def reweight(prefix: list[str], dist: dict[str, float],
                 fr = _parse_m1(text)
             ok_any[p] = bool(fr) and not text_violations(text, fr)
 
-    out = {w: x for w, x in dist.items() if ok_any.get(w, True)}
+    out = _apply_register_prior(
+        {w: x for w, x in dist.items() if ok_any.get(w, True)}, f)
     if out:
         return out
     # no clean candidate. Prefer to keep growing (drop punctuation) over
     # emitting a dirty ending; if even that is empty the only legal next
     # token is a dirty punct, so return nothing and let the sampler
     # reject this prefix outright — the brake never lets a violation out.
-    return {w: x for w, x in dist.items() if w not in (".", "?", ",")}
+    return _apply_register_prior(
+        {w: x for w, x in dist.items() if w not in (".", "?", ",")}, f)
 
 
 def generate_lm(n_sentences: int = 5, **kw) -> str:
@@ -595,7 +716,7 @@ def generate_lm(n_sentences: int = 5, **kw) -> str:
     # a generous try budget and exploration: at low temperature the field
     # collapses onto a few high-weight, often dead-end words and yield
     # craters, so keep temperature >= ~0.8 when the brakes are engaged.
-    kw.setdefault("max_tries", 1500)
+    kw.setdefault("max_tries", 3000)
     return _gen(n_sentences, accept=accept, reweight=reweight,
                 require_roundtrip=False, **kw)
 

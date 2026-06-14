@@ -159,7 +159,7 @@ def build_argparser() -> argparse.ArgumentParser:
 
     for name, help_text, tries in (
         ("mcguffey1", "generate McGuffey tier-1 text", 200),
-        ("mcguffey1b", "generate tier-1 text with the grammar/semantics critic", 800),
+        ("mcguffey1b", "generate tier-1 text with the grammar/semantics critic", 3000),
     ):
         lm = sub.add_parser(name, help=help_text)
         lm.add_argument(
